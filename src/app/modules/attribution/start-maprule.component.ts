@@ -48,7 +48,7 @@ export class StartMapRuleComponent {
 
   idUrl(): string {
     const base = `${environment.maprules}/config/${this.configId}`;
-    return decodeURIComponent(`${osm}?presets?${base}/presets/iD&validations=${base}/rules/iD`);
+    return decodeURIComponent(`${environment.osm}?presets?${base}/presets/iD&validations=${base}/rules/iD`);
   }
 
   josmUrl(): string {
