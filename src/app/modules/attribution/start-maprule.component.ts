@@ -29,8 +29,6 @@ export class StartMapRuleComponent {
   ) { }
 
   ngOnInit() {
-    const idUrl = this.idUrl();
-    const josmUrl = this.josmUrl();
     setTimeout(() => {
       this.route.params.forEach(params => {
         const id = params['id'];
@@ -38,20 +36,20 @@ export class StartMapRuleComponent {
           this.configId = id;
           this.maprules.getMapRule(this.configId).subscribe(data => {
             this.maprule = data;
-            $('#iDlink').attr('href', idUrl);
-            $('#josmLink').attr('href', josmUrl);
+            $('#iDlink').attr('href', this.idUrl);
+            $('#josmLink').attr('href', this.josmUrl);
           });
         }
       });
     });
   }
 
-  idUrl(): string {
+  get idUrl(): string {
     const base = `${environment.maprules}/config/${this.configId}`;
     return decodeURIComponent(`${environment.osm}?presets?${base}/presets/iD&validations=${base}/rules/iD`);
   }
 
-  josmUrl(): string {
+  get josmUrl(): string {
     return decodeURIComponent(`${environment.josm}/load_maprules?id=${this.configId}`);
   }
 
