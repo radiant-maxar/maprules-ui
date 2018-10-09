@@ -23,9 +23,9 @@ export class StartMapRuleComponent {
 
   constructor(
      private route: ActivatedRoute,
-     private router:
-     Router, private fieldConfig:
-     FieldConfigService, private maprules: MapRulesService
+     private router: Router, 
+     private fieldConfig: FieldConfigService, 
+     private maprules: MapRulesService
   ) { }
 
   ngOnInit() {
@@ -44,6 +44,10 @@ export class StartMapRuleComponent {
         }
       });
     });
+  }
+
+  toEdit(): void {
+    this.router.navigateByUrl(`/${this.configId}/edit`);
   }
 
   idUrl(): string {
