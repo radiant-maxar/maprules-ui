@@ -1,0 +1,24 @@
+.content-group {
+    margin: 20px;
+}
+
+.content-header {
+    margin: 10px;
+}
+
+.content-label {
+    margin-bottom: 10px;
+}
+
+.content-label h5 {
+    font-size: 30px;
+    font-weight: bold;
+    /* text-decoration: underline; */
+    color: #418a99ca;
+    /* color: rgba(57,57,57, 0.7) */
+}
+
+.maprule-name {
+    margin-left: 10px;
+    width: 20%;
+}

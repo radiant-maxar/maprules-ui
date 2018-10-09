@@ -1,0 +1,20 @@
+.main {
+    height: 94vh;
+    margin:auto;
+}
+.maprules-main {
+    text-align: center;
+}
+
+.maprules-banner {
+    margin-top: 25%;
+}
+
+.maprules-button {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.maprules-button:active {
+    transform: translate(0,3px);
+}

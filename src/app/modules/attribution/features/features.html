@@ -1,0 +1,60 @@
+<div class="content-group">
+  <div class='content-header'>
+    <label class="content-label">
+      <h5>{{ config.label }}</h5>
+    </label>
+  </div>
+  <div class="content-body">
+    <div class="row">
+      <div class="col-md-12">
+        <ng-container [formGroup]="attribution.form">
+          <ng-container formArrayName="presets">
+            <ng-container *ngFor="let preset of attribution.form.controls.presets.controls; let i=index">
+              <ngb-accordion  #acc="ngbAccordion" destroyOnHide="false" [activeIds]="panelIds">
+                <ngb-panel class="feature-panel">
+                  <ng-template ngbPanelTitle>
+                    <div class="row">
+                      <div class="md-col-12">
+                        <div class="d-flex flex-row">
+                          <div class="mr-auto p-2">
+                            <ng-container
+                              feature
+                              class="features-header"
+                              field="name"
+                              type="light"
+                              [group]="attribution.form"
+                              [nestedGroupIndex]="i">
+                            </ng-container>
+                          </div>
+                          <div class="p-2">
+                            <button class="form-control btn btn-sm" type="button">
+                              <i class="fa fa-minus-square-o" *ngIf="acc.isExpanded('ngb-panel-' + i)"> </i>
+                              <i class="fa fa-plus-square-o" *ngIf="!acc.isExpanded('ngb-panel-' + i)"> </i>
+                            </button>
+                          </div>
+                          <div class="p-2">
+                            <button class="form-control btn btn-sm p-2" type="button" (click)="removeFeatureCard(i)">
+                              <i class="fa fa-trash-o"> </i>    
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </ng-template>
+                  <ng-template ngbPanelContent>
+                    <app-feature [config]=config [preset]=preset [i]=i></app-feature>
+                  </ng-template>
+                </ngb-panel>
+              </ngb-accordion>
+            </ng-container>
+          </ng-container>
+        </ng-container>
+      </div>
+      <div class='col-md-12 feature-content'>
+        <button class="btn btn-success btn-add-entity" type="button" (click)="addFeatureCard()" data-toggle="tooltip" data-placement="bottom" title="{{config.hint}}">
+          <i class="fa fa-plus"> </i>  Add Preset
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

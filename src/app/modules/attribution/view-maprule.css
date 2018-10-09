@@ -1,0 +1,73 @@
+.view-primary-tags-container {
+    border: 1px solid rgba(57,57,57, .2);
+    border-radius: 3px;
+    margin-left: 10px;
+}
+
+.view-primary-tag div {
+    text-align: center;
+    border-bottom: 1px solid rgba(57,57,57, .2);
+    padding: 3px;
+}
+
+.view-primary-key {
+    background-color: rgba(57,57,57, .1);
+    border-right: 1px solid rgba(57,57,57, .2);
+}
+
+.view-primary-tags-container:last-child {
+    border-bottom: none;
+}
+
+.view-primary-geometry {
+    text-align: center;
+    min-width: 70px;
+    margin: 0px 3px;
+    background-color: rgba(57,57,57, .1);
+    border: 1px solid rgba(57,57,57,.2);
+}
+
+.view-required-fields {
+    border: 1px solid rgba(57,57,57, .2);
+    border-radius: 3px;
+}
+
+.required-field-cell {
+    border-bottom: 1px solid rgba(57,57,57, .2);
+    border-right: 1px solid rgba(57,57,57, .2);
+    padding: 3px 5px;
+    text-align: center;
+}
+
+.required-field-cell-last {
+    border-right: none;
+}
+
+.required-field-container:last-child div {
+    border-bottom: none;
+}
+
+.required-field-key {
+    background-color: rgba(57,57,57, .1);
+}
+
+.field-must-not-be {
+    background-color: rgba(255,0,0,0.1)
+}
+
+.field-may-be {
+    background-color: rgba(255,255,0,0.1)
+}
+
+.field-must-be {
+    background-color: rgba(76,153,0,0.1)
+}
+
+.field-value-pill {
+    background-color: rgba(57,57,57, .1);
+    margin: 3px;
+    padding: 1px 5px;
+    border: 1px solid rgba(57,57,57,.2);
+    border-radius: 5px;
+}
+

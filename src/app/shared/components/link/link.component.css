@@ -1,0 +1,16 @@
+.maprules-nav {
+    color: black
+}
+.maprules-nav:hover {
+    color: rgb(57,57,57)
+}
+
+.maprules-nav:active {
+    transform: translate(0,3px);
+}
+
+.current-location {
+    color: rgb(57,57,57);
+    background: rgba(57,57,57,0.1);
+    border-radius: 10px;
+}

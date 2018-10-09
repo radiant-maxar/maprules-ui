@@ -1,0 +1,170 @@
+<ng-container class="feature-card" [formGroup]="attribution.form">
+  <ng-container formArrayName="presets">
+    <ng-container [formGroupName]="i">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="feature-group">
+            <div class="content-group">
+              <div class="content-header">
+                <div class='content-header'>
+                  <label class="content-label feature-label">
+                    <h5>Identifying Tags</h5>
+                  </label>
+                </div>
+              </div>
+              <div class="content-body feature-body">
+                <div class="feature-table">
+                  <table class="table table-borderless">
+                    <thead class="feature-table-thead">
+                      <tr class="feature-table-head-row">
+                        <th scope="col">key</th>
+                        <th scope="col">value</th>
+                        <th class="primary-table-row-delete" scope="col"></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <ng-container formArrayName="primary">
+                        <ng-container *ngFor="let primaryGroup of primaryFormArray.controls; let primaryGroupIndex=index">
+                          <ng-container [formGroupName]="primaryGroupIndex">
+                            <tr class='primary-table-body-row'>
+                              <td>
+                                <ng-container attribution field="key" [group]="attribution.form" [nestedGroupIndex]="i"
+                                  [nestedArrayIndex]="primaryGroupIndex">
+                                </ng-container>
+                              </td>
+                              <td>
+                                <ng-container *ngIf="primaryFormArray.at(primaryGroupIndex).controls.key && primaryFormArray.at(primaryGroupIndex).controls.key.value && primaryFormArray.at(primaryGroupIndex).controls.val">
+                                  <ng-container primary-identifier field="val" [group]="attribution.form"
+                                    [nestedGroupIndex]="i" [nestedArrayIndex]="primaryGroupIndex">
+                                  </ng-container>
+                                </ng-container>
+                              </td>
+                              <td>
+                                <button class="btn btn-sm" type="button" (click)="removePrimaryGroup(primaryGroupIndex)">
+                                  <i class="fa fa-times"> </i>
+                                </button>
+                              </td>
+                            </tr>
+                          </ng-container>
+                        </ng-container>
+                      </ng-container>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="feature-inner-body feature-add">
+            <div class='feature-button-container'>
+              <button class="btn btn-success feature-button" type="button" (click)="addPrimaryGroup(i, null)"
+                data-toggle="tooltip" data-placement="bottom" title="Add primary tag for preset">
+                <i class="fa fa-plus"></i> Add tag
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="form-group col-md-12">
+          <div class="feature-group">
+            <div class="content-group">
+              <div class="content-header">
+                <div class='content-header'>
+                  <label class="content-label feature-label">
+                    <h5>Geometry</h5>
+                  </label>
+                </div>
+              </div>
+              <div class="content-body">
+                <div class="geometry-inner-content">
+                  <ng-container feature field="geometry" [group]="attribution.form" [nestedGroupIndex]="i"></ng-container>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="feature-group">
+            <div class="content-header feature-header">
+              <label class="content-inner-content">
+                <p class="feature-label">Fields</p>
+              </label>
+            </div>
+            <div class="content-body">
+              <div class="feature-inner-body">
+                <div class="feature-table">
+                  <table class="table table-borderless">
+                    <thead class="feature-table-head-row">
+                      <tr>
+                        <th scope="col">Key Condition</th>
+                        <th scope="col">Key</th>
+                        <th scope="col">Value Condition</th>
+                        <th scope="col">Value(s)</th>
+                        <th scope="col">Label</th>
+                        <th scope="col">Placeholder</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <ng-container formArrayName="fields">
+                        <ng-container *ngFor="let field of fields.controls; let fieldIndex=index">
+                          <ng-container [formGroupName]="fieldIndex">
+                            <tr>
+                              <td style="width:13%">
+                                <ng-container guideline field="keyCondition" [group]="attribution.form"
+                                  [nestedGroupIndex]="i" [nestedArrayIndex]="fieldIndex">
+                                </ng-container>
+                              </td>
+                              <td style="width:17.5%">
+                                <ng-container guideline field="key" [group]="attribution.form" [nestedGroupIndex]="i"
+                                  [nestedArrayIndex]="fieldIndex">
+                                </ng-container>
+                              </td>
+                              <td style="width:10%">
+                                <ng-container guideline field="valCondition" [group]="attribution.form"
+                                  [nestedGroupIndex]="i" [nestedArrayIndex]="fieldIndex">
+                                </ng-container>
+                              </td>
+                              <td style="width:24.5%">
+                                <ng-container guideline field="values" [group]="attribution.form" [nestedGroupIndex]="i"
+                                  [nestedArrayIndex]="fieldIndex">
+                                </ng-container>
+                              </td>
+                              <td style="width:16%">
+                                <ng-container guideline field="label" [group]="attribution.form" [nestedGroupIndex]="i"
+                                  [nestedArrayIndex]="fieldIndex">
+                                </ng-container>
+                              </td>
+                              <td style="width:16%">
+                                <ng-container guideline field="placeholder" [group]="attribution.form"
+                                  [nestedGroupIndex]="i" [nestedArrayIndex]="fieldIndex">
+                                </ng-container>
+                              </td>
+                              <td style="width:3%">
+                                <button class="btn btn-sm   float-right" type="button" (click)="removeField(fieldIndex)">
+                                  <i class="fa fa-times"> </i>
+                                </button>
+                              </td>
+                            </tr>
+                          </ng-container>
+                        </ng-container>
+                      </ng-container>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="feature-inner-body feature-add">
+                <div class='feature-button-container'>
+                  <button class="btn btn-success feature-button" type="button" (click)="addGuideline(i, null)"
+                    data-toggle="tooltip" data-placement="bottom" title="Add field for preset">
+                    <i class="fa fa-plus"></i> Add Field
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </ng-container>
+</ng-container>

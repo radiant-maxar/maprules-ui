@@ -1,0 +1,71 @@
+<div class="content-group">
+  <div class="content-header">
+    <label class="content-inner-content">
+      <h5>Disable Features</h5>
+    </label>
+  </div>
+  <div class="content-body">
+    <div class="row">
+      <div class="col-md-12">
+            <ng-container [formGroup]="attribution.form">
+            <ng-container formArrayName="disabledFeatures">
+              <div class="feature-inner-body">
+                <div class="feature-table">
+                  <table class="table table-borderless">
+                    <thead class="feature-table-head-row">
+                      <tr>
+                        <th scope="col">Key</th>
+                        <th scope="col">Value</th>
+                        <th scope="col"></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <ng-container *ngFor="let disabledFeature of attribution.disabledFeatures.controls; let disabledFeatureIndex=index">
+                      <tr>
+                        <td style="width:48.5%">
+                          <ng-container
+                            discouraged-feature
+                            field="key"
+                            [group]="attribution.form"
+                            [nestedGroupIndex]="disabledFeatureIndex">
+                          </ng-container>          
+                        </td>
+                        <td style="width:48.5%">
+                          <ng-container *ngIf="attribution.disabledFeatures.at(disabledFeatureIndex).get('key') &&
+                          attribution.disabledFeatures.at(disabledFeatureIndex).get('key').value && attribution.disabledFeatures.at(disabledFeatureIndex).get('val')">
+                          <ng-container
+                            discouraged-feature
+                            field="val"
+                            [group]="attribution.form"
+                            [nestedGroupIndex]="disabledFeatureIndex">
+                          </ng-container>
+                          </ng-container>
+                        </td>
+                        <td style="width:3%">
+                          <button class="form-control btn btn-default float-right" type="button" (click)="removeDisabledFeature(i)">
+                            <i class="fa fa-times"> </i>    
+                          </button>
+                        </td>
+                      </tr>
+                      </ng-container>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="feature-inner-body feature-add">
+                <div class='feature-button-container'>
+                  <button class="btn btn-success feature-button" type="button" (click)="addDiscouragedFeature()" data-toggle="tooltip" data-placement="bottom" title="{{ config.hint }}">
+                    <i class="fa fa-plus"> </i>  Add Feature
+                  </button>
+                </div>
+              </div>
+            </ng-container>
+          </ng-container>
+        </div>
+      </div>  
+    </div>
+  </div>
+
+
+
+   
