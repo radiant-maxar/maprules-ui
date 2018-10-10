@@ -124,7 +124,7 @@ export class AttributionComponent implements OnChanges, OnInit {
   saveForm(): void {
     this.maprules.saveForm(this.form.value)
       .subscribe(data => {
-        this.router.navigateByUrl(`/${data.id}/start`);
+        this.router.navigateByUrl(`/${data['id']}/start`);
       });
   }
 

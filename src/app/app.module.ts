@@ -20,7 +20,7 @@ const appRoutes: Routes = [
   { path: 'home', component: MainComponent },
   { path: 'new', component: EditMapRuleComponent },
   { path: ':id', component: EditMapRuleComponent },
-  { path: ':id/start', component: StartMapRuleComponent }
+  { path: ':id/start', component: StartMapRuleComponent },
   { path: ':id/edit', component: EditMapRuleComponent },
 ];
 
