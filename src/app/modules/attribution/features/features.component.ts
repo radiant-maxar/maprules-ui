@@ -9,7 +9,11 @@ import { FieldConfigService } from '../../../core/services/field-config.service'
 import { NgbPanelChangeEvent } from '@ng-bootstrap/ng-bootstrap'; 
 @Component({
   selector: 'app-features',
-  styleUrls: ['../../../shared/components/content.group.css', './features.component.css'],
+  styleUrls: [
+    '../../../shared/components/content.group.css',
+    './features.component.css',
+    './feature/feature.component.css'
+  ],
   templateUrl: './features.html'
 })
 export class FeaturesComponent {

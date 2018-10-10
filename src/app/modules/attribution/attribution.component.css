@@ -1,3 +1,16 @@
-.attribution-submit-button {
-    border: none;
+.submit-group {
+    margin-right: 10px;
+}
+
+.submit-group button {
+    font-weight: bold;
+}
+
+.features-button {
+    background: #459949bb;
+    color: white;
+}
+
+.features-button:hover {
+    background: rgba(79, 173, 87, 0.733);
 }

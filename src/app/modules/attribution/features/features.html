@@ -51,9 +51,11 @@
         </ng-container>
       </div>
       <div class='col-md-12 feature-content'>
-        <button class="btn btn-success btn-add-entity" type="button" (click)="addFeatureCard()" data-toggle="tooltip" data-placement="bottom" title="{{config.hint}}">
-          <i class="fa fa-plus"> </i>  Add Preset
-        </button>
+        <div class="d-flex flex-row-reverse">
+          <button class="btn btn-light feature-button feature-button-round" type="button" (click)="addFeatureCard()" data-toggle="tooltip" data-placement="bottom" title="{{config.hint}}">
+            <i class="fa fa-plus"> </i>  Add Preset
+          </button>
+        </div>
       </div>
     </div>
   </div>
