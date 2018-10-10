@@ -6,14 +6,13 @@ import { Feature } from '../../shared/models/feature';
 import { FeaturesComponent } from './features/features.component';
 import { DiscouragedFeaturesComponent } from './discouraged-features/discouraged-features.component';
 import { MapRulesService } from '../../core/services/maprules.service';
-import {Location, LocationStrategy, PathLocationStrategy} from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   exportAs: 'attribution',
   selector: 'attribution',
   styleUrls: ['../../shared/components/content.group.css', './attribution.component.css'],
-  templateUrl: './attribution.html',
-  providers: [Location, {provide: LocationStrategy, useClass: PathLocationStrategy}]
+  templateUrl: './attribution.html'
 })
 export class AttributionComponent implements OnChanges, OnInit {
   @Input()
@@ -36,16 +35,20 @@ export class AttributionComponent implements OnChanges, OnInit {
   get changes() { return this.form.valueChanges; }
   get valid() { return this.form.valid; }
   get value() { return this.form.value; }
-  get presets(){ return this.form.get('presets') as FormArray; }
-  get disabledFeatures(){
+  get presets() { return this.form.get('presets') as FormArray; }
+  get disabledFeatures() {
     return <FormArray> this.form.get('disabledFeatures') as FormArray;
   }
 
-  constructor(private fb: FormBuilder, private maprules: MapRulesService, private location: Location) {}
+  constructor(
+    private fb: FormBuilder,
+    private maprules: MapRulesService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
-    this.form = this.createGroup(); 
-    if(this.configId){
+    this.form = this.createGroup();
+    if (this.configId) {
       this.maprules.getMapRule(this.configId).subscribe(
         (data) => {
             this.form.get('name').setValue(data['name']);
@@ -55,7 +58,7 @@ export class AttributionComponent implements OnChanges, OnInit {
           console.error(error);
         }
       );
-    } else if(this.name){
+    } else if (this.name) {
       this.form.get('name').setValue(this.name);
     }
   }
@@ -79,7 +82,7 @@ export class AttributionComponent implements OnChanges, OnInit {
   }
 
   createGroup() {
-    const group = this.fb.group({ 
+    const group = this.fb.group({
       name : ['', [Validators.required]],
       presets: this.fb.array([]),
       disabledFeatures: this.fb.array([])
@@ -101,7 +104,7 @@ export class AttributionComponent implements OnChanges, OnInit {
 
   setDisabled(name: string, disable: boolean) {
     if (this.form.controls[name]) {
-      const method = disable ? 'disable': 'enable';
+      const method = disable ? 'disable' : 'enable';
       this.form.controls[name][method]();
       return;
     }
@@ -114,16 +117,15 @@ export class AttributionComponent implements OnChanges, OnInit {
     });
   }
 
-  setValue(name: string, value: any) {
+  setValue(name: string, value: any): void {
     this.form.controls[name].setValue(value, {emitEvent: true});
   }
 
-  saveForm(){
-    this.maprules.saveForm(this.form.value).subscribe( 
-      data => {
-        // this.location.path(data['id'] + '/start')
-      }
-    );
+  saveForm(): void {
+    this.maprules.saveForm(this.form.value)
+      .subscribe(data => {
+        this.router.navigateByUrl(`/${data['id']}/start`);
+      });
   }
 
 }
