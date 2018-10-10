@@ -23,9 +23,9 @@ export class StartMapRuleComponent {
 
   constructor(
      private route: ActivatedRoute,
-     private router:
-     Router, private fieldConfig:
-     FieldConfigService, private maprules: MapRulesService
+     private router: Router, 
+     private fieldConfig: FieldConfigService, 
+     private maprules: MapRulesService
   ) { }
 
   ngOnInit() {
@@ -34,6 +34,8 @@ export class StartMapRuleComponent {
         const id = params['id'];
         if (id) {
           this.configId = id;
+          const idUrl = this.idUrl;
+          const josmUrl = this.josmUrl;
           this.maprules.getMapRule(this.configId).subscribe(data => {
             this.maprule = data;
             $('#iDlink').attr('href', this.idUrl);
@@ -42,6 +44,10 @@ export class StartMapRuleComponent {
         }
       });
     });
+  }
+
+  toEdit(): void {
+    this.router.navigateByUrl(`/${this.configId}/edit`);
   }
 
   get idUrl(): string {
