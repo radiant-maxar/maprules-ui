@@ -31,12 +31,12 @@ export class MapRulesService {
 
   save(configId: string, value: {[name: string]: any}){
     const scrubbedForm = this.removeEmpty(value);
-    if(configId){
-      return this.http.put(this.mapRulesUrl + "/" + configId, scrubbedForm, this.httpOptions).pipe(
-        catchError(this.handleError)
-      );
+    if(configId == "undefined"){
+      return this.saveNewConfig(scrubbedForm);
     }
-    return this.saveNewConfig(scrubbedForm);
+    return this.http.put(this.mapRulesUrl + "/" + configId, scrubbedForm, this.httpOptions).pipe(
+      catchError(this.handleError)
+    );
   }
 
   saveForm(value: {[name: string]: any}){
