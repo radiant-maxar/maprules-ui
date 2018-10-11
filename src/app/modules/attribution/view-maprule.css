@@ -27,9 +27,56 @@
     border: 1px solid rgba(0,0,0,.125);
     border-radius: 10px;
     background: #f8f9fa;
+    display: inline-block;
+    margin-top: 10px;
 }
 
 .view-panel-pill {
+    padding: 8px;
+}
+
+.badge-must {
+    background: rgba(42, 212, 0, 0.267);
+}
+
+.badge-must-not {
+    background: rgba(255, 0, 0, 0.267);
+}
+
+.badge-condition {
+    font-size: initial;
+}
+
+.view-pill-tag {
     margin: auto;
-    padding: 5px 10px;
+    background: white;
+    border: 1px solid rgba(0,0,0,.125);
+    border-radius: 10px;
+    padding: 2px 5px;
+    margin-left: 5px;
+}
+
+.clear-button {
+    border: none;
+    background: none;
+}
+
+.view-pill-tooltip-control:hover {
+    background: #f8f9faa9;
+}
+
+.view-pill-tooltip {
+    color: black;
+    border: 1px solid rgba(0,0,0,.4);
+    margin:auto;
+    margin-top: 2px;
+}
+
+.view-tooltip .tooltip-inner {
+    background: #ebebeb;
+    border: 1px solid rgba(0, 0, 0, 0.4);
+}
+
+.view-tooltip .arrow::before {
+    border: none; 
 }

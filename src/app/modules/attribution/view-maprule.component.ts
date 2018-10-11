@@ -1,4 +1,12 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  ViewEncapsulation
+} from '@angular/core';
 import { Validators, FormGroup } from '@angular/forms';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { FieldConfig } from '../../shared/interfaces/field-config.interface';
@@ -14,8 +22,8 @@ declare var $: any;
     '../../shared/components/content.group.css',
     './view-maprule.css'
   ],
-  templateUrl: './view-maprule.html'
-
+  templateUrl: './view-maprule.html',
+  encapsulation: ViewEncapsulation.None
 })
 export class ViewMapRuleComponent {
   configId: string;

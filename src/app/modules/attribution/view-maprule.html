@@ -15,19 +15,82 @@
 							<h5>{{preset.name}}</h5>
 						</label>
 					</div>
-					<div class="content-body view-panel d-flex flex-columns">
-						<div>
+					<div class="content-body view-panel d-flex flex-column">
+						<div class="view-panel-content">
 							<div class="view-panel-header">
 								<label class="view-label">
 									<h5>Identifying Tags</h5>
 								</label>
 							</div>
-							<ng-container *ngFor="let primary of preset.primary">
-								<div class="view-panel-content view-panel-pill-group d-flex flex-row">
-									<div class="view-panel-pill">{{primary.key}}</div>
-									<div id="view-panel-pill-equals" class="view-panel-pill">=</div>
-									<div class="view-panel-pill">{{primary.val}}</div>
-								</div>
+							<div class="d-inline-flex">
+								<ng-container *ngFor="let primary of preset.primary">
+									<div class="view-panel-content view-panel-pill-group d-inline-flex">
+										<div class="view-panel-pill">{{primary.key}}</div>
+										<div class="view-panel-pill view-panel-pill-separator">=</div>
+										<div class="view-panel-pill identifying-val">{{primary.val}}</div>
+									</div>
+								</ng-container>
+							</div>
+						</div>
+						<div class="view-panel-content">
+							<ng-container *ngIf="getTagsByKeyCondition(i, 1); let requiredTags">
+								<ng-container *ngIf="requiredTags.length">
+									<div class="view-panel-header">
+										<label class="view-label">
+											<h5>Required Tags</h5>
+										</label>
+									</div>
+									<div class="view-panel-content d-flex flex-column">
+										<ng-container *ngFor="let requiredTag of requiredTags">
+											<div class="view-panel-pill-group d-inline-flex">
+												<div class="view-panel-pill">
+													<span class="badge badge-pill badge-condition badge-must">must be</span>
+												</div>
+												<div class="view-panel-pill">
+													{{requiredTag.key}}
+												</div>
+												<ng-container *ngIf="requiredTag.values.length">
+													<div class="view-panel-pill" [ngSwitch]="requiredTag.values[0].valCondition">
+														<span class="badge badge-pill badge-condition badge-must-not" *ngSwitchCase="0">must not have</span>
+														<span class="badge badge-pill badge-condition badge-must" *ngSwitchCase="1">must have</span>
+														<span class="badge badge-pill badge-condition badge-may" *ngSwitchCase="2">may have</span>
+														<span class="badge badge-pill badge-condition" *ngSwitchCase="3"><</span>
+														<span class="badge badge-pill badge-condition" *ngSwitchCase="4"><=</span>
+														<span class="badge badge-pill badge-condition" *ngSwitchCase="5">></span>
+														<span class="badge badge-pill badge-condition" *ngSwitchCase="6">>=</span>
+													</div>
+													<div class="view-pill-panel d-inline-flex">
+														<ng-container *ngIf="requiredTag.values[0].values.length <= 3">
+															<ng-container *ngFor="let val of requiredTag.values[0].values">
+																<div class="view-pill-tag">{{val}}</div>
+															</ng-container>
+														</ng-container>
+														<ng-container *ngIf="requiredTag.values[0].values.length > 3">															
+															<ng-container *ngFor="let val of requiredTag.values[0].values.slice(0,3)">
+																<div class="view-pill-tag">{{val}}</div>
+															</ng-container>
+															<ng-template #tipContent>
+																<div class="d-flex flex-column">
+																	<ng-container *ngFor="let tag of requiredTag.values[0].values.slice(3, requiredTag.values[0].values.length)">
+																		<div class="view-pill-tag view-pill-tooltip">{{tag}}</div>
+																	</ng-container>
+																</div>
+															</ng-template>
+															<button 
+																type="button" 
+																class="view-pill-tag view-pill-tooltip-control"
+																triggers="hover" [autoClose]="'outside'"
+																[ngbTooltip]="tipContent"
+																tooltipClass="view-tooltip">
+																...
+															</button>
+														</ng-container>
+													</div>
+												</ng-container>
+											</div>
+										</ng-container>
+									</div>
+								</ng-container>
 							</ng-container>
 						</div>
 					</div>
@@ -37,26 +100,7 @@
 	</div>
 </ng-container>
 <!-- 
-													<div class="container">
-														<div>
-															<label>Identifying Tags</label>
-														</div>
-														<div class="row">
-															<div class="col-md-8 view-primary-tags-container">
-																<ng-container *ngFor="let primary of preset.primary">
-																	<div class="row view-primary-tag">
-																		<div class="col-sm-6 view-primary-key">
-																			{{primary.key}}
-																		</div>
-																		<div class="col-sm-6">
-																			{{primary.val}}
-																		</div>
-																	</div>
-																</ng-container>
-															</div>
-														</div>
-													</div>
-												</div>
+													
 												<ng-container *ngIf="getTagsByKeyCondition(i, 1); let requiredTags">
 													<ng-container *ngIf="requiredTags.length > 0">
 														<div class="form-group col-md-12">
