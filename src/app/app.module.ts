@@ -43,7 +43,7 @@ const appRoutes: Routes = [
     NgbModule,
     NgSelectizeModule,
     HttpClientModule,
-    RouterModule.forRoot(appRoutes)
+    RouterModule.forChild(appRoutes)
   ],
   providers: [],
   bootstrap: [AppComponent]
