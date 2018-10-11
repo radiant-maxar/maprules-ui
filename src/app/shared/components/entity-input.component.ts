@@ -7,11 +7,16 @@ import { NgbPanelChangeEvent } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'entity-input',
+  styleUrls: ['./entity-input.component.css']
   template: `
       <ng-container [formGroup]="group">
         <ng-container formArrayName="presets">
           <ng-container [formGroupName]="nestedGroupIndex">
-              <input [formControlName]="config.name" class="form-control" [placeholder]="config.placeholder" (click)="preventToggle($event)"/>
+              <input
+                [formControlName]="config.name"
+                class="form-control entity-input"
+                [placeholder]="config.placeholder"
+                (click)="preventToggle($event)"/>
           </ng-container>
         </ng-container>
       </ng-container>

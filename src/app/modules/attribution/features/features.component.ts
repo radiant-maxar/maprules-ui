@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { Validators, FormGroup, FormControl, FormBuilder, FormArray } from '@angular/forms';
 
 import { Field } from '../../../shared/interfaces/field.interface';
@@ -7,6 +7,9 @@ import { SelectizeOption } from '../../../shared/interfaces/selectize-option.int
 import { AttributionComponent } from '../attribution.component';
 import { FieldConfigService } from '../../../core/services/field-config.service';
 import { NgbPanelChangeEvent } from '@ng-bootstrap/ng-bootstrap'; 
+
+declare var $: any;
+
 @Component({
   selector: 'app-features',
   styleUrls: [
@@ -14,13 +17,18 @@ import { NgbPanelChangeEvent } from '@ng-bootstrap/ng-bootstrap';
     './features.component.css',
     './feature/feature.component.css'
   ],
-  templateUrl: './features.html'
+  templateUrl: './features.html',
+  encapsulation: ViewEncapsulation.None
 })
 export class FeaturesComponent {
   @Input()
   config: FieldConfig[] = [];
 
-  constructor(private fb: FormBuilder, private attribution: AttributionComponent, private fieldConfig: FieldConfigService) {}
+  constructor(
+    private fb: FormBuilder,
+    private attribution: AttributionComponent,
+    private fieldConfig: FieldConfigService
+  ) {}
 
   panelIds: string[] = [];
 
@@ -31,7 +39,7 @@ export class FeaturesComponent {
       if(this.attribution.loadedForm && this.attribution.loadedForm['presets']){
         this.attribution.loadedForm['presets'].forEach(function(preset){
           $scope.addFeatureCard();
-          var presetControls = (<FormGroup>(<FormGroup>(<FormArray>$scope.attribution.form.controls.presets).controls[presetIndex]));
+          const presetControls = (<FormGroup>(<FormGroup>(<FormArray>$scope.attribution.form.controls.presets).controls[presetIndex]));
           presetControls.controls.name.setValue(preset.name);
           presetControls.controls.geometry.setValue(preset.geometry);
           presetIndex++;
@@ -67,9 +75,9 @@ export class FeaturesComponent {
                             }
                           }
                         ];
-    var featureIndex = control.value.length-1;
+    var featureIndex = control.value.length - 1;
     this.fieldConfig.featureConfig.set(featureIndex, featureConfig);
-    this.panelIds.push("ngb-panel-" + featureIndex);
+    // this.panelIds.push("ngb-panel-" + featureIndex);
   }
 
   private clearFeatureCards(){

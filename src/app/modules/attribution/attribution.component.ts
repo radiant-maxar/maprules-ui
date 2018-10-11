@@ -13,7 +13,7 @@ import { Router } from '@angular/router';
   selector: 'attribution',
   styleUrls: [
     '../../shared/components/content.group.css',
-    './features/feature/feature.component.css'
+    './features/feature/feature.component.css',
     './attribution.component.css',
   ],
   templateUrl: './attribution.html'

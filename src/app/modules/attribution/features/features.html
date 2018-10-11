@@ -10,50 +10,41 @@
         <ng-container [formGroup]="attribution.form">
           <ng-container formArrayName="presets">
             <ng-container *ngFor="let preset of attribution.form.controls.presets.controls; let i=index">
-              <ngb-accordion  #acc="ngbAccordion" destroyOnHide="false" [activeIds]="panelIds">
-                <ngb-panel class="feature-panel">
-                  <ng-template ngbPanelTitle>
-                    <div class="row">
-                      <div class="md-col-12">
-                        <div class="d-flex flex-row">
-                          <div class="mr-auto p-2">
-                            <ng-container
-                              feature
-                              class="features-header"
-                              field="name"
-                              type="light"
-                              [group]="attribution.form"
-                              [nestedGroupIndex]="i">
-                            </ng-container>
-                          </div>
-                          <div class="p-2">
-                            <button class="form-control btn btn-sm" type="button">
-                              <i class="fa fa-minus-square-o" *ngIf="acc.isExpanded('ngb-panel-' + i)"> </i>
-                              <i class="fa fa-plus-square-o" *ngIf="!acc.isExpanded('ngb-panel-' + i)"> </i>
-                            </button>
-                          </div>
-                          <div class="p-2">
-                            <button class="form-control btn btn-sm p-2" type="button" (click)="removeFeatureCard(i)">
-                              <i class="fa fa-trash-o"> </i>    
-                            </button>
-                          </div>
-                        </div>
-                      </div>
+              <div class="preset-card row">
+                <div class="col-md-12 preset-card-header">
+                  <div class="d-flex flex-row">
+                    <div class="mr-auto preset-features-header p-3">
+                      <ng-container feature class="features-header" field="name" type="light" [group]="attribution.form"
+                        [nestedGroupIndex]="i">
+                      </ng-container>
                     </div>
-                  </ng-template>
-                  <ng-template ngbPanelContent>
-                    <app-feature [config]=config [preset]=preset [i]=i></app-feature>
-                  </ng-template>
-                </ngb-panel>
-              </ngb-accordion>
+                    <div class="preset-accordion-button-container">
+                      <button class="form-control btn preset-accordion-button" type="button">
+                        <i class="fa fa-minus-square-o" ></i>
+                        <!-- i *ngIf="acc.isExpanded('ngb-panel-' + i)"> </i>
+                        <i class="fa fa-plus-square-o" *ngIf="!acc.isExpanded('ngb-panel-' + i)"> </i> -->
+                      </button>
+                    </div>
+                    <div class="preset-accordion-button-container">
+                      <button class="form-control btn preset-accordion-button" type="button" (click)="removeFeatureCard(i)">
+                        <i class="fa fa-trash-o"> </i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-12 panel">
+                  <app-feature [config]=config [preset]=preset [i]=i></app-feature>
+                </div>
+              </div>
             </ng-container>
           </ng-container>
         </ng-container>
       </div>
       <div class='col-md-12 feature-content'>
         <div class="d-flex flex-row-reverse">
-          <button class="btn btn-light feature-button feature-button-round" type="button" (click)="addFeatureCard()" data-toggle="tooltip" data-placement="bottom" title="{{config.hint}}">
-            <i class="fa fa-plus"> </i>  Add Preset
+          <button class="btn btn-light feature-button feature-button-round" type="button" (click)="addFeatureCard()"
+            data-toggle="tooltip" data-placement="bottom" title="{{config.hint}}">
+            <i class="fa fa-plus"> </i> Add Preset
           </button>
         </div>
       </div>

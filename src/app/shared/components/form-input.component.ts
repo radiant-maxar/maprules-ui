@@ -6,7 +6,11 @@ import { FieldConfig } from '../interfaces/field-config.interface';
 
 @Component({
   selector: 'form-input',
-  styleUrls: ['./form-input.component.css', './content.group.css'],
+  styleUrls: [
+    './content.group.css',
+    './form-input.component.css'
+    './entity-input.component.css'
+  ],
   template: `    
       <div class="content-group" [formGroup]="group">
         <div class='content-header'>
@@ -15,7 +19,7 @@ import { FieldConfig } from '../interfaces/field-config.interface';
           </label>
         </div>
         <div class='content-body'>
-	        <input [formControlName]="config.name" class="maprule-name form-input form-control" data-toggle="tooltip" data-placement="bottom" title="{{config.hint}}"/>
+	        <input [formControlName]="config.name" class="maprule-name form-input form-control entity-input" data-toggle="tooltip" data-placement="bottom" title="{{config.hint}}"/>
         </div>
       </div>
   `
