@@ -15,6 +15,7 @@ declare var $: any;
   selector: 'discouraged-features',
   styleUrls: [
     '../features/feature/feature.component.css',
+    '../features/features.component.css',
     '../../../shared/components/content.group.css',
     './discouraged-features.component.css'
   ],
