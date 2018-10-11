@@ -10,7 +10,10 @@ declare var $: any;
 @Component({
   exportAs: 'view-maprule',
   selector: 'view-maprule',
-  styleUrls: ['../../shared/components/content.group.css', './view-maprule.css'],
+  styleUrls: [
+    '../../shared/components/content.group.css',
+    './view-maprule.css'
+  ],
   templateUrl: './view-maprule.html'
 
 })

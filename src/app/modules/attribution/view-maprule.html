@@ -1,28 +1,42 @@
 <ng-container *ngIf="maprule">
 	<div class="row">
 		<div class="content-group col-lg-12">
-			<div class="row">
-				<div class="col-md-12">
-					<div class="form-group">
-						<label class="content-label content-inner-content">
-							<h5>{{maprule.name}}</h5>
+			<div class="content-headerF">
+				<label class="content-label">
+					<h5>{{maprule.name}}</h5>
+				</label>
+			</div>
+		</div>
+		<div class="content-group col-md-12">
+			<ng-container *ngFor="let preset of maprule.presets; let i = index">
+				<div class="view-card">
+					<div class="content-header view-header">
+						<label class="content-label view-label">
+							<h5>{{preset.name}}</h5>
 						</label>
 					</div>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-md-12">
-					<ng-container *ngFor="let preset of maprule.presets; let i=index">
-						<div class="content-group">
-							<div class="content-header">
-								<h6>{{preset.name}}</h6>
+					<div class="content-body view-panel d-flex flex-columns">
+						<div>
+							<div class="view-panel-header">
+								<label class="view-label">
+									<h5>Identifying Tags</h5>
+								</label>
 							</div>
-							<div class="container content-body">
-								<div class="row">
-									<div class="col-md-9">
-										<div class="container">
-											<div class="row">
-												<div class="form-group col-sm-9">
+							<ng-container *ngFor="let primary of preset.primary">
+								<div class="view-panel-content view-panel-pill-group d-flex flex-row">
+									<div class="view-panel-pill">{{primary.key}}</div>
+									<div id="view-panel-pill-equals" class="view-panel-pill">=</div>
+									<div class="view-panel-pill">{{primary.val}}</div>
+								</div>
+							</ng-container>
+						</div>
+					</div>
+				</div>
+			</ng-container>
+		</div>
+	</div>
+</ng-container>
+<!-- 
 													<div class="container">
 														<div>
 															<label>Identifying Tags</label>
@@ -102,8 +116,8 @@
 																								</div>
 																							</div>
 																						</div>
-																					</ng-container>
-																					<!-- <ng-container *ngIf="requiredTags.values.length === 0">
+																					</ng-container> -->
+<!-- <ng-container *ngIf="requiredTags.values.length === 0">
 																							<div class="col-sm-4 required-field-condition required-field-cell required-field-key">
 																								{{requiredTag.key}}
 																							</div>
@@ -114,7 +128,7 @@
 																								*
 																							</div>
 																					</ng-container> -->
-																				</div>
+<!-- </div>
 																			</ng-container>
 																		</div>
 																	</div>
@@ -279,9 +293,7 @@
 					</ng-container>
 				</div>
 			</div>
-		</div>
-	</div>
-</ng-container>
+		</div> -->
 <!--
 							<ng-container *ngIf="getTagsByKeyCondition(i, 0); let doNotTags">
 								<label *ngIf="doNotTags.length > 0">Do Not Add Tags</label>

@@ -1,5 +1,5 @@
 .feature-label h5 {
-    font-size: 20px;
+    font-size: 25px;
 }
 
 .feature-header {
@@ -19,6 +19,7 @@
 .feature-table-th {
     border: none;
     border-bottom: 1px solid rgba(0,0,0,.125);
+    font-size: 20px;
 }
 
 .feature-table-td {
