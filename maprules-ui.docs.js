@@ -1,12 +1,40 @@
 /**
- * @api {get} /:id Edit MapRules config
- * @apiName EditMapRule
+ * @api {get} /new Create new MapRules config
+ * @apiName Create MapRule
+ * @apiGroup CreateMapRule
+ *  
+ * @apiVersion 0.0.1
+ * 
+ 
+ */
+
+/**
+ * @api {get} /:id/edit Edit MapRules config
+ * @apiName Edit MapRule
  * @apiGroup EditMapRule
  * 
  * @apiParam {String} id MapRules configuration id
  * 
  * @apiVersion 0.0.1
+ */
+
+/**
+ * @api {get} /:id/instructions View MapRules instructions
+ * @apiName View MapRule
+ * @apiGroup ViewMapRule
  * 
- * @apiExample {curl} Example Usage
- *      curl http://localhost:4200/f343b37a-a2f5-4ee7-bcfd-2710af86c6ba
- *
+ * @apiParam {String} id MapRules configuration id
+ * 
+ * @apiVersion 0.0.1
+ */
+
+/**
+ * @api {get} /:id/start Start Editors with MapRules
+ * @apiName Start MapRule
+ * @apiGroup ViewMapRule
+ * 
+ * @apiParam {String} id MapRules configuration id
+ * 
+ * @apiVersion 0.0.1
+ */
+
