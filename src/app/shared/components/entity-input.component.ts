@@ -7,7 +7,7 @@ import { NgbPanelChangeEvent } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'entity-input',
-  styleUrls: ['./entity-input.component.css']
+  styleUrls: ['./entity-input.component.css'],
   template: `
       <ng-container [formGroup]="group">
         <ng-container formArrayName="presets">

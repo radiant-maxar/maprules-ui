@@ -7,6 +7,7 @@ import { SelectizeOption } from '../../../shared/interfaces/selectize-option.int
 import { AttributionComponent } from '../attribution.component';
 import { FieldConfigService } from '../../../core/services/field-config.service';
 import { NgbPanelChangeEvent } from '@ng-bootstrap/ng-bootstrap'; 
+import { Event } from '@angular/router';
 
 declare var $: any;
 
@@ -34,21 +35,21 @@ export class FeaturesComponent {
 
   ngOnInit() {
     setTimeout(() => {
-      var $scope = this; 
-      var presetIndex = 0;
-      if(this.attribution.loadedForm && this.attribution.loadedForm['presets']){
+      const $scope = this;
+      let presetIndex = 0;
+      if (this.attribution.loadedForm && this.attribution.loadedForm['presets']){
         this.attribution.loadedForm['presets'].forEach(function(preset){
           $scope.addFeatureCard();
           const presetControls = (<FormGroup>(<FormGroup>(<FormArray>$scope.attribution.form.controls.presets).controls[presetIndex]));
           presetControls.controls.name.setValue(preset.name);
           presetControls.controls.geometry.setValue(preset.geometry);
           presetIndex++;
-        }); 
+        });
       }
     });
   }
 
-  private addFeatureCard() {
+  private addFeatureCard(): void {
     const control = this.attribution.presets;
     control.push(this.getFeature());
     var featureConfig = [
@@ -80,23 +81,50 @@ export class FeaturesComponent {
     // this.panelIds.push("ngb-panel-" + featureIndex);
   }
 
-  private clearFeatureCards(){
+  private clearFeatureCards(): void {
     const control = this.attribution.presets;
     while (control.length !== 0) {
       control.removeAt(0);
     }
   }
 
-  private getFeature(){
+  private getFeature(): FormGroup {
     return this.fb.group({  primary: this.fb.array([]),
-                            name: "",
-                            geometry: [["node", "way", "closedway", "area"]],
+                            name: '',
+                            geometry: [['node', 'way', 'closedway', 'area']],
                             fields: this.fb.array([])
                         });
-  } 
+  }
 
-  private removeFeatureCard(i: number){
+  private removeFeatureCard(i: number): void {
     const control = this.attribution.presets;
     control.removeAt(i);
   }
-}
+
+  private animateAccordion(e: any, index: number) {
+    e.preventDefault();
+    const presetCard: any = $(`#preset-card-panel-${index}`);
+    if (presetCard) {
+      const height: number = Number($(presetCard).css('height').replace('px', ''));
+
+      let newClass = '';
+      let oldClass = '';
+
+      if (height > 1) {
+        oldClass = 'minus';
+        newClass = 'plus';
+      } else {
+        oldClass = 'plus';
+        newClass = 'minus';
+      }
+
+      const toggler: any = $(`#preset-accordion-toggler-${index}`);
+      toggler.addClass(`fa-${newClass}-square-o`);
+      toggler.removeClass(`fa-${oldClass}-square-o`);
+
+      $(presetCard).css('max-height', height > 1 ? 0 : 'initial');
+    
+    }
+  }
+
+

@@ -19,10 +19,12 @@
                       </ng-container>
                     </div>
                     <div class="preset-accordion-button-container">
-                      <button class="form-control btn preset-accordion-button" type="button">
-                        <i class="fa fa-minus-square-o" ></i>
-                        <!-- i *ngIf="acc.isExpanded('ngb-panel-' + i)"> </i>
-                        <i class="fa fa-plus-square-o" *ngIf="!acc.isExpanded('ngb-panel-' + i)"> </i> -->
+                      <button 
+                        class="form-control btn preset-accordion-button" 
+                        (click)="animateAccordion($event, i)" type="button">
+                        <i   
+                          id="preset-accordion-toggler-{{i}}"
+                          class="fa fa-plus-square-o"></i>
                       </button>
                     </div>
                     <div class="preset-accordion-button-container">
@@ -32,7 +34,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-md-12 panel">
+                <div class="col-md-12 preset-card-panel" id="preset-card-panel-{{i}}">
                   <app-feature [config]=config [preset]=preset [i]=i></app-feature>
                 </div>
               </div>

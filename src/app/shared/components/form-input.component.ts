@@ -8,10 +8,10 @@ import { FieldConfig } from '../interfaces/field-config.interface';
   selector: 'form-input',
   styleUrls: [
     './content.group.css',
-    './form-input.component.css'
+    './form-input.component.css',
     './entity-input.component.css'
   ],
-  template: `    
+  template: `
       <div class="content-group" [formGroup]="group">
         <div class='content-header'>
           <label class="content-label">
@@ -19,7 +19,10 @@ import { FieldConfig } from '../interfaces/field-config.interface';
           </label>
         </div>
         <div class='content-body'>
-	        <input [formControlName]="config.name" class="maprule-name form-input form-control entity-input" data-toggle="tooltip" data-placement="bottom" title="{{config.hint}}"/>
+          <input
+            [formControlName]="config.name"
+            class="maprule-name form-input form-control entity-input"
+            data-toggle="tooltip" data-placement="bottom" title="{{config.hint}}"/>
         </div>
       </div>
   `

@@ -40,3 +40,8 @@
 .preset-accordion-button i {
   font-size: 20px;
 }
+
+.preset-card-panel {
+  overflow: hidden;
+  max-height: 0;
+}
