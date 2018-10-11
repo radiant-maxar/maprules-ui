@@ -16,12 +16,12 @@ import { WayComponent } from './icons/way/way.component';
 import { AreaComponent } from './icons/area/area.component';
 import { LinkComponent } from './shared/components/link/link.component';
 const appRoutes: Routes = [
-  { path: 'maprule/', redirectTo: '/home', pathMatch: 'full' },
-  { path: 'maprule/home', component: MainComponent },
-  { path: 'maprule/new', component: EditMapRuleComponent },
-  { path: 'maprule/:id/instructions', component: ViewMapRuleComponent },
-  { path: 'maprule:id/start', component: StartMapRuleComponent },
-  { path: 'maprule/:id/edit', component: EditMapRuleComponent },
+  { path: '', redirectTo: '/home', pathMatch: 'full' },
+  { path: 'home', component: MainComponent },
+  { path: 'new', component: EditMapRuleComponent },
+  { path: ':id/instructions', component: ViewMapRuleComponent },
+  { path: ':id/start', component: StartMapRuleComponent },
+  { path: ':id/edit', component: EditMapRuleComponent },
 ];
 
 @NgModule({
@@ -43,7 +43,7 @@ const appRoutes: Routes = [
     NgbModule,
     NgSelectizeModule,
     HttpClientModule,
-    RouterModule.forRoot(appRoutes)
+    RouterModule.forChild(appRoutes)
   ],
   providers: [],
   bootstrap: [AppComponent]
