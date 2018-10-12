@@ -17,13 +17,22 @@
     "group": "EditMapRule",
     "parameter": {
       "fields": {
-        "Parameter": [
+        "Path Param": [
           {
-            "group": "Parameter",
+            "group": "Path Param",
             "type": "String",
             "optional": false,
             "field": "id",
             "description": "<p>MapRules configuration id</p>"
+          }
+        ],
+        "Query Parameters": [
+          {
+            "group": "Query Parameters",
+            "type": "String",
+            "optional": false,
+            "field": "name",
+            "description": "<p>MapRules name initializes to this value</p>"
           }
         ]
       }

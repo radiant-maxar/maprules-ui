@@ -13,7 +13,8 @@
  * @apiName Edit MapRule
  * @apiGroup EditMapRule
  * 
- * @apiParam {String} id MapRules configuration id
+ * @apiParam (Path Param) {String} id MapRules configuration id
+ * @apiParam (Query Parameters) {String} name MapRules name initializes to this value 
  * 
  * @apiVersion 0.0.1
  */
