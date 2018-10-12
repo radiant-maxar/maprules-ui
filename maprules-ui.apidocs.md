@@ -43,13 +43,13 @@ UI for Creating Custom Mapping Presets and Validation rules
 
 
 
-### Path Param Parameters
+### Path Parameters
 
 | Name     | Type       | Description                           |
 |:---------|:-----------|:--------------------------------------|
 |  id | String | <p>MapRules configuration id</p>|
 
-### Query Parameters Parameters
+### Query Parameters
 
 | Name     | Type       | Description                           |
 |:---------|:-----------|:--------------------------------------|
