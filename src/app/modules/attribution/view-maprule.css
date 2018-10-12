@@ -39,6 +39,10 @@
     background: rgba(42, 212, 0, 0.267);
 }
 
+.badge-may {
+    background: rgba(231, 211, 35, 0.466);
+}
+
 .badge-must-not {
     background: rgba(255, 0, 0, 0.267);
 }
@@ -69,12 +73,15 @@
     color: black;
     border: 1px solid rgba(0,0,0,.4);
     margin:auto;
-    margin-top: 2px;
+    margin: 0 2px;
+    padding: 2px 4px;
 }
 
 .view-tooltip .tooltip-inner {
     background: #ebebeb;
     border: 1px solid rgba(0, 0, 0, 0.4);
+    border-radius: 10px;
+    margin-bottom: 2px;
 }
 
 .view-tooltip .arrow::before {

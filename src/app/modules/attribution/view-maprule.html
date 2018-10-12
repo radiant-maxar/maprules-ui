@@ -1,13 +1,13 @@
 <ng-container *ngIf="maprule">
 	<div class="row">
-		<div class="content-group col-lg-12">
-			<div class="content-headerF">
+		<div class="col-lg-12">
+			<div class="content-header">
 				<label class="content-label">
 					<h5>{{maprule.name}}</h5>
 				</label>
 			</div>
 		</div>
-		<div class="content-group col-md-12">
+		<div class="col-md-12">
 			<ng-container *ngFor="let preset of maprule.presets; let i = index">
 				<div class="view-card">
 					<div class="content-header view-header">
@@ -22,7 +22,7 @@
 									<h5>Identifying Tags</h5>
 								</label>
 							</div>
-							<div class="d-inline-flex">
+							<div class="d-flex flex-column">
 								<ng-container *ngFor="let primary of preset.primary">
 									<div class="view-panel-content view-panel-pill-group d-inline-flex">
 										<div class="view-panel-pill">{{primary.key}}</div>
@@ -32,15 +32,15 @@
 								</ng-container>
 							</div>
 						</div>
-						<div class="view-panel-content">
-							<ng-container *ngIf="getTagsByKeyCondition(i, 1); let requiredTags">
-								<ng-container *ngIf="requiredTags.length">
+						<ng-container *ngIf="getTagsByKeyCondition(i, 1); let requiredTags">
+							<ng-container *ngIf="requiredTags.length">
+								<div class="view-panel-content">
 									<div class="view-panel-header">
 										<label class="view-label">
 											<h5>Required Tags</h5>
 										</label>
 									</div>
-									<div class="view-panel-content d-flex flex-column">
+									<div class="view-panel-content d-flex flex-column flex-wrap">
 										<ng-container *ngFor="let requiredTag of requiredTags">
 											<div class="view-panel-pill-group d-inline-flex">
 												<div class="view-panel-pill">
@@ -65,23 +65,19 @@
 																<div class="view-pill-tag">{{val}}</div>
 															</ng-container>
 														</ng-container>
-														<ng-container *ngIf="requiredTag.values[0].values.length > 3">															
+														<ng-container *ngIf="requiredTag.values[0].values.length > 3">
 															<ng-container *ngFor="let val of requiredTag.values[0].values.slice(0,3)">
 																<div class="view-pill-tag">{{val}}</div>
 															</ng-container>
 															<ng-template #tipContent>
-																<div class="d-flex flex-column">
+																<div class="d-flex">
 																	<ng-container *ngFor="let tag of requiredTag.values[0].values.slice(3, requiredTag.values[0].values.length)">
 																		<div class="view-pill-tag view-pill-tooltip">{{tag}}</div>
 																	</ng-container>
 																</div>
 															</ng-template>
-															<button 
-																type="button" 
-																class="view-pill-tag view-pill-tooltip-control"
-																triggers="hover" [autoClose]="'outside'"
-																[ngbTooltip]="tipContent"
-																tooltipClass="view-tooltip">
+															<button type="button" class="view-pill-tag view-pill-tooltip-control" triggers="hover" [autoClose]="'outside'"
+															 [ngbTooltip]="tipContent" tooltipClass="view-tooltip">
 																...
 															</button>
 														</ng-container>
@@ -90,9 +86,88 @@
 											</div>
 										</ng-container>
 									</div>
-								</ng-container>
+								</div>
 							</ng-container>
-						</div>
+						</ng-container>
+						<ng-container *ngIf="getTagsByKeyCondition(i, 2); let suggestedTags">
+							<ng-container *ngIf="suggestedTags.length">
+								<div class="view-panel-content">
+									<div class="view-panel-header">
+										<label class="view-label">
+											<h5>Suggested Tags</h5>
+										</label>
+									</div>
+									<div class="view-panel-content d-flex flex-column">
+										<ng-container *ngFor="let suggestedTag of suggestedTags">
+											<div class="view-panel-pill-group d-inline-flex">
+												<div class="view-panel-pill">
+													<span class="badge badge-pill badge-condition badge-may">may be</span>
+												</div>
+												<div class="view-panel-pill">
+													{{suggestedTag.key}}
+												</div>
+												<ng-container *ngIf="suggestedTag.values.length">
+														<div class="view-panel-pill" [ngSwitch]="suggestedTag.values[0].valCondition">
+																<span class="badge badge-pill badge-condition badge-must-not" *ngSwitchCase="0">must not have</span>
+																<span class="badge badge-pill badge-condition badge-must" *ngSwitchCase="1">must have</span>
+																<span class="badge badge-pill badge-condition badge-may" *ngSwitchCase="2">may have</span>
+																<span class="badge badge-pill badge-condition" *ngSwitchCase="3"><</span>
+																<span class="badge badge-pill badge-condition" *ngSwitchCase="4"><=</span>
+																<span class="badge badge-pill badge-condition" *ngSwitchCase="5">></span>
+																<span class="badge badge-pill badge-condition" *ngSwitchCase="6">>=</span>
+															</div>
+															<div class="view-pill-panel d-inline-flex">
+																<ng-container *ngIf="suggestedTag.values[0].values.length <= 3">
+																	<ng-container *ngFor="let val of suggestedTag.values[0].values">
+																		<div class="view-pill-tag">{{val}}</div>
+																	</ng-container>
+																</ng-container>
+																<ng-container *ngIf="suggestedTag.values[0].values.length > 3">
+																	<ng-container *ngFor="let val of suggestedTag.values[0].values.slice(0,3)">
+																		<div class="view-pill-tag">{{val}}</div>
+																	</ng-container>
+																	<ng-template #tipContent>
+																		<div class="d-flex">
+																			<ng-container *ngFor="let tag of suggestedTag.values[0].values.slice(3, suggestedTag.values[0].values.length)">
+																				<div class="view-pill-tag view-pill-tooltip">{{tag}}</div>
+																			</ng-container>
+																		</div>
+																	</ng-template>
+																	<button type="button" class="view-pill-tag view-pill-tooltip-control" triggers="hover" [autoClose]="'outside'"
+																	 [ngbTooltip]="tipContent" tooltipClass="view-tooltip">
+																		...
+																	</button>
+																</ng-container>
+															</div>
+												</ng-container>
+											</div>
+										</ng-container>
+									</div>
+								</div>
+							</ng-container>
+						</ng-container>
+						<ng-container *ngIf="getTagsByKeyCondition(i, 0); let disabledTags">
+							<ng-container *ngIf="disabledTags.length">
+								<div class="view-panel-content">
+									<div class="view-panel-header">
+										<label class="view-label">
+											<h5>Disallowed Tags</h5>
+										</label>
+									</div>
+									<div class="view-panel-content d-flex flex-column flex-wrap">
+										<ng-container *ngFor="let disabledTag of disabledTags">
+											<div class="view-panel-pill-group d-inline-flex">
+												<div class="view-panel-pill">
+													<span class="badge badge-pill badge-condition badge-must-not">
+														{{disabledTag.key}}
+													</span>
+												</div>
+											</div>
+										</ng-container>
+									</div>
+								</div>
+							</ng-container>
+						</ng-container>
 					</div>
 				</div>
 			</ng-container>
