@@ -54,6 +54,27 @@ UI for Creating Custom Mapping Presets and Validation rules
 | Name     | Type       | Description                           |
 |:---------|:-----------|:--------------------------------------|
 |  name | String | <p>MapRules name initializes to this value</p>|
+### Examples
+
+iFrame integration:
+
+```
+var win = document.getElementById('editMapRulesFrame').contentWindow;
+win.postMessage("save:" + $("#configId").val(), '*');
+window.addEventListener('message', function(event) {
+  if(event.data && event.data.indexOf("Error") != -1){
+    alert(event.data);
+  }else{
+    if(!$("#configId").val() || $("#configId").val() == ""){
+      $("#configId").val(event.data);
+      var configUrl = map_rules_url + "/" + $('#configId').val() + "/instructions";
+      $("#viewMapRulesFrame").attr("src", configUrl);
+    }
+    $("#editMapRulesModal").modal('hide');
+    $("#viewMapRulesFrame")[0].src =  $("#viewMapRulesFrame")[0].src;
+  }
+});
+```
 
 
 
