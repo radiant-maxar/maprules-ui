@@ -1,6 +1,5 @@
 import { Component, ViewChild, AfterViewInit } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -8,5 +7,5 @@ import { RouterModule, Routes } from '@angular/router';
 })
 
 export class AppComponent {
-
+	
 }
