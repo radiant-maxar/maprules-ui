@@ -5,6 +5,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { AttributionModule } from './modules/attribution/attribution.module';
+import { NavigationBarComponent } from './shared/components/navigation-bar.component';
 import { EditMapRuleComponent } from './modules/attribution/edit-maprule.component';
 import { ViewMapRuleComponent } from './modules/attribution/view-maprule.component';
 import { StartMapRuleComponent } from './modules/attribution/start-maprule.component';
@@ -19,7 +20,7 @@ const appRoutes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: 'home', component: MainComponent },
   { path: 'new', component: EditMapRuleComponent },
-  { path: ':id', component: EditMapRuleComponent },
+  { path: ':id/instructions', component: ViewMapRuleComponent },
   { path: ':id/start', component: StartMapRuleComponent },
   { path: ':id/edit', component: EditMapRuleComponent },
 ];
@@ -27,6 +28,7 @@ const appRoutes: Routes = [
 @NgModule({
   declarations: [
     AppComponent,
+    NavigationBarComponent,
     EditMapRuleComponent,
     ViewMapRuleComponent,
     StartMapRuleComponent,

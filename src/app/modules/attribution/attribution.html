@@ -23,7 +23,7 @@
       </div>
       <div class="col-md-12">
         <div class="content-group attribution-submit-button">
-          <ng-container *ngIf="!name">
+          <ng-container *ngIf="nav.visible">
             <button type="submit" class="btn btn-success attribution-submit" (click)="saveForm()">Submit</button>
           </ng-container>
         </div>

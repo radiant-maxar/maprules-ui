@@ -2,6 +2,8 @@
 
 NOTE, THIS PROJECT IS CURRENTLY UNDER DEVELOPMENT
 
+[MapRules UI API](https://github.com/radiant-maxar/maprules-ui/blob/develop/maprules-ui.apidocs.md)
+
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.1.2.
 
 ## Development server
