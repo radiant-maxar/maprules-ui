@@ -15,7 +15,8 @@
  * 
  * @apiParam (Path) {String} id MapRules configuration id
  * @apiParam (Query) {String} name MapRules name initializes to this value 
- * 
+ * @apiParam (Query) {String=[hide,show]} nav=show show/hide navigation bar and submit button
+ *
  * @apiVersion 0.0.1
  * @apiExample {js} iFrame integration:
  * var win = document.getElementById('editMapRulesFrame').contentWindow;
@@ -41,7 +42,8 @@
  * @apiName View MapRule
  * @apiGroup ViewMapRule
  * 
- * @apiParam {String} id MapRules configuration id
+ * @apiParam (Path) {String} id MapRules configuration id
+ * @apiParam (Query) {String=[hide,show]} nav=show nav show/hide navigation bar
  * 
  * @apiVersion 0.0.1
  */

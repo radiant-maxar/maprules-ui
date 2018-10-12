@@ -54,6 +54,7 @@ UI for Creating Custom Mapping Presets and Validation rules
 | Name     | Type       | Description                           |
 |:---------|:-----------|:--------------------------------------|
 |  name | String | <p>MapRules name initializes to this value</p>|
+|  nav | String | <p>show/hide navigation bar and submit button</p>_Default value: show_<br>_Allowed values: [hide,show]_|
 ### Examples
 
 iFrame integration:
@@ -112,11 +113,17 @@ window.addEventListener('message', function(event) {
 
 
 
-### Parameter Parameters
+### Path Parameters
 
 | Name     | Type       | Description                           |
 |:---------|:-----------|:--------------------------------------|
 |  id | String | <p>MapRules configuration id</p>|
+
+### Query Parameters
+
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+|  nav | String | <p>nav show/hide navigation bar</p>_Default value: show_<br>_Allowed values: [hide,show]_|
 
 
 

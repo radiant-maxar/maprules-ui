@@ -7,6 +7,8 @@ import { FieldConfig } from '../../shared/interfaces/field-config.interface';
 import { AttributionComponent } from '../../modules/attribution/attribution.component';
 import { FieldConfigService } from '../../core/services/field-config.service';
 import { MapRulesService } from '../../core/services/maprules.service';
+import { NavigationService } from '../../core/services/navigation.service';
+
 declare var $: any;
 
 @Component({
@@ -23,7 +25,7 @@ export class EditMapRuleComponent implements AfterViewInit {
 	
 	@ViewChild(AttributionComponent) form: AttributionComponent;
 
- 	constructor(private route: ActivatedRoute, private router: Router, private fieldConfig: FieldConfigService, private maprules: MapRulesService){}
+ 	constructor(private route: ActivatedRoute, private router: Router, private fieldConfig: FieldConfigService, private maprules: MapRulesService, private nav: NavigationService){}
 
 	ngOnInit(){
   	combineLatest(this.route.queryParams, this.route.params).subscribe(([queryParam, params]) => {
@@ -34,6 +36,14 @@ export class EditMapRuleComponent implements AfterViewInit {
       const name = queryParam['name'];
       if(name){
         this.name = name;
+      }
+      const nav = queryParam['nav'];
+      if(nav){
+        if(nav == "hide"){
+          this.nav.hide();
+        } else {
+          this.nav.show();
+        }
       }
    	});
   }
