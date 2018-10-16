@@ -1,18 +1,12 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnInit,
-  Output,
-  ViewEncapsulation
-} from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { Validators, FormGroup } from '@angular/forms';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { FieldConfig } from '../../shared/interfaces/field-config.interface';
 import { AttributionComponent } from '../../modules/attribution/attribution.component';
 import { FieldConfigService } from '../../core/services/field-config.service';
 import { MapRulesService } from '../../core/services/maprules.service';
+import { NavigationService } from '../../core/services/navigation.service';
+import { combineLatest } from 'rxjs';
 
 declare var $: any;
 
@@ -38,18 +32,27 @@ export class ViewMapRuleComponent {
      private route: ActivatedRoute,
      private router: Router,
      private fieldConfig: FieldConfigService,
-     private maprules: MapRulesService) {
+     private maprules: MapRulesService,
+     private nav: NavigationService) {
   }
 
   ngOnInit() {
     setTimeout(() => {
-      this.route.params.forEach(params => {
+      combineLatest(this.route.queryParams, this.route.params).subscribe(([queryParam, params]) => {
         const id: string = params['id'];
         if (id) {
           this.configId = id;
           this.maprules.getMapRule(this.configId).subscribe(data => {
             this.maprule = data;
           });
+        }
+        const nav = queryParam['nav'];
+        if(nav){
+          if(nav == "hide"){
+            this.nav.hide();
+          } else {
+            this.nav.show();
+          }
         }
       });
     });
@@ -59,11 +62,6 @@ export class ViewMapRuleComponent {
     return this.maprule.presets[i].fields.filter(guideline => {
         return guideline.keyCondition === keyCondition;
     });
-  }
-
-  notDesktop(mediaQuery: string): boolean {
-    const isMatch: boolean = window.matchMedia(mediaQuery).matches;
-    return window.matchMedia(mediaQuery).matches;
   }
 
 }

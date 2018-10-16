@@ -1,6 +1,6 @@
 .maprules-nav {
-    color: black;
     font-weight: bold;
+    color:rgba(31, 73, 98, 0.746);
 }
 .maprules-nav:hover {
     color: rgb(57,57,57)

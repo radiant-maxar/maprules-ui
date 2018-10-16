@@ -6,6 +6,7 @@ import { Feature } from '../../shared/models/feature';
 import { FeaturesComponent } from './features/features.component';
 import { DiscouragedFeaturesComponent } from './discouraged-features/discouraged-features.component';
 import { MapRulesService } from '../../core/services/maprules.service';
+import { NavigationService } from '../../core/services/navigation.service'; 
 import { Router } from '@angular/router';
 
 @Component({
@@ -48,6 +49,7 @@ export class AttributionComponent implements OnChanges, OnInit {
   constructor(
     private fb: FormBuilder,
     private maprules: MapRulesService,
+    private nav: NavigationService,
     private router: Router
   ) {}
 
