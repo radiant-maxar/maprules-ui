@@ -13,6 +13,7 @@ import { FieldConfig } from '../../shared/interfaces/field-config.interface';
 import { AttributionComponent } from '../../modules/attribution/attribution.component';
 import { FieldConfigService } from '../../core/services/field-config.service';
 import { MapRulesService } from '../../core/services/maprules.service';
+
 declare var $: any;
 
 @Component({
@@ -20,7 +21,9 @@ declare var $: any;
   selector: 'view-maprule',
   styleUrls: [
     '../../shared/components/content.group.css',
-    './view-maprule.css'
+    './view-maprule.css',
+    '../../icons/icon.component.css'
+    
   ],
   templateUrl: './view-maprule.html',
   encapsulation: ViewEncapsulation.None
@@ -56,6 +59,11 @@ export class ViewMapRuleComponent {
     return this.maprule.presets[i].fields.filter(guideline => {
         return guideline.keyCondition === keyCondition;
     });
+  }
+
+  notDesktop(mediaQuery: string): boolean {
+    const isMatch: boolean = window.matchMedia(mediaQuery).matches;
+    return window.matchMedia(mediaQuery).matches;
   }
 
 }

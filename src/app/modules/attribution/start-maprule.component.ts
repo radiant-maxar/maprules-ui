@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { Validators, FormGroup } from '@angular/forms';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { FieldConfig } from '../../shared/interfaces/field-config.interface';
@@ -12,9 +12,12 @@ declare var $: any;
 @Component({
   exportAs: 'start-maprule',
   selector: 'start-maprule',
-  styleUrls: ['../../shared/components/content.group.css', './start-maprule.component.css'],
-  templateUrl: './start-maprule.html'
-
+  styleUrls: [
+    '../../shared/components/content.group.css',
+    './start-maprule.component.css'
+  ],
+  templateUrl: './start-maprule.html',
+  encapsulation: ViewEncapsulation.None
 })
 export class StartMapRuleComponent {
   configId: string;

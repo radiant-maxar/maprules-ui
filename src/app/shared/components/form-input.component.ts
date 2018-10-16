@@ -12,7 +12,7 @@ import { FieldConfig } from '../interfaces/field-config.interface';
     './entity-input.component.css'
   ],
   template: `
-      <div class="content-group" [formGroup]="group">
+      <div class="content-group-container" [formGroup]="group">
         <div class='content-header'>
           <label class="content-label">
             <h5>{{ config.label }}</h5>

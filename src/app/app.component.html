@@ -7,9 +7,29 @@
         class="d-inline block align-top"
         alt="" />
     </a>
-    <app-link navLocation="home"></app-link>
-    <app-link navLocation="new" ></app-link>
-    <app-link navLocation="explore" ></app-link>
+    <button 
+      class="navbar-toggler" 
+      type="button" 
+      data-toggle="collapse"
+      data-target="#nav-bar-links"
+      aria-controls="#nav-bar-links"
+      aria-expanded="false"
+      aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="nav-bar-links">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <app-link navLocation="home"></app-link>
+        </li>
+        <li class="nav-item">
+          <app-link navLocation="new" ></app-link>
+        </li>
+        <li class="nav-item">
+          <app-link navLocation="explore" ></app-link>
+        </li>
+      </ul>
+    </div>
   </nav>
   <router-outlet></router-outlet>
 </div>

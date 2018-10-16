@@ -15,6 +15,11 @@ import { NodeComponent } from './icons/node/node.component';
 import { WayComponent } from './icons/way/way.component';
 import { AreaComponent } from './icons/area/area.component';
 import { LinkComponent } from './shared/components/link/link.component';
+import { TagsComponent } from './tags/tags.component';
+import { ValTooltipComponent } from './val-tooltip/val-tooltip.component';
+import { DecodeConditionPipe } from './decode-condition.pipe';
+import { EncodeClassPipe } from './encode-class.pipe';
+
 const appRoutes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: 'home', component: MainComponent },
@@ -34,7 +39,11 @@ const appRoutes: Routes = [
     NodeComponent,
     WayComponent,
     AreaComponent,
-    LinkComponent
+    LinkComponent,
+    TagsComponent,
+    ValTooltipComponent,
+    DecodeConditionPipe,
+    EncodeClassPipe
   ],
   imports: [
     BrowserModule,

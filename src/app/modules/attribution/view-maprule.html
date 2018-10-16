@@ -19,12 +19,32 @@
 						<div class="view-panel-content">
 							<div class="view-panel-header">
 								<label class="view-label">
+									<h5>Geometry</h5>
+								</label>
+							</div>
+							<div class="view-panel-content">
+								<ng-container *ngFor="let geometry of preset.geometry">
+									<div class="view-panel-content view-panel-pill-group d-inline-flex">
+										<div [ngSwitch]="geometry" class="view-panel-pill-geometry">
+											<app-area *ngSwitchCase="'area'"></app-area>
+											<app-node *ngSwitchCase="'node'"></app-node>
+											<app-way *ngSwitchCase="'way'"></app-way>
+											<app-area *ngSwitchCase="'closedway'"></app-area>
+										</div>
+										<div class="view-panel-pill">{{ geometry }}</div>
+									</div>
+								</ng-container>
+							</div>
+						</div>
+						<div class="view-panel-content">
+							<div class="view-panel-header">
+								<label class="view-label">
 									<h5>Identifying Tags</h5>
 								</label>
 							</div>
-							<div class="d-flex flex-column">
+							<div class="view-panel-content d-flex align-items-start flex-column bd-highlight mb-3">
 								<ng-container *ngFor="let primary of preset.primary">
-									<div class="view-panel-content view-panel-pill-group d-inline-flex">
+									<div class="view-panel-content view-panel-pill-group identifying-tags-group">
 										<div class="view-panel-pill">{{primary.key}}</div>
 										<div class="view-panel-pill view-panel-pill-separator">=</div>
 										<div class="view-panel-pill identifying-val">{{primary.val}}</div>
@@ -40,50 +60,9 @@
 											<h5>Required Tags</h5>
 										</label>
 									</div>
-									<div class="view-panel-content d-flex flex-column flex-wrap">
+									<div class="view-panel-content  d-flex align-items-start flex-column bd-highlight mb-3">
 										<ng-container *ngFor="let requiredTag of requiredTags">
-											<div class="view-panel-pill-group d-inline-flex">
-												<div class="view-panel-pill">
-													<span class="badge badge-pill badge-condition badge-must">must be</span>
-												</div>
-												<div class="view-panel-pill">
-													{{requiredTag.key}}
-												</div>
-												<ng-container *ngIf="requiredTag.values.length">
-													<div class="view-panel-pill" [ngSwitch]="requiredTag.values[0].valCondition">
-														<span class="badge badge-pill badge-condition badge-must-not" *ngSwitchCase="0">must not have</span>
-														<span class="badge badge-pill badge-condition badge-must" *ngSwitchCase="1">must have</span>
-														<span class="badge badge-pill badge-condition badge-may" *ngSwitchCase="2">may have</span>
-														<span class="badge badge-pill badge-condition" *ngSwitchCase="3"><</span>
-														<span class="badge badge-pill badge-condition" *ngSwitchCase="4"><=</span>
-														<span class="badge badge-pill badge-condition" *ngSwitchCase="5">></span>
-														<span class="badge badge-pill badge-condition" *ngSwitchCase="6">>=</span>
-													</div>
-													<div class="view-pill-panel d-inline-flex">
-														<ng-container *ngIf="requiredTag.values[0].values.length <= 3">
-															<ng-container *ngFor="let val of requiredTag.values[0].values">
-																<div class="view-pill-tag">{{val}}</div>
-															</ng-container>
-														</ng-container>
-														<ng-container *ngIf="requiredTag.values[0].values.length > 3">
-															<ng-container *ngFor="let val of requiredTag.values[0].values.slice(0,3)">
-																<div class="view-pill-tag">{{val}}</div>
-															</ng-container>
-															<ng-template #tipContent>
-																<div class="d-flex">
-																	<ng-container *ngFor="let tag of requiredTag.values[0].values.slice(3, requiredTag.values[0].values.length)">
-																		<div class="view-pill-tag view-pill-tooltip">{{tag}}</div>
-																	</ng-container>
-																</div>
-															</ng-template>
-															<button type="button" class="view-pill-tag view-pill-tooltip-control" triggers="hover" [autoClose]="'outside'"
-															 [ngbTooltip]="tipContent" tooltipClass="view-tooltip">
-																...
-															</button>
-														</ng-container>
-													</div>
-												</ng-container>
-											</div>
+											<app-tags [config]="requiredTag"></app-tags>
 										</ng-container>
 									</div>
 								</div>
@@ -97,50 +76,9 @@
 											<h5>Suggested Tags</h5>
 										</label>
 									</div>
-									<div class="view-panel-content d-flex flex-column">
+									<div class="view-panel-content  d-flex align-items-start flex-column bd-highlight mb-3">
 										<ng-container *ngFor="let suggestedTag of suggestedTags">
-											<div class="view-panel-pill-group d-inline-flex">
-												<div class="view-panel-pill">
-													<span class="badge badge-pill badge-condition badge-may">may be</span>
-												</div>
-												<div class="view-panel-pill">
-													{{suggestedTag.key}}
-												</div>
-												<ng-container *ngIf="suggestedTag.values.length">
-														<div class="view-panel-pill" [ngSwitch]="suggestedTag.values[0].valCondition">
-																<span class="badge badge-pill badge-condition badge-must-not" *ngSwitchCase="0">must not have</span>
-																<span class="badge badge-pill badge-condition badge-must" *ngSwitchCase="1">must have</span>
-																<span class="badge badge-pill badge-condition badge-may" *ngSwitchCase="2">may have</span>
-																<span class="badge badge-pill badge-condition" *ngSwitchCase="3"><</span>
-																<span class="badge badge-pill badge-condition" *ngSwitchCase="4"><=</span>
-																<span class="badge badge-pill badge-condition" *ngSwitchCase="5">></span>
-																<span class="badge badge-pill badge-condition" *ngSwitchCase="6">>=</span>
-															</div>
-															<div class="view-pill-panel d-inline-flex">
-																<ng-container *ngIf="suggestedTag.values[0].values.length <= 3">
-																	<ng-container *ngFor="let val of suggestedTag.values[0].values">
-																		<div class="view-pill-tag">{{val}}</div>
-																	</ng-container>
-																</ng-container>
-																<ng-container *ngIf="suggestedTag.values[0].values.length > 3">
-																	<ng-container *ngFor="let val of suggestedTag.values[0].values.slice(0,3)">
-																		<div class="view-pill-tag">{{val}}</div>
-																	</ng-container>
-																	<ng-template #tipContent>
-																		<div class="d-flex">
-																			<ng-container *ngFor="let tag of suggestedTag.values[0].values.slice(3, suggestedTag.values[0].values.length)">
-																				<div class="view-pill-tag view-pill-tooltip">{{tag}}</div>
-																			</ng-container>
-																		</div>
-																	</ng-template>
-																	<button type="button" class="view-pill-tag view-pill-tooltip-control" triggers="hover" [autoClose]="'outside'"
-																	 [ngbTooltip]="tipContent" tooltipClass="view-tooltip">
-																		...
-																	</button>
-																</ng-container>
-															</div>
-												</ng-container>
-											</div>
+											<app-tags [config]="suggestedTag"></app-tags>
 										</ng-container>
 									</div>
 								</div>
@@ -154,13 +92,16 @@
 											<h5>Disallowed Tags</h5>
 										</label>
 									</div>
-									<div class="view-panel-content d-flex flex-column flex-wrap">
+									<div class="view-panel-content  d-flex align-items-start flex-column bd-highlight mb-3">
 										<ng-container *ngFor="let disabledTag of disabledTags">
-											<div class="view-panel-pill-group d-inline-flex">
+											<div class="view-panel-pill-group">
 												<div class="view-panel-pill">
 													<span class="badge badge-pill badge-condition badge-must-not">
-														{{disabledTag.key}}
+														must not have
 													</span>
+												</div>
+												<div class="view-panel-pill">
+													{{disabledTag.key}}
 												</div>
 											</div>
 										</ng-container>
@@ -174,270 +115,3 @@
 		</div>
 	</div>
 </ng-container>
-<!-- 
-													
-												<ng-container *ngIf="getTagsByKeyCondition(i, 1); let requiredTags">
-													<ng-container *ngIf="requiredTags.length > 0">
-														<div class="form-group col-md-12">
-															<div class="container">
-																<div>
-																	<label>Required Fields</label>
-																</div>
-																<div class="row">
-																	<div class="col-md-12">
-																		<div class="container view-required-fields">
-																			<ng-container *ngFor="let requiredTag of requiredTags">
-																				<div class="row required-field-container">
-																					<div class="col-sm-4 required-field-key required-field-cell">
-																						{{requiredTag.key}}
-																					</div>
-																					<ng-container *ngIf="requiredTag.values.length > 0">
-																						<ng-container *ngIf="requiredTag.values[0].valCondition === 0">
-																							<div class="col-sm-4 required-field-condition required-field-cell field-must-not-be">
-																								must not be
-																							</div>
-																						</ng-container>
-																						<ng-container *ngIf="requiredTag.values[0].valCondition === 1">
-																							<div class="col-sm-4 required-field-condition required-field-cell field-must-be">
-																								must be
-																							</div>
-																						</ng-container>
-																						<ng-container *ngIf="requiredTag.values[0].valCondition === 2">
-																							<div class="col-sm-4 required-field-condition required-field-cell field-may-be">
-																								may be
-																							</div>
-																						</ng-container>
-																						<ng-container *ngIf="requiredTag.values[0].valCondition === 3">
-																							<div class="col-sm-4 required-field-condition required-field-cell">
-																								less than</div>
-																						</ng-container>
-																						<ng-container *ngIf="requiredTag.values[0].valCondition === 4">
-																							<div class="col-sm-4 required-field-condition required-field-cell">
-																								less than or equal</div>
-																						</ng-container>
-																						<ng-container *ngIf="requiredTag.values[0].valCondition === 5">
-																							<div class="col-sm-4 required-field-condition required-field-cell">
-																								greater than</div>
-																						</ng-container>
-																						<ng-container *ngIf="requiredTag.values[0].valCondition === 6">
-																							<div class="col-sm-4 required-field-condition required-field-cell">
-																								greater than or equal
-																							</div>
-																						</ng-container>
-																						<div class="col-sm-4 required-field-values required-field-cell required-field-cell-last">
-																							<div class="container">
-																								<div class="row">
-																									<ng-container *ngFor="let val of requiredTag.values[0].values; let valIndex= index">
-																										<div class="field-value-pill">
-																											{{val}}
-																										</div>
-																									</ng-container>
-																								</div>
-																							</div>
-																						</div>
-																					</ng-container> -->
-<!-- <ng-container *ngIf="requiredTags.values.length === 0">
-																							<div class="col-sm-4 required-field-condition required-field-cell required-field-key">
-																								{{requiredTag.key}}
-																							</div>
-																							<div class="col-sm-4 required-field-condition required-field-cell">
-																								=
-																							</div>
-																							<div class="col-sm-4 required-field-condition required-field-cell">
-																								*
-																							</div>
-																					</ng-container> -->
-<!-- </div>
-																			</ng-container>
-																		</div>
-																	</div>
-																</div>
-															</div>
-														</div>
-													</ng-container>
-												</ng-container>
-												<ng-container *ngIf="getTagsByKeyCondition(i, 2); let suggestedTags">
-													<ng-container *ngIf="suggestedTags.length > 0">
-														<div class="form-group col-md-12">
-															<div class="container">
-																<div>
-																	<label>Suggested Fields</label>
-																</div>
-																<div class="row">
-																	<div class="col-md-12">
-																		<div class="container view-required-fields">
-																			<ng-container *ngFor="let suggestedTag of suggestedTags">
-																				<div class="row required-field-container">
-																					<div class="col-sm-4 required-field-key required-field-cell">
-																						{{suggestedTag.key}}
-																					</div>
-																					<ng-container *ngIf="suggestedTag.values.length > 0">
-																						<ng-container *ngIf="suggestedTag.values[0].valCondition === 0">
-																							<div class="col-sm-4 required-field-condition required-field-cell field-must-not-be">
-																								must not be
-																							</div>
-																						</ng-container>
-																						<ng-container *ngIf="suggestedTag.values[0].valCondition === 1">
-																							<div class="col-sm-4 required-field-condition required-field-cell field-must-be">
-																								must be
-																							</div>
-																						</ng-container>
-																						<ng-container *ngIf="suggestedTag.values[0].valCondition === 2">
-																							<div class="col-sm-4 required-field-condition required-field-cell field-may-be">
-																								may be
-																							</div>
-																						</ng-container>
-																						<ng-container *ngIf="suggestedTag.values[0].valCondition === 3">
-																							<div class="col-sm-4 required-field-condition required-field-cell">
-																								less than</div>
-																						</ng-container>
-																						<ng-container *ngIf="suggestedTag.values[0].valCondition === 4">
-																							<div class="col-sm-4 required-field-condition required-field-cell">
-																								less than or equal</div>
-																						</ng-container>
-																						<ng-container *ngIf="suggestedTag.values[0].valCondition === 5">
-																							<div class="col-sm-4 required-field-condition required-field-cell">
-																								greater than</div>
-																						</ng-container>
-																						<ng-container *ngIf="suggestedTag.values[0].valCondition === 6">
-																							<div class="col-sm-4 required-field-condition required-field-cell">
-																								greater than or equal
-																							</div>
-																						</ng-container>
-																						<div class="col-sm-4 required-field-values required-field-cell required-field-cell-last">
-																							<div class="container">
-																								<div class="row">
-																									<ng-container *ngFor="let val of suggestedTag.values[0].values; let valIndex= index">
-																										<div class="field-value-pill">
-																											{{val}}
-																										</div>
-																									</ng-container>
-																								</div>
-																							</div>
-																						</div>
-																					</ng-container>
-																				</div>
-																			</ng-container>
-																		</div>
-																	</div>
-																</div>
-															</div>
-														</div>
-													</ng-container>
-												</ng-container>
-												<ng-container *ngIf="getTagsByKeyCondition(i, 0); let doNotTags">
-													<ng-container *ngIf="doNotTags.length > 0">
-														<div class="form-group col-md-12">
-															<div class="container">
-																<div>
-																	<labeL>Disabled Featuers</labeL>
-																</div>
-																<div class="row">
-																	<div class="col-md-7">
-																		<div class="container view-required-fields">
-																			<ng-container *ngFor="let doNotTag of doNotTags">
-																				<div class="row required-field-container">
-																					<div class="col-sm-4 required-field-key required-field-cell">
-																						{{requiredTag.key}}
-																					</div>
-																				</div>
-																			</ng-container>
-																		</div>
-																	</div>
-																</div>
-															</div>
-														</div>
-													</ng-container>
-												</ng-container>
-											</div>
-										</div>
-									</div>
-									<div class="col-md-3">
-										<div class="container">
-											<div>
-												<div>
-													<label>Geometry</label>
-												</div>
-												<div class="row">
-													<div class="col-md-12">
-														<ng-container *ngFor="let geometry of preset.geometry">
-															<div class="row">
-																<div class="col-md-12">
-																	<ng-container [ngSwitch]="geometry" class="container">
-																		<div *ngSwitchCase="'node'" class="row">
-																			<div class="col-sm-6">
-																				<app-node></app-node>
-																			</div>
-																			<div class="col-sm-6">
-																				<label>node</label>
-																			</div>
-																		</div>
-																		<div *ngSwitchCase="'way'" class="row">
-																			<div class="col-sm-6">
-																				<app-way></app-way>
-																			</div>
-																			<div class="col-sm-6">
-																				<label>way</label>
-																			</div>
-																		</div>
-																		<div *ngSwitchCase="'area'" class="row">
-																			<div class="col-sm-6">
-																				<app-area></app-area>
-																			</div>
-																			<div class="col-sm-6">
-																				<label>area</label>
-																			</div>
-																		</div>
-																		<div *ngSwitchCase="'closedway'" class="row">
-																			<div class="col-sm-6">
-																				<app-area></app-area>
-																			</div>
-																			<div class="col-sm-6">
-																				<label>closedway</label>
-																			</div>
-																		</div>
-																	</ng-container>
-																</div>
-															</div>
-														</ng-container>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-
-							</div>
-						</div>
-					</ng-container>
-				</div>
-			</div>
-		</div> -->
-<!--
-							<ng-container *ngIf="getTagsByKeyCondition(i, 0); let doNotTags">
-								<label *ngIf="doNotTags.length > 0">Do Not Add Tags</label>
-								<ul>
-									<ng-container *ngFor="let doNotTag of doNotTags">
-										<li>
-											{{doNotTag.key}}
-											<span *ngIf="doNotTag.label">
-												({{doNotTag.label}})  
-											</span>
-										</li>
-									</ng-container>
-								</ul>
-							</ng-container>
-						</div>
-					</div>
-		</ng-container>
-		<div class="form-group">
-	  	  <label class="col-form-label" *ngIf="maprule.disabledFeatures.length > 0">Do Not Map the Following Entities</label>
-		  <ul>
-			<ng-container *ngFor="let discouragedEntity of maprule.disabledFeatures">
-			  <li> {{discouragedEntity.key}} {{discouragedEntity.val ?  "- " + discouragedEntity.val : "" }} </li>
-			</ng-container>
-		  </ul>
-		</div>
-	  </div> -->
-<!-- </div>
-</ng-container> -->
