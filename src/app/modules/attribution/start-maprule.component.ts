@@ -23,13 +23,15 @@ export class StartMapRuleComponent {
   configId: string;
   maprule: any;
   environment: any = environment;
+  idUrl: string;
+  josmUrl: string;
 
   constructor(
      private route: ActivatedRoute,
-     private router: Router, 
-     private fieldConfig: FieldConfigService, 
+     private router: Router,
+     private fieldConfig: FieldConfigService,
      private maprules: MapRulesService
-  ) { }
+  ) {}
 
   ngOnInit() {
     setTimeout(() => {
@@ -41,8 +43,8 @@ export class StartMapRuleComponent {
           const josmUrl = this.josmUrl;
           this.maprules.getMapRule(this.configId).subscribe(data => {
             this.maprule = data;
-            $('#iDlink').attr('href', this.idUrl);
-            $('#josmLink').attr('href', this.josmUrl);
+            this.idUrl = this.buildIdUrl();
+            this.josmUrl = this.buildJosmUrl();
           });
         }
       });
@@ -53,12 +55,12 @@ export class StartMapRuleComponent {
     this.router.navigateByUrl(`/${this.configId}/edit`);
   }
 
-  get idUrl(): string {
+  buildIdUrl(): string {
     const base = `${environment.maprules}/config/${this.configId}`;
     return decodeURIComponent(`${environment.osm}?presets?${base}/presets/iD&validations=${base}/rules/iD`);
   }
 
-  get josmUrl(): string {
+  buildJosmUrl(): string {
     return decodeURIComponent(`${environment.josm}/load_maprules?id=${this.configId}`);
   }
 

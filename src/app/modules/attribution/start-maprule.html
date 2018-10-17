@@ -6,11 +6,11 @@
 		<button class="btn btn-lg start-button" id="edit-button" (click)="toEdit()">Edit MapRule</button>
 		<ng-template #tipContent>
 			<div class="d-flex flex-column">
-				<a id="iDlink" class="dropdown-item edit-with-item" target="_blank">iD editor</a>
-				<a id="josmLink" class="dropdown-item edit-with-item" target="_blank">JOSM</a>
+				<a href="{{ idUrl }}" id="iDlink" class="dropdown-item edit-with-item" target="_blank">iD editor</a>
+				<a href="{{ josmUrl }}" id="josmLink" class="dropdown-item edit-with-item" target="_blank">JOSM</a>
 			</div>
 		</ng-template>
-		<button type="button" class="btn btn-lg start-button" triggers="click" [autoClose]="'outside'" [ngbTooltip]="tipContent" tooltipClass="edit-with-tooltip">
+		<button type="button" class="btn btn-lg start-button" triggers="click" [ngbTooltip]="tipContent" tooltipClass="edit-with-tooltip">
 			Map With
 		</button>
 	</div>
