@@ -77,6 +77,16 @@
     font-size: initial;
 }
 
+.disabled-features-pills-container {
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+
+.disabled-features-pills {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
 /* media queries */
 @media (max-width: 650px) {
     .view-panel-pill {

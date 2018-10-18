@@ -16,7 +16,8 @@ declare var $: any;
   styleUrls: [
     '../../shared/components/content.group.css',
     './view-maprule.css',
-    '../../icons/icon.component.css'
+    '../../icons/icon.component.css',
+    '../../shared/components/tags/tags.component.css'
     
   ],
   templateUrl: './view-maprule.html',

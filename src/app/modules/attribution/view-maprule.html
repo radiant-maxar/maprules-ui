@@ -112,6 +112,30 @@
 					</div>
 				</div>
 			</ng-container>
+			<ng-container *ngIf="maprule.disabledFeatures.length">
+				<div class="view-card">
+					<div class="content-header view-header">
+						<label class="view-label">
+							<h5>Discouraged Features</h5>
+						</label>
+					</div>
+					<div class="view-panel-content disabled-features-pills-container d-flex align-items-start flex-column bd-highlight mb-3">
+						<ng-container *ngFor="let disabled of maprule.disabledFeatures">
+							<div class="view-panel-content view-panel-pill-group d-flex disabled-features-pills">
+								<div class="view-panel-pill">{{ disabled.key }}</div>
+								<div class="view-panel-pill">=</div>
+								<ng-container *ngIf="disabled.val">
+									<div class="view-panel-pill d-inline-flex">
+										<ng-container *ngFor="let v of disabled.val">
+											<div class="val-pill">{{ v }}</div>	
+										</ng-container>
+									</div>
+								</ng-container>
+							</div>
+						</ng-container>
+					</div>
+				</div>
+			</ng-container>
 		</div>
 	</div>
 </ng-container>
