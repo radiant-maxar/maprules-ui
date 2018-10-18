@@ -24,7 +24,8 @@
                         (click)="animateAccordion($event, i)" type="button">
                         <i   
                           id="preset-accordion-toggler-{{i}}"
-                          class="fa fa-plus-square-o"></i>
+                          class="fa fa-plus-square-o">
+                        </i>
                       </button>
                     </div>
                     <div class="preset-accordion-button-container">
@@ -44,7 +45,10 @@
       </div>
       <div class='col-md-12 feature-content'>
         <div class="d-flex flex-row-reverse">
-          <button class="btn btn-light feature-button feature-button-round features-button" type="button" (click)="addFeatureCard()"
+          <button 
+            type="button" 
+            class="btn btn-light feature-button feature-button-round features-button" 
+            (click)="addFeatureCard();"
             data-toggle="tooltip" data-placement="bottom" title="{{config.hint}}">
             <i class="fa fa-plus"> </i> Add Preset
           </button>

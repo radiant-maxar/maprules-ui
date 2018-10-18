@@ -86,6 +86,10 @@ export class FieldConfigService {
     return this.guidelineConfig.get(i).get(guidelineIndex).filter(fieldConfig => fieldConfig.name === field)[0];
   }
 
+  haveFeatureGuidelineField(i: number, guidelineIndex: number, field: string) {
+    return this.guidelineConfig.get(i).get(guidelineIndex).findIndex(fieldConfig => fieldConfig.name === field) >= 0;
+  }
+
   getDisabledFeatureConfigMap(i: number) {
     return this.disabledFeatureConfig.get(i);
   }

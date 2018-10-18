@@ -29,12 +29,20 @@ export class FeatureComponent {
 
   ngOnInit(){
     setTimeout(() => {
+      if (
+        !this.attribution.loadedForm ||
+        !this.attribution.loadedForm['presets'][this.i]) {
+        $(`#preset-card-panel-${this.i}`).css('max-height', 'initial');
+        const toggler: any = $(`#preset-accordion-toggler-${this.i}`);
+        toggler.addClass(`fa-minus-square-o`);
+        toggler.removeClass(`fa-plus-square-o`);
+      }
       this.tagInfo.popularTagsRequest.add(() => {
         var $scope = this;
         var presetControls = (<FormArray>$scope.attribution.form.get('presets')).at(this.i);
         var primaryGroupIndex = 0;
         if(this.attribution.loadedForm && this.primaryFormArray.length == 0){
-          var preset = this.attribution.loadedForm['presets'][this.i];
+          const preset = this.attribution.loadedForm['presets'][this.i];
           if(preset && preset.primary){
             preset.primary.forEach(function(loadedGroup){
               $scope.addPrimaryGroup($scope.i, loadedGroup);
@@ -49,7 +57,7 @@ export class FeatureComponent {
   }
 
   get featureFormGroup(){
-    return <FormGroup> this.attribution.presets.at(this.i);    
+    return <FormGroup> this.attribution.presets.at(this.i); 
   }
   
   get primaryFormArray(){
@@ -60,7 +68,13 @@ export class FeatureComponent {
     return <FormArray> this.featureFormGroup.get('fields');
   }
 
-  constructor(private fb: FormBuilder, private attribution: AttributionComponent, private fieldConfig: FieldConfigService, private tagInfo: TagInfoService) {}
+  constructor(
+    private fb: FormBuilder,
+    private attribution: AttributionComponent,
+    private fieldConfig: FieldConfigService,
+    private tagInfo: TagInfoService
+  ) {}
+
   addPrimaryGroup(i: number, loadedGroup: FormGroup){
     var keyOptions = this.tagInfo.popularKeys;
     if(loadedGroup){

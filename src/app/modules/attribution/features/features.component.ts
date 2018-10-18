@@ -52,7 +52,7 @@ export class FeaturesComponent {
   private addFeatureCard(): void {
     const control = this.attribution.presets;
     control.push(this.getFeature());
-    var featureConfig = [
+    const featureConfig = [
                           {
                             type: 'input',
                             name: 'name',
@@ -68,17 +68,16 @@ export class FeaturesComponent {
                               plugins: ['dropdown_direction', 'remove_button'],
                               dropdownDirection: 'down',
                               options: [
-                                <SelectizeOption>{text:'node', value:'node'},
-                                <SelectizeOption>{text:'way', value:'way'},
-                                <SelectizeOption>{text:'closedway', value:'closedway'},
-                                <SelectizeOption>{text:'area', value:'area'}
+                                <SelectizeOption>{text: 'node', value: 'node'},
+                                <SelectizeOption>{text: 'way', value: 'way'},
+                                <SelectizeOption>{text: 'closedway', value: 'closedway'},
+                                <SelectizeOption>{text: 'area', value: 'area'}
                               ]
                             }
                           }
                         ];
-    var featureIndex = control.value.length - 1;
+    const featureIndex = control.value.length - 1;
     this.fieldConfig.featureConfig.set(featureIndex, featureConfig);
-    // this.panelIds.push("ngb-panel-" + featureIndex);
   }
 
   private clearFeatureCards(): void {
@@ -104,7 +103,7 @@ export class FeaturesComponent {
   private animateAccordion(e: any, index: number) {
     e.preventDefault();
     const presetCard: any = $(`#preset-card-panel-${index}`);
-    if (presetCard) {
+    if (presetCard.length) {
       const height: number = Number($(presetCard).css('height').replace('px', ''));
 
       let newClass = '';
@@ -123,7 +122,7 @@ export class FeaturesComponent {
       toggler.removeClass(`fa-${oldClass}-square-o`);
 
       $(presetCard).css('max-height', height > 1 ? 0 : 'initial');
-    
+
     }
   }
 }
