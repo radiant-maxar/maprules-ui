@@ -6,6 +6,8 @@ import { AttributionComponent } from '../../modules/attribution/attribution.comp
 import { FieldConfigService } from '../../core/services/field-config.service';
 import { MapRulesService } from '../../core/services/maprules.service';
 import { environment } from '../../../environments/environment';
+import { fromEvent, timer } from 'rxjs';
+import { debounce } from 'rxjs/operators';
 
 declare var $: any;
 
@@ -25,26 +27,30 @@ export class StartMapRuleComponent {
   environment: any = environment;
   idUrl: string;
   josmUrl: string;
+  closed: boolean;
 
   constructor(
      private route: ActivatedRoute,
      private router: Router,
      private fieldConfig: FieldConfigService,
      private maprules: MapRulesService
-  ) {}
+  ) {
+    fromEvent(window, 'click')
+      .pipe(debounce(() => timer(10)))
+      .subscribe((e) => this.toggleCaret());
+  }
 
   ngOnInit() {
     setTimeout(() => {
+      this.closed = true;
       this.route.params.forEach(params => {
         const id = params['id'];
         if (id) {
           this.configId = id;
-          const idUrl = this.idUrl;
-          const josmUrl = this.josmUrl;
+          this.idUrl = this.buildIdUrl();
+          this.josmUrl = this.buildJosmUrl();
           this.maprules.getMapRule(this.configId).subscribe(data => {
             this.maprule = data;
-            this.idUrl = this.buildIdUrl();
-            this.josmUrl = this.buildJosmUrl();
           });
         }
       });
@@ -68,6 +74,10 @@ export class StartMapRuleComponent {
     return this.maprule.presets[i].fields.filter(guideline => {
         return guideline.keyCondition === keyCondition;
     });
+  }
+
+  toggleCaret(): void {
+    this.closed = !$('.edit-with-tooltip').length;
   }
 
 }

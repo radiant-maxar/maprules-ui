@@ -1,4 +1,6 @@
 import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
+import { fromEvent, timer } from 'rxjs';
+import { debounce } from 'rxjs/operators';
 
 @Component({
   selector: 'app-val-tooltip',
@@ -8,13 +10,13 @@ import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
 })
 export class ValTooltipComponent implements OnInit {
   _vals: Array<string>;
+  _id: string;
+  closed: boolean;
 
   @Input()
   set vals(newVals: Array<string>) {
     this._vals = newVals;
   }
-
-  constructor() { }
 
   ngOnInit() {}
 

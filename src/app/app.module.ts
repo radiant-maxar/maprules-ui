@@ -16,8 +16,8 @@ import { NodeComponent } from './icons/node/node.component';
 import { WayComponent } from './icons/way/way.component';
 import { AreaComponent } from './icons/area/area.component';
 import { LinkComponent } from './shared/components/link/link.component';
-import { TagsComponent } from './tags/tags.component';
-import { ValTooltipComponent } from './val-tooltip/val-tooltip.component';
+import { TagsComponent } from './shared/components/tags/tags.component';
+import { ValTooltipComponent } from './shared/components/val-tooltip/val-tooltip.component';
 import { DecodeConditionPipe } from './decode-condition.pipe';
 import { EncodeClassPipe } from './encode-class.pipe';
 
@@ -45,7 +45,7 @@ const appRoutes: Routes = [
     TagsComponent,
     ValTooltipComponent,
     DecodeConditionPipe,
-    EncodeClassPipe
+    EncodeClassPipe,
   ],
   imports: [
     BrowserModule,

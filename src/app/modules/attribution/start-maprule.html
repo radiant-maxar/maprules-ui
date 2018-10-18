@@ -10,8 +10,13 @@
 				<a href="{{ josmUrl }}" id="josmLink" class="dropdown-item edit-with-item" target="_blank">JOSM</a>
 			</div>
 		</ng-template>
-		<button type="button" class="btn btn-lg start-button" triggers="click" [ngbTooltip]="tipContent" tooltipClass="edit-with-tooltip">
-			Map With
+		<button type="button" 
+			class="btn btn-lg start-button" 
+			(click)="toggleCaret()"
+			triggers="click" 
+			[ngbTooltip]="tipContent" 
+			tooltipClass="edit-with-tooltip">
+			Map With <i class="fa" [ngClass]="closed ? 'fa-caret-up' : 'fa-caret-down'"  aria-hidden="true"></i>
 		</button>
 	</div>
 </div>
