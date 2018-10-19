@@ -124,13 +124,16 @@
 							<div class="view-panel-content view-panel-pill-group d-flex disabled-features-pills">
 								<div class="view-panel-pill">{{ disabled.key }}</div>
 								<div class="view-panel-pill">=</div>
-								<ng-container *ngIf="disabled.val">
-									<div class="view-panel-pill d-inline-flex">
+								<div class="view-panel-pill d-inline-flex">
+									<ng-template #star>
+										<div class="val-pill star-pill">*</div>
+									</ng-template>
+									<ng-container *ngIf="disabled.val.length else star">
 										<ng-container *ngFor="let v of disabled.val">
-											<div class="val-pill">{{ v }}</div>	
+											<div class="val-pill">{{ v }}</div>
 										</ng-container>
-									</div>
-								</ng-container>
+									</ng-container>
+								</div>
 							</div>
 						</ng-container>
 					</div>
