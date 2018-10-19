@@ -1,0 +1,17 @@
+  <ng-template #tipContent>
+    <div class="d-flex flex-column">
+      <ng-container *ngFor="let val of _vals">
+        <div class="val-pill val-tooltip">{{ val }}</div>
+      </ng-container>
+    </div>
+  </ng-template>
+<div id="{{ _id }}">
+  <button type="button" 
+    class="val-pill val-pill-tooltip-control" 
+    triggers="hover" 
+    [autoClose]="'outside'"
+    [ngbTooltip]="tipContent"
+    tooltipClass="val-tooltip">
+    ... <i class="fa fa-caret-up"  aria-hidden="true"></i>
+  </button>
+</div>

@@ -1,0 +1,41 @@
+<div class="view-panel-pill-group">
+  <div class="view-panel-pill">
+    <span class="badge badge-pill badge-condition badge-{{ _config.tags.keyCondition | decodeCondition | encodeClass }}">
+      {{ _config.tags.keyCondition | decodeCondition }} have
+    </span>
+  </div>
+  <div class="view-panel-pill">
+    {{ _config.tags.key }}
+  </div>
+  <ng-container *ngIf="_config.hasValues">
+    <div class="view-panel-pill" [ngSwitch]="_config.tags.values[0].valCondition < 3">
+      <span *ngSwitchCase="true" class="badge badge-pill badge-condition badge-{{ _config.tags.values[0].valCondition | decodeCondition | encodeClass }}">
+        {{ _config.tags.values[0].valCondition | decodeCondition }} be
+      </span>
+      <span *ngSwitchCase="false">
+        {{ _config.tags.values[0].valCondition | decodeCondition }}
+      </span>
+    </div>
+    <ng-container [ngSwitch]="_config.screen">
+      <div *ngSwitchCase="'desktop'" class="view-pill-panel d-inline-flex">
+        <ng-container *ngIf="_config.tags.values[0].values.length <= 3; then fullVals else shorthandVals"></ng-container>
+      </div>
+      <div *ngSwitchCase="'mobile'" class="view-pill-panel d-inline-flex">
+        <ng-container *ngIf="_config.tags.values[0].values.length > 1; else fullVals">
+          <app-val-tooltip [vals]="_config.tags.values[0].values"></app-val-tooltip>
+        </ng-container>
+      </div>
+    </ng-container>
+    <ng-template #fullVals>
+      <ng-container *ngFor="let val of _config.tags.values[0].values">
+        <div class="val-pill">{{val}}</div>
+      </ng-container>
+    </ng-template>
+    <ng-template #shorthandVals>
+      <ng-container *ngFor="let val of _config.tags.values[0].values.slice(0,3)">
+        <div class="val-pill">{{val}}</div>
+      </ng-container>
+      <app-val-tooltip [vals]="_config.tags.values[0].values.slice(3, _config.tags.values[0].values.length)"></app-val-tooltip>
+    </ng-template>
+  </ng-container>
+</div>

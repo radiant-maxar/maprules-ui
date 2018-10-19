@@ -15,7 +15,9 @@ declare var $: any;
   selector: 'discouraged-features',
   styleUrls: [
     '../features/feature/feature.component.css',
-    '../../../shared/components/content.group.css'
+    '../features/features.component.css',
+    '../../../shared/components/content.group.css',
+    './discouraged-features.component.css'
   ],
   templateUrl: './discouraged-features.html'
 })
@@ -23,7 +25,12 @@ export class DiscouragedFeaturesComponent {
   @Input()
   config: FieldConfig[] = [];
 
-  constructor(private fb: FormBuilder, private attribution: AttributionComponent, private fieldConfig: FieldConfigService, private tagInfo: TagInfoService) {}
+  constructor(
+    private fb: FormBuilder,
+    private attribution: AttributionComponent,
+    private fieldConfig: FieldConfigService,
+    private tagInfo: TagInfoService
+  ) {}
 
   panelIds: string[] = [];
 

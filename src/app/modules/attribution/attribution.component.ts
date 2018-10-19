@@ -12,7 +12,12 @@ import { Router } from '@angular/router';
 @Component({
   exportAs: 'attribution',
   selector: 'attribution',
-  styleUrls: ['../../shared/components/content.group.css', './attribution.component.css'],
+  styleUrls: [
+    '../../shared/components/content.group.css',
+    './features/feature/feature.component.css',
+    './features/features.component.css',
+    './attribution.component.css',
+  ],
   templateUrl: './attribution.html'
 })
 export class AttributionComponent implements OnChanges, OnInit {

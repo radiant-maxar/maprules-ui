@@ -30,68 +30,72 @@ export class FieldConfigService {
     }
   ];
 
-  featureConfig: Map<number, FieldConfig[]> = new Map<number,FieldConfig[]>();
+  featureConfig: Map<number, FieldConfig[]> = new Map<number, FieldConfig[]>();
   primaryGroupConfig: Map<number, Map<number, FieldConfig>> = new Map<number, Map<number, FieldConfig>>();
-  guidelineConfig: Map<number, Map<number, FieldConfig[]>> = new Map<number, Map<number, FieldConfig[]>>(); 
+  guidelineConfig: Map<number, Map<number, FieldConfig[]>> = new Map<number, Map<number, FieldConfig[]>>();
   disabledFeatureConfig: Map<number, FieldConfig[]> = new Map<number, FieldConfig[]>();
 
-  constructor() {
-  }
+  constructor() {}
 
-  get valConditionMap(){
-    var valConditionMap = new Map<string, number>();
-    valConditionMap.set("must be", 1);
-    valConditionMap.set("may be", 2);
-    valConditionMap.set("must not be", 0);
-    valConditionMap.set("<", 3);
-    valConditionMap.set("<=", 4);
-    valConditionMap.set(">", 5);
-    valConditionMap.set(">=", 6);
+  get valConditionMap() {
+    const valConditionMap = new Map<string, number>();
+    valConditionMap.set('must be', 1);
+    valConditionMap.set('may be', 2);
+    valConditionMap.set('must not be', 0);
+    valConditionMap.set('<', 3);
+    valConditionMap.set('<=', 4);
+    valConditionMap.set('>', 5);
+    valConditionMap.set('>=', 6);
     return valConditionMap;
   }
 
-  get keyConditionMap(){
-    var keyConditionMap = new Map<string, number>();
-    keyConditionMap.set("must have", 1);
-    keyConditionMap.set("may have", 2);
-    keyConditionMap.set("should not have", 0);
+  get keyConditionMap() {
+    const keyConditionMap = new Map<string, number>();
+    keyConditionMap.set('must have', 1);
+    keyConditionMap.set('may have', 2);
+    keyConditionMap.set('should not have', 0);
     return keyConditionMap;
   }
-  
-  getFieldConfig(name: string){
-    var field = this.config.find((control) => control.name == name);
-  	return field;
+
+  getFieldConfig(name: string) {
+    const field = this.config.find((control) => control.name === name);
+    return field;
   }
 
-  getFeatureConfig(i: number, name: string){
-    return this.featureConfig.get(i).find((control) => control.name == name);
+  getFeatureConfig(i: number, name: string) {
+    return this.featureConfig.get(i).find((control) => control.name === name);
   }
 
-  getFeaturePrimaryConfig(i: number){
+  getFeaturePrimaryConfig(i: number) {
    return this.primaryGroupConfig.get(i);
   }
 
-  getPrimaryIdentifierConfig(i:number, primaryGroupIndex:number){
+  getPrimaryIdentifierConfig(i: number, primaryGroupIndex: number) {
     return this.primaryGroupConfig.get(i).get(primaryGroupIndex);
   }
 
-  getFeatureGuidelineConfig(i:number){
+  getFeatureGuidelineConfig(i: number) {
     return this.guidelineConfig.get(i);
   }
-  
-  getFeatureGuideline(i:number, guidelineIndex: number){
+
+  getFeatureGuideline(i: number, guidelineIndex: number) {
     return this.guidelineConfig.get(i).get(guidelineIndex);
   }
 
-  getFeatureGuidelineField(i:number, guidelineIndex: number, field: string){
-    return this.guidelineConfig.get(i).get(guidelineIndex).filter(fieldConfig => { return fieldConfig.name == field})[0];
+  getFeatureGuidelineField(i: number, guidelineIndex: number, field: string) {
+    return this.guidelineConfig.get(i).get(guidelineIndex).filter(fieldConfig => fieldConfig.name === field)[0];
   }
 
-  getDisabledFeatureConfigMap(i: number){
+  haveFeatureGuidelineField(i: number, guidelineIndex: number, field: string) {
+    return this.guidelineConfig.get(i).get(guidelineIndex).findIndex(fieldConfig => fieldConfig.name === field) >= 0;
+  }
+
+  getDisabledFeatureConfigMap(i: number) {
     return this.disabledFeatureConfig.get(i);
   }
 
-  getDisabledFeatureConfig(i: number, name: string){
-    return this.disabledFeatureConfig.get(i).find((control) => control.name == name);
+  getDisabledFeatureConfig(i: number, name: string) {
+    return this.disabledFeatureConfig.get(i).find((control) => control.name === name);
   }
+
 }

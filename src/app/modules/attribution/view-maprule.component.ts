@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { Validators, FormGroup } from '@angular/forms';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { FieldConfig } from '../../shared/interfaces/field-config.interface';
@@ -13,9 +13,15 @@ declare var $: any;
 @Component({
   exportAs: 'view-maprule',
   selector: 'view-maprule',
-  styleUrls: ['../../shared/components/content.group.css', './view-maprule.css'],
-  templateUrl: './view-maprule.html'
-
+  styleUrls: [
+    '../../shared/components/content.group.css',
+    './view-maprule.css',
+    '../../icons/icon.component.css',
+    '../../shared/components/tags/tags.component.css'
+    
+  ],
+  templateUrl: './view-maprule.html',
+  encapsulation: ViewEncapsulation.None
 })
 export class ViewMapRuleComponent {
   configId: string;
@@ -34,8 +40,8 @@ export class ViewMapRuleComponent {
   ngOnInit() {
     setTimeout(() => {
       combineLatest(this.route.queryParams, this.route.params).subscribe(([queryParam, params]) => {
-        var id = params['id'];
-        if(id){
+        const id: string = params['id'];
+        if (id) {
           this.configId = id;
           this.maprules.getMapRule(this.configId).subscribe(data => {
             this.maprule = data;

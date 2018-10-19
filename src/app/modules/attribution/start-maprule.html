@@ -1,25 +1,22 @@
-
 <div class="col-md-12">
 	<view-maprule></view-maprule>
 </div>
 <div class="col-md-12">
-	<div class="content-group start-group container">
-		<div class="row">
-			<div class="col-md-2">
-				<button class="btn btn-basic start-button" (click)="toEdit()">
-					Edit MapRule
-				</button>
+	<div class="content-group start-group-container d-flex justify-content-center">
+		<button class="btn btn-lg start-button" id="edit-button" (click)="toEdit()">Edit MapRule</button>
+		<ng-template #tipContent>
+			<div class="d-flex flex-column">
+				<a href="{{ idUrl }}" id="iDlink" class="dropdown-item edit-with-item" target="_blank">iD editor</a>
+				<a href="{{ josmUrl }}" id="josmLink" class="dropdown-item edit-with-item" target="_blank">JOSM</a>
 			</div>
-			<div class="col-md-2">
-				<div ngbDropdown>
-					<button class="btn btn-success start-button" id="dropdownBasic1" ngbDropdownToggle>
-					Map With
-					</button>
-					<div ngbDropdownMenu aria-labelledby="dropdownBasic1" class="start-button">
-						<a id="iDlink" class="dropdown-item" target="_blank">iD editor</a>
-						<a id="josmLink" class="dropdown-item" target="_blank">JOSM</a>
-					</div>
-				</div>
-			</div>
+		</ng-template>
+		<button type="button" 
+			class="btn btn-lg start-button" 
+			(click)="toggleCaret()"
+			triggers="click" 
+			[ngbTooltip]="tipContent" 
+			tooltipClass="edit-with-tooltip">
+			Map With <i class="fa" [ngClass]="closed ? 'fa-caret-up' : 'fa-caret-down'"  aria-hidden="true"></i>
+		</button>
 	</div>
 </div>
