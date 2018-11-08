@@ -40,9 +40,9 @@ export class FeaturesComponent {
       if (this.attribution.loadedForm && this.attribution.loadedForm['presets']){
         this.attribution.loadedForm['presets'].forEach(function(preset){
           $scope.addFeatureCard();
-          const presetControls = (<FormGroup>(<FormGroup>(<FormArray>$scope.attribution.form.controls.presets).controls[presetIndex]));
-          presetControls.controls.name.setValue(preset.name);
-          presetControls.controls.geometry.setValue(preset.geometry);
+          const presetControls = (<FormGroup>(<FormGroup>(<FormArray>$scope.attribution.form.get("presets")).at(presetIndex))); 
+          presetControls.get("name").setValue(preset.name);
+          presetControls.get("geometry").setValue(preset.geometry);
           presetIndex++;
         });
       }
@@ -68,10 +68,9 @@ export class FeaturesComponent {
                               plugins: ['dropdown_direction', 'remove_button'],
                               dropdownDirection: 'down',
                               options: [
-                                <SelectizeOption>{text: 'node', value: 'node'},
-                                <SelectizeOption>{text: 'way', value: 'way'},
-                                <SelectizeOption>{text: 'closedway', value: 'closedway'},
-                                <SelectizeOption>{text: 'area', value: 'area'}
+                                <SelectizeOption>{text: 'Point', value: 'Point'},
+                                <SelectizeOption>{text: 'Line', value: 'Line'},
+                                <SelectizeOption>{text: 'Area', value: 'Area'}
                               ]
                             }
                           }
@@ -90,7 +89,7 @@ export class FeaturesComponent {
   private getFeature(): FormGroup {
     return this.fb.group({  primary: this.fb.array([]),
                             name: '',
-                            geometry: [['node', 'way', 'closedway', 'area']],
+                            geometry: [['Point', 'Line', 'Area']],
                             fields: this.fb.array([])
                         });
   }

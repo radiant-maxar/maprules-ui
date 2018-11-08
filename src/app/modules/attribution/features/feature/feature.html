@@ -30,7 +30,7 @@
                               </ng-container>
                             </td>
                             <td class="feature-table-main feature-table-td">
-                              <ng-container *ngIf="primaryFormArray.at(primaryGroupIndex).controls.key && primaryFormArray.at(primaryGroupIndex).controls.key.value && primaryFormArray.at(primaryGroupIndex).controls.val">
+                              <ng-container *ngIf="primaryFormArray.at(primaryGroupIndex).get('key') && primaryFormArray.at(primaryGroupIndex).get('key').value && primaryFormArray.at(primaryGroupIndex).get('val')">
                                 <ng-container primary-identifier field="val" [group]="attribution.form"
                                   [nestedGroupIndex]="i" [nestedArrayIndex]="primaryGroupIndex">
                                 </ng-container>
