@@ -26,10 +26,10 @@
 								<ng-container *ngFor="let geometry of preset.geometry">
 									<div class="view-panel-content view-panel-pill-group d-inline-flex">
 										<div [ngSwitch]="geometry" class="view-panel-pill-geometry">
-											<app-area *ngSwitchCase="'area'"></app-area>
-											<app-node *ngSwitchCase="'node'"></app-node>
-											<app-way *ngSwitchCase="'way'"></app-way>
-											<app-area *ngSwitchCase="'closedway'"></app-area>
+											<app-area *ngSwitchCase="'Area'"></app-area>
+											<app-node *ngSwitchCase="'Point'"></app-node>
+											<app-way *ngSwitchCase="'Line'"></app-way>
+											<app-area *ngSwitchCase="'Line'"></app-area>
 										</div>
 										<div class="view-panel-pill">{{ geometry }}</div>
 									</div>

@@ -81,19 +81,7 @@ export class FeatureComponent {
       keyOptions.push(<SelectizeOption>{text: loadedGroup['key'], value: loadedGroup['key']});
     }
     const featureFormGroup = <FormGroup> this.attribution.presets.at(i);
-    var primaryKeyConfig = {  type: 'primary',
-                              name: 'key',
-                              validation: [Validators.required],
-                              selectizeConfig: {
-                                                create: true,
-                                                persist: true,
-                                                items: [""],
-                                                maxItems: 1,
-                                                options: keyOptions,
-                                                plugins: ['dropdown_direction'],
-                                                dropdownDirection: 'down' 
-                              }
-                           };
+    var primaryKeyConfig = this.fieldConfig.getPrimaryKeyConfigSettings(keyOptions);
 
     this.fieldConfig.config.push(primaryKeyConfig); 
 
@@ -136,34 +124,14 @@ export class FeatureComponent {
 
         popularValuesRequest.add(() => {
           setTimeout(() => {
-            var primaryValueConfig = {
-                                          type: 'primary',
-                                          name: 'val',
-                                          value: "",
-                                          selectizeConfig: {
-                                                              create: true,
-                                                              persist: true,
-                                                              maxItems: 1,
-                                                              items: [""],
-                                                              options: valueOptions,
-                                                              allowEmptyOption: true,
-                                                              plugins: ['dropdown_direction'],
-                                                              dropdownDirection: 'down'
-                                                            }
-                                     };
+            var primaryValueConfig = this.fieldConfig.getPrimaryValueConfigSettings(valueOptions); 
+
 
             let featureConfig = this.fieldConfig.getFeaturePrimaryConfig(this.i);
             if(featureConfig) {
               let primaryGroupMap = featureConfig;
-              let $select = $(document.getElementById(this.i + "_" + primaryGroupIndex + "_val"));
-              if($select[0]){
-                let selectize = $select[0].selectize;
-                selectize.clear();
-                selectize.clearOptions();
-                selectize.load(function(callback) {
-                    callback(valueOptions);
-                });
-              }
+              this.fieldConfig.refreshSelectizeOptions(this.i + "_" + primaryGroupIndex + "_val", valueOptions);
+
               primaryGroupMap.set(primaryGroupIndex, primaryValueConfig);
             } else {
               const primaryGroupMap = new Map<number, FieldConfig>();
@@ -254,52 +222,7 @@ export class FeatureComponent {
     if (loadedGuideline) {
       keyOptions.push(<SelectizeOption> {text: loadedGuideline['key'], value: loadedGuideline['key']});
     }
-    const guidelineFields = [ {
-                              type: 'guideline',
-                              name: 'keyCondition',
-                              optionMap: this.fieldConfig.keyConditionMap,
-                              validation: [Validators.required] // TODO make validation work for these fields
-                            },
-                            {
-                              type: 'guidelineSelectize',
-                              name: 'key',
-                              id: this.i + '_associated_key_' + guidelineGroupIndex,
-                              validation: [Validators.required],
-                              selectizeConfig: {
-                                                create: true,
-                                                persist: true,
-                                                maxItems: 1,
-                                                options: keyOptions,
-                                                plugins: ['dropdown_direction'],
-                                                dropdownDirection: 'down'
-                                              }
-                            },
-                            {
-                              type: 'valueSelect',
-                              name: 'valCondition',
-                              optionMap: this.fieldConfig.valConditionMap
-                             },
-                            {
-                              type: 'valueSelectize',
-                              name: 'values',
-                              id: this.i + '_associated_values_' + guidelineGroupIndex,
-                              selectizeConfig: {
-                                                  create: true,
-                                                  persist: true,
-                                                  plugins: ['dropdown_direction', 'remove_button'],
-                                                  dropdownDirection: 'down',
-                                                  maxItems: null
-                                                }
-                            },
-                            {
-                              type: 'guidelineInput',
-                              name: 'label'
-                            },
-                            {
-                              type: 'guidelineInput',
-                              name: 'placeholder'
-                            }
-                           ];
+    const guidelineFields = this.fieldConfig.getGuidelineFieldConfig(this.i, guidelineGroupIndex, keyOptions);
     const guidelineConfig = this.fieldConfig.getFeatureGuidelineConfig(this.i);
     let guidelineMap;
     if (guidelineConfig) {
@@ -412,15 +335,8 @@ export class FeatureComponent {
         }
 
         this.fieldConfig.getFeatureGuidelineField(this.i, guidelineGroupIndex, 'values').selectizeConfig.options = valueOptions;
-        const $select = $(document.getElementById(this.i + '_associated_values_' + guidelineGroupIndex));
-        if ($select[0]) {
-          const selectize = $select[0].selectize;
-          selectize.clear();
-          selectize.clearOptions();
-          selectize.load(function(callback) {
-            callback(valueOptions);
-          });
-        }
+        this.fieldConfig.refreshSelectizeOptions(this.i + '_associated_values_' + guidelineGroupIndex, valueOptions);
+
         if (loadedValues && (<FormGroup>guidelineFormGroup).get('key').pristine) {
           (<FormArray>guidelineFormGroup.get('values')).at(0).get('values').setValue(loadedValues);
         }
