@@ -32,28 +32,35 @@ export class FeatureComponent {
       if (
         !this.attribution.loadedForm ||
         !this.attribution.loadedForm['presets'][this.i]) {
-        $(`#preset-card-panel-${this.i}`).css('max-height', 'initial');
-        const toggler: any = $(`#preset-accordion-toggler-${this.i}`);
-        toggler.addClass(`fa-minus-square-o`);
-        toggler.removeClass(`fa-plus-square-o`);
+        this.maximizeCard();
       }
       this.tagInfo.popularTagsRequest.add(() => {
-        var $scope = this;
-        var presetControls = (<FormArray>$scope.attribution.form.get('presets')).at(this.i);
-        var primaryGroupIndex = 0;
-        if(this.attribution.loadedForm && this.primaryFormArray.length == 0){
-          const preset = this.attribution.loadedForm['presets'][this.i];
-          if(preset && preset.primary){
-            preset.primary.forEach(function(loadedGroup){
-              $scope.addPrimaryGroup($scope.i, loadedGroup);
-            });
-          }
-        }
-        if(this.primaryFormArray.length == 0){
-          this.addPrimaryGroup(0, null);
-        }
+       this.loadPrimaryGroups();
       });
     });
+  }
+
+  maximizeCard(){
+    $(`#preset-card-panel-${this.i}`).css('max-height', 'initial');
+    const toggler: any = $(`#preset-accordion-toggler-${this.i}`);
+    toggler.addClass(`fa-minus-square-o`);
+    toggler.removeClass(`fa-plus-square-o`);
+  }
+
+  loadPrimaryGroups(){
+    var $scope = this;
+    var primaryGroupIndex = 0;
+    if(this.attribution.loadedForm && this.primaryFormArray.length == 0){
+      const preset = this.attribution.loadedForm['presets'][this.i];
+      if(preset && preset.primary){
+        preset.primary.forEach(function(loadedGroup){
+          $scope.addPrimaryGroup($scope.i, loadedGroup);
+        });        
+      }
+    }
+    if(this.primaryFormArray.length == 0){
+      this.addPrimaryGroup($scope.i, null); 
+    }
   }
 
   get featureFormGroup(){
@@ -76,15 +83,16 @@ export class FeatureComponent {
   ) {}
 
   addPrimaryGroup(i: number, loadedGroup: FormGroup){
-    var keyOptions = this.tagInfo.popularKeys;
-    if(loadedGroup){
+    var keyOptions = this.tagInfo.popularKeys; 
+    var primaryKeyConfig = this.fieldConfig.getPrimaryKeyConfigSettings(keyOptions);
+    this.fieldConfig.config.push(primaryKeyConfig);
+    this.addPrimaryKeyControl(primaryKeyConfig, loadedGroup);
+     if(loadedGroup){
       keyOptions.push(<SelectizeOption>{text: loadedGroup['key'], value: loadedGroup['key']});
     }
-    const featureFormGroup = <FormGroup> this.attribution.presets.at(i);
-    var primaryKeyConfig = this.fieldConfig.getPrimaryKeyConfigSettings(keyOptions);
+  }
 
-    this.fieldConfig.config.push(primaryKeyConfig); 
-
+  addPrimaryKeyControl(primaryKeyConfig: FieldConfig, loadedGroup: FormGroup){
     this.primaryFormArray.push(this.fb.group({}));
 
     const primaryGroupIndex = this.primaryFormArray.length == 0 ? 0 : this.primaryFormArray.length - 1;
@@ -92,59 +100,40 @@ export class FeatureComponent {
     primaryGroup.addControl("key", this.attribution.createControl(primaryKeyConfig));
 
     if(loadedGroup){
-      var val = loadedGroup['val'];
-      this.addPrimaryKeyListener(primaryGroupIndex, val);
+      this.addPrimaryKeyListener(primaryGroup, primaryGroupIndex, loadedGroup);
       primaryGroup.get('key').setValue(loadedGroup['key']);
     } else {
-      this.addPrimaryKeyListener(primaryGroupIndex, null);
+      this.addPrimaryKeyListener(primaryGroup, primaryGroupIndex, null);
     }
   }
 
- addPrimaryKeyListener(primaryGroupIndex: number, loadedVal: string){
-    let primaryFormGroup = <FormGroup> this.primaryFormArray.at(primaryGroupIndex); 
+ addPrimaryKeyListener(primaryFormGroup: FormGroup, primaryGroupIndex: number, loadedGroup: FormGroup){
+    var loadedVal;
+    if(loadedGroup){
+      loadedVal = loadedGroup['val'];
+    }
     primaryFormGroup.get('key').valueChanges.subscribe(val => { 
-      setTimeout(() => { 
-        var valueOptions = [<SelectizeOption>{text:"", value:""}];
-        var popularValuesRequest = this.tagInfo.getPopularValues(val).subscribe(
-          (data) => {
-            var values = data['data'];      
-            values.sort((a,b) => parseFloat(b.count) - parseFloat(a.count)).forEach(function(prop) {
-              var current = <SelectizeOption>{text:prop.value, value:prop.value};
-              valueOptions.push(current);
-            });
-          }, 
-          error => {
-            console.error(error);
-          }
-        );
-
+      setTimeout(() => {
+        var valueOptions = [];
         if(loadedVal) {
           valueOptions.push(<SelectizeOption>{text: loadedVal, value: loadedVal});
         }
-
+        var popularValuesRequest = this.tagInfo.getPopularValues(val).subscribe(
+          (data) => {
+            var values = data['data'];
+            values.sort((a,b) => parseFloat(b.count) - parseFloat(a.count)).forEach(function(prop) {
+              var current = <SelectizeOption>{text:prop.value, value:prop.value};
+              valueOptions.push(current);
+            }); 
+          },
+          error => { 
+            console.error(error);
+          }
+        );
         popularValuesRequest.add(() => {
           setTimeout(() => {
             var primaryValueConfig = this.fieldConfig.getPrimaryValueConfigSettings(valueOptions); 
-
-
-            let featureConfig = this.fieldConfig.getFeaturePrimaryConfig(this.i);
-            if(featureConfig) {
-              let primaryGroupMap = featureConfig;
-              this.fieldConfig.refreshSelectizeOptions(this.i + "_" + primaryGroupIndex + "_val", valueOptions);
-
-              primaryGroupMap.set(primaryGroupIndex, primaryValueConfig);
-            } else {
-              const primaryGroupMap = new Map<number, FieldConfig>();
-              primaryGroupMap.set(primaryGroupIndex, primaryValueConfig);
-              this.fieldConfig.primaryGroupConfig.set(this.i, primaryGroupMap);
-            }
-            primaryFormGroup.addControl('val', this.attribution.createControl(primaryValueConfig));
-            setTimeout(() => {
-              this.addPrimaryValueListener(primaryGroupIndex);
-              if(loadedVal && primaryFormGroup.get('val').pristine) {
-                primaryFormGroup.get('val').setValue(loadedVal);
-              }
-            });
+            this.setPrimaryValues(primaryGroupIndex, valueOptions, primaryValueConfig, loadedVal, primaryFormGroup); 
           });
         });
         if(!this.attribution.presets.at(this.i).get("name").value) {
@@ -346,5 +335,26 @@ export class FeatureComponent {
 
   removeField(i: number) {
     this.fields.removeAt(i);
+  }
+
+  setPrimaryValues(primaryGroupIndex: number, valueOptions: SelectizeOption[], primaryValueConfig: any, loadedVal: string, primaryFormGroup: FormGroup){ 
+    let featureConfig = this.fieldConfig.getFeaturePrimaryConfig(this.i); 
+    
+    if(featureConfig) { 
+      let primaryGroupMap = featureConfig; 
+      primaryGroupMap.set(primaryGroupIndex, primaryValueConfig); 
+    } else { 
+      const primaryGroupMap = new Map<number, FieldConfig>(); 
+      primaryGroupMap.set(primaryGroupIndex, primaryValueConfig); 
+      this.fieldConfig.primaryGroupConfig.set(this.i, primaryGroupMap); 
+    } 
+    this.fieldConfig.refreshSelectizeOptions(this.i + "_" + primaryGroupIndex + "_val", valueOptions);
+     primaryFormGroup.addControl('val', this.attribution.createControl(primaryValueConfig)); 
+    setTimeout(() => { 
+      this.addPrimaryValueListener(primaryGroupIndex); 
+      if(loadedVal && primaryFormGroup.get('val').pristine) { 
+        primaryFormGroup.get('val').setValue(loadedVal); 
+      } 
+    }); 
   }
 }
