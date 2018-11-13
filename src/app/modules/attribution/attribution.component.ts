@@ -110,9 +110,9 @@ export class AttributionComponent implements OnChanges, OnInit {
   }
 
   setDisabled(name: string, disable: boolean) {
-    if (this.form.get("name")) {
+    if (this.form.get(name)) {
       const method = disable ? 'disable' : 'enable';
-      this.form.get("name")[method]();
+      this.form.get(name)[method]();
       return;
     }
 
