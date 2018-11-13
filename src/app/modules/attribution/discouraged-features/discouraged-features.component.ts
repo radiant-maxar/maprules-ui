@@ -124,7 +124,7 @@ export class DiscouragedFeaturesComponent {
       this.fieldConfig.disabledFeatureConfig.get(i).push(disabledValueConfig);
       disabledFormGroup.addControl('val', this.attribution.createControl(disabledValueConfig)); 
     } else {
-      this.fieldConfig.refreshSelectizeOptions(i + "_val", valueOptions);
+      this.fieldConfig.refreshSelectizeOptions(i + "_val", valueOptions, true);
       featureConfigMap[1] = disabledValueConfig;
     }
     if(loadedVal && (<FormArray>this.attribution.form.get("disabledFeatures")).at(i).get("val").pristine){

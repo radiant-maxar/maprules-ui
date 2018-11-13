@@ -218,12 +218,14 @@ export class FieldConfigService {
     };
   }
   
-  refreshSelectizeOptions(id: string, valueOptions: SelectizeOption[]){
+  refreshSelectizeOptions(id: string, valueOptions: SelectizeOption[], clearSelection: boolean){
     var $select = $(document.getElementById(id));
     if($select[0]){
       var selectize = $select[0].selectize;
-      selectize.clear();
-      selectize.clearOptions();
+      if(clearSelection){
+        selectize.clear();
+        selectize.clearOptions();
+      }
       selectize.load(function(callback) {
         callback(valueOptions);
       });

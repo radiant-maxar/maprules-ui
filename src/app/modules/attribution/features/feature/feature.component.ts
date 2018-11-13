@@ -34,9 +34,7 @@ export class FeatureComponent {
         !this.attribution.loadedForm['presets'][this.i]) {
         this.maximizeCard();
       }
-      this.tagInfo.popularTagsRequest.add(() => {
-       this.loadPrimaryGroups();
-      });
+     this.loadPrimaryGroups();
     });
   }
 
@@ -83,13 +81,21 @@ export class FeatureComponent {
   ) {}
 
   addPrimaryGroup(i: number, loadedGroup: FormGroup){
-    var keyOptions = this.tagInfo.popularKeys; 
+    var keyOptions = [];
     if(loadedGroup){
       keyOptions.push(<SelectizeOption>{text: loadedGroup['key'], value: loadedGroup['key']});
     }
     var primaryKeyConfig = this.fieldConfig.getPrimaryKeyConfigSettings(keyOptions);
     this.fieldConfig.config.push(primaryKeyConfig);
     this.addPrimaryKeyControl(primaryKeyConfig, loadedGroup);
+
+    this.tagInfo.getPopularKeyOptions();
+    this.tagInfo.popularTagsRequest.add(() => {
+      var options = keyOptions.concat(this.tagInfo.popularKeys);
+      const primaryGroupIndex = this.primaryFormArray.length == 0 ? 0 : this.primaryFormArray.length - 1;
+      this.fieldConfig.refreshSelectizeOptions(`${i}_${primaryGroupIndex}_key`, options, false);
+    });
+
   }
 
   addPrimaryKeyControl(primaryKeyConfig: FieldConfig, loadedGroup: FormGroup){
@@ -118,24 +124,25 @@ export class FeatureComponent {
         if(loadedVal) {
           valueOptions.push(<SelectizeOption>{text: loadedVal, value: loadedVal});
         }
+
+        var primaryValueConfig = this.fieldConfig.getPrimaryValueConfigSettings(valueOptions); 
+        this.setPrimaryValues(primaryGroupIndex, valueOptions, primaryValueConfig, loadedVal, primaryFormGroup); 
+
         var popularValuesRequest = this.tagInfo.getPopularValues(val).subscribe(
           (data) => {
             var values = data['data'];
             values.sort((a,b) => parseFloat(b.count) - parseFloat(a.count)).forEach(function(prop) {
               var current = <SelectizeOption>{text:prop.value, value:prop.value};
               valueOptions.push(current);
-            }); 
+            });
+
+            this.fieldConfig.refreshSelectizeOptions(this.i + "_" + primaryGroupIndex + "_val", valueOptions, !loadedVal);
           },
           error => { 
             console.error(error);
           }
         );
-        popularValuesRequest.add(() => {
-          setTimeout(() => {
-            var primaryValueConfig = this.fieldConfig.getPrimaryValueConfigSettings(valueOptions); 
-            this.setPrimaryValues(primaryGroupIndex, valueOptions, primaryValueConfig, loadedVal, primaryFormGroup); 
-          });
-        });
+
         if(!this.attribution.presets.at(this.i).get("name").value) {
           this.attribution.presets.at(this.i).get("name").patchValue(val);
         }
@@ -162,6 +169,18 @@ export class FeatureComponent {
           });
           this.tagInfo.comboMap.set(this.i, featureComboMap);
         });
+        if (this.attribution.loadedForm && (<FormArray> this.attribution.presets.at(this.i).get('fields')).length === 0) {
+          if (!this.attribution.loadedForm['presets'][this.i]) {
+            return;
+          }
+          const guidelines = this.attribution.loadedForm['presets'][this.i].fields;
+          const $scope = this;
+          if (guidelines) {
+            guidelines.forEach(function(guideline) {
+              $scope.addGuideline($scope.i, guideline);
+            });
+          }
+        }
 
         tagComboRequest.add(() => {
           let featureKeyOptions = this.tagInfo.keysMap.get(this.i);
@@ -172,18 +191,6 @@ export class FeatureComponent {
             featureKeyOptions.push(<SelectizeOption>{ text: key, value: key});
           });
           this.tagInfo.keysMap.set(this.i, featureKeyOptions);
-          if (this.attribution.loadedForm && (<FormArray> this.attribution.presets.at(this.i).get('fields')).length === 0) {
-            if (!this.attribution.loadedForm['presets'][this.i]) {
-              return;
-            }
-            const guidelines = this.attribution.loadedForm['presets'][this.i].fields;
-            const $scope = this;
-            if (guidelines) {
-              guidelines.forEach(function(guideline) {
-                $scope.addGuideline($scope.i, guideline);
-              });
-            }
-          }
         });
       });
     });
@@ -324,7 +331,7 @@ export class FeatureComponent {
         }
 
         this.fieldConfig.getFeatureGuidelineField(this.i, guidelineGroupIndex, 'values').selectizeConfig.options = valueOptions;
-        this.fieldConfig.refreshSelectizeOptions(this.i + '_associated_values_' + guidelineGroupIndex, valueOptions);
+        this.fieldConfig.refreshSelectizeOptions(this.i + '_associated_values_' + guidelineGroupIndex, valueOptions, true);
 
         if (loadedValues && (<FormGroup>guidelineFormGroup).get('key').pristine) {
           (<FormArray>guidelineFormGroup.get('values')).at(0).get('values').setValue(loadedValues);
@@ -348,8 +355,9 @@ export class FeatureComponent {
       primaryGroupMap.set(primaryGroupIndex, primaryValueConfig); 
       this.fieldConfig.primaryGroupConfig.set(this.i, primaryGroupMap); 
     } 
-    this.fieldConfig.refreshSelectizeOptions(this.i + "_" + primaryGroupIndex + "_val", valueOptions);
-     primaryFormGroup.addControl('val', this.attribution.createControl(primaryValueConfig)); 
+    this.fieldConfig.refreshSelectizeOptions(this.i + "_" + primaryGroupIndex + "_val", valueOptions, true);
+    primaryFormGroup.addControl('val', this.attribution.createControl(primaryValueConfig));
+
     setTimeout(() => { 
       this.addPrimaryValueListener(primaryGroupIndex); 
       if(loadedVal && primaryFormGroup.get('val').pristine) { 
