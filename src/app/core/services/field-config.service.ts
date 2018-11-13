@@ -146,13 +146,13 @@ export class FieldConfigService {
               name: 'val', 
               value: "", 
               selectizeConfig: { 
-                                  create: true, 
-                                  persist: true, 
-                                  maxItems: 1, 
-                                  items: [""], 
-                                  options: valueOptions,       
-                                  allowEmptyOption: true, 
-                                  plugins: ['dropdown_direction'], 
+                                  create: true,
+                                  persist: true,
+                                  maxItems: 1,
+                                  items: [""],
+                                  options: valueOptions,
+                                  allowEmptyOption: true,
+                                  plugins: ['dropdown_direction'],
                                   dropdownDirection: 'down' 
                                 } 
     }; 
