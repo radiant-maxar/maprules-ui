@@ -84,12 +84,12 @@ export class FeatureComponent {
 
   addPrimaryGroup(i: number, loadedGroup: FormGroup){
     var keyOptions = this.tagInfo.popularKeys; 
+    if(loadedGroup){
+      keyOptions.push(<SelectizeOption>{text: loadedGroup['key'], value: loadedGroup['key']});
+    }
     var primaryKeyConfig = this.fieldConfig.getPrimaryKeyConfigSettings(keyOptions);
     this.fieldConfig.config.push(primaryKeyConfig);
     this.addPrimaryKeyControl(primaryKeyConfig, loadedGroup);
-     if(loadedGroup){
-      keyOptions.push(<SelectizeOption>{text: loadedGroup['key'], value: loadedGroup['key']});
-    }
   }
 
   addPrimaryKeyControl(primaryKeyConfig: FieldConfig, loadedGroup: FormGroup){
