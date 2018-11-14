@@ -13,11 +13,10 @@ import { environment } from '../../../environments/environment'
 export class TagInfoService {
  
   tagInfoUrl: string;
-  keysMap: Map<number, any> = new Map<number, any>();
+  keysMap : Map<number, any> = new Map<number, any>();
   comboMap: Map<number, any> = new Map<number, any>();
   popularKeys: SelectizeOption[];
   popularTagsRequest: any;
-  tagComboRequest: any;
 
   constructor(private http: HttpClient) {
     this.setTagInfoUrl();
@@ -44,24 +43,6 @@ export class TagInfoService {
     return this.http.get(this.tagInfoUrl + "tag/combinations?key=" + primaryKey + "&" + "value=" + primaryValue).pipe(
       catchError(this.handleError)
     );
-  }
-
-  populateTagCombos(i: number, key: string, val: string){
-    var featureComboMap = this.comboMap.get(i);
-    if(!featureComboMap){
-      featureComboMap = [];
-    }
-    this.tagComboRequest = this.getTagCombinations(key, val).subscribe((data) => {
-      const combos = data['data'].sort((a, b) => parseFloat(b.together_count) - parseFloat(a.together_count));
-      combos.forEach(function(combo) {
-        if (featureComboMap[combo.other_key]) {
-          featureComboMap[combo.other_key].push(combo.other_value);
-        } else {
-          featureComboMap[combo.other_key] = [combo.other_value];
-        }
-      });
-      this.comboMap.set(i, featureComboMap);
-    });
   }
 
   private handleError(error: HttpErrorResponse) {
