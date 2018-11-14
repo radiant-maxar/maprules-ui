@@ -155,20 +155,7 @@ export class FeatureComponent {
     let featureComboMap = this.tagInfo.comboMap.get(this.i);
     let primaryValListener = primaryFormGroup.get('val').valueChanges.subscribe(val => {
       setTimeout(() => {
-        if(!featureComboMap) {
-          featureComboMap = [];
-        }
-        const tagComboRequest = this.tagInfo.getTagCombinations(primaryFormGroup.get('key').value, val).subscribe((data) => {
-          const combos = data['data'].sort((a, b) => parseFloat(b.together_count) - parseFloat(a.together_count));
-          combos.forEach(function(combo) {
-            if (featureComboMap[combo.other_key]) {
-              featureComboMap[combo.other_key].push(combo.other_value);
-            } else {
-              featureComboMap[combo.other_key] = [combo.other_value];
-            }
-          });
-          this.tagInfo.comboMap.set(this.i, featureComboMap);
-        });
+        this.tagInfo.populateTagCombos(this.i, primaryFormGroup.get('key').value, val);
         if (this.attribution.loadedForm && (<FormArray> this.attribution.presets.at(this.i).get('fields')).length === 0) {
           if (!this.attribution.loadedForm['presets'][this.i]) {
             return;
@@ -181,17 +168,6 @@ export class FeatureComponent {
             });
           }
         }
-
-        tagComboRequest.add(() => {
-          let featureKeyOptions = this.tagInfo.keysMap.get(this.i);
-          if (!featureKeyOptions) {
-            featureKeyOptions = [];
-          }
-          Object.keys(featureComboMap).forEach(function(key) {
-            featureKeyOptions.push(<SelectizeOption>{ text: key, value: key});
-          });
-          this.tagInfo.keysMap.set(this.i, featureKeyOptions);
-        });
       });
     });
   }
@@ -214,7 +190,9 @@ export class FeatureComponent {
     }));
     const guidelineGroupIndex = this.fields.length === 0 ? 0 : this.fields.length - 1;
     const guidelineGroup = <FormGroup>this.fields.at(guidelineGroupIndex);
-    const keyOptions = this.tagInfo.keysMap.get(this.i);
+    
+    var keyOptions = [];
+    
     if (loadedGuideline) {
       keyOptions.push(<SelectizeOption> {text: loadedGuideline['key'], value: loadedGuideline['key']});
     }
@@ -230,6 +208,20 @@ export class FeatureComponent {
       this.fieldConfig.guidelineConfig.set(this.i, guidelineMap);
     }
     guidelineGroup.addControl('keyCondition', this.attribution.createControl(guidelineFields[0]));
+    
+    this.tagInfo.tagComboRequest.add(() => {
+      let featureKeyOptions = keyOptions;
+      if (!featureKeyOptions) {
+        featureKeyOptions = [];
+      }
+      let featureComboMap = this.tagInfo.comboMap.get(this.i);
+      Object.keys(featureComboMap).forEach(function(key) {
+        featureKeyOptions.push(<SelectizeOption>{ text: key, value: key});
+      });
+      this.tagInfo.keysMap.set(this.i, featureKeyOptions);
+      this.fieldConfig.refreshSelectizeOptions(`${this.i}_associated_key_${guidelineGroupIndex}`, featureKeyOptions, false);
+    });
+
     this.addKeyConditionListener(guidelineGroupIndex, loadedGuideline);
   }
 
