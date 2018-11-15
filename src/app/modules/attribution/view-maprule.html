@@ -128,7 +128,7 @@
 									<ng-template #star>
 										<div class="val-pill star-pill">*</div>
 									</ng-template>
-									<ng-container *ngIf="disabled.val.length else star">
+									<ng-container *ngIf="disabled.val else star">
 										<ng-container *ngFor="let v of disabled.val">
 											<div class="val-pill">{{ v }}</div>
 										</ng-container>
