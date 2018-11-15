@@ -35,10 +35,9 @@ export class DiscouragedFeaturesComponent {
   panelIds: string[] = [];
 
   ngOnInit() {
-    setTimeout(() => {
-      this.tagInfo.popularTagsRequest.add(() => {
-        this.loadDiscouragedFeatures();
-      });
+    this.tagInfo.getPopularKeyOptions();
+    this.tagInfo.popularTagsRequest.add(() => {
+      this.loadDiscouragedFeatures();
     });
   }
 
@@ -57,11 +56,17 @@ export class DiscouragedFeaturesComponent {
   }
 
   addDiscouragedFeature(loadedFeature: FormGroup){
-    var keyOptions = this.tagInfo.popularKeys;
+    var keyOptions = [];
     if(loadedFeature){
       keyOptions.push(<SelectizeOption>{text: loadedFeature['key'], value: loadedFeature['key']});
     }
     this.addDisabledKeyControl(keyOptions, loadedFeature);
+    this.tagInfo.getPopularKeyOptions();
+    this.tagInfo.popularTagsRequest.add(() => {
+      var allOptions = keyOptions.concat(this.tagInfo.popularKeys);
+      const index = this.attribution.disabledFeatures.length == 0 ? 0 : this.attribution.disabledFeatures.length - 1;
+      this.fieldConfig.refreshSelectizeOptions(`${index}_key`, allOptions, false);
+    });
   }
 
 
@@ -92,6 +97,12 @@ export class DiscouragedFeaturesComponent {
     disabledFormGroup.get("key").valueChanges.subscribe(val => { 
       setTimeout(() => { 
         var valueOptions = [];
+        if(loadedVal){
+          loadedVal.forEach((val) => {
+            valueOptions.push(<SelectizeOption>{text: val, value: val});
+          });
+        }
+        this.addDisabledValueControl(disabledFormGroup, i, valueOptions, loadedVal);
         var popularValuesRequest = this.tagInfo.getPopularValues(val).subscribe(
           (data) => {
             var values = data['data'];      
@@ -104,13 +115,9 @@ export class DiscouragedFeaturesComponent {
             console.error(error);
           }
         );
-        if(loadedVal){
-          loadedVal.forEach((val) => {
-            valueOptions.push(<SelectizeOption>{text: val, value: val});
-          });
-        }
+       
         popularValuesRequest.add(() => {
-          this.addDisabledValueControl(disabledFormGroup, i, valueOptions, loadedVal);
+          this.fieldConfig.refreshSelectizeOptions(`${i}_val`, valueOptions, false);
         });
       });
     });
