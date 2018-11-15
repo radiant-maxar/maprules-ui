@@ -47,7 +47,14 @@
 									<div class="view-panel-content view-panel-pill-group identifying-tags-group">
 										<div class="view-panel-pill">{{primary.key}}</div>
 										<div class="view-panel-pill view-panel-pill-separator">=</div>
-										<div class="view-panel-pill identifying-val">{{primary.val}}</div>
+											<div class="view-panel-pill d-inline-flex">
+												<ng-template #star>
+													<div class="val-pill star-pill">*</div>
+												</ng-template>
+												<ng-container *ngIf="primary.val else star">
+													<div class="view-panel-pill identifying-val">{{primary.val}}</div>
+												</ng-container>
+											</div>
 									</div>
 								</ng-container>
 							</div>
