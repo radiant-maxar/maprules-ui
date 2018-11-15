@@ -23,6 +23,11 @@ import { FieldConfig } from '../interfaces/field-config.interface';
             [formControlName]="config.name"
             class="maprule-name form-input form-control entity-input"
             data-toggle="tooltip" data-placement="bottom" title="{{config.hint}}"/>
+            <div class="maprule-name alert alert-danger" *ngIf="group.get(config.name).errors && (group.invalid && group.dirty || group.touched)">
+              <div *ngIf="group.get(config.name).errors && group.get(config.name).errors.required">
+                Required.
+              </div>
+            </div>
         </div>
       </div>
   `
