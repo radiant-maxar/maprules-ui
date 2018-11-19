@@ -21,7 +21,6 @@ export class TagInfoService {
 
   constructor(private http: HttpClient) {
     this.setTagInfoUrl();
-    this.getPopularKeyOptions();
   }
 
   setTagInfoUrl(){
