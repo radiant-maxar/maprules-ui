@@ -127,16 +127,16 @@ export class FieldConfigService {
   }
   getPrimaryKeyConfigSettings(keyOptions: SelectizeOption[]){ 
     return {  type: 'primary', 
-            name: 'key', 
-            validation: [Validators.required], 
-            selectizeConfig: { 
-                              create: true, 
-                              persist: true, 
-                              items: [""], 
-                              maxItems: 1, 
-                              options: keyOptions, 
-                              plugins: ['dropdown_direction'], 
-                              dropdownDirection: 'down'        
+              name: 'key', 
+              validation: [Validators.required], 
+              selectizeConfig: { 
+                                create: true, 
+                                persist: true, 
+                                items: [""], 
+                                maxItems: 1, 
+                                options: keyOptions, 
+                                plugins: ['dropdown_direction'], 
+                                dropdownDirection: 'down'        
             }
     };
   }

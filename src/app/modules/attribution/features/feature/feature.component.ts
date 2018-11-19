@@ -47,15 +47,27 @@ export class FeatureComponent {
 
   loadPrimaryGroups(){
     var $scope = this;
-    var primaryGroupIndex = 0;
-    if(this.attribution.loadedForm && this.primaryFormArray.length == 0){
+    var keyOptions = [];
+    if(this.attribution.loadedForm && this.primaryFormArray.length == 0){    
       const preset = this.attribution.loadedForm['presets'][this.i];
       if(preset && preset.primary){
+        var primaryKeyConfig;
+        primaryKeyConfig = $scope.fieldConfig.getPrimaryKeyConfigSettings(keyOptions);
+        this.fieldConfig.config.push(primaryKeyConfig); //TODO is this being used properly?
         preset.primary.forEach(function(loadedGroup){
-          $scope.addPrimaryGroup($scope.i, loadedGroup);
-        });        
+          keyOptions.push(<SelectizeOption>{text: loadedGroup['key'], value: loadedGroup['key']});
+          $scope.addPrimaryKeyControl(primaryKeyConfig, loadedGroup);
+          const primaryGroupIndex = $scope.primaryFormArray.length == 0 ? 0 : $scope.primaryFormArray.length - 1;
+          $scope.fieldConfig.refreshSelectizeOptions(`${$scope.i}_${primaryGroupIndex}_key`, keyOptions, false);
+          $scope.tagInfo.popularTagsRequest.add(() => {
+            var options = keyOptions.concat($scope.tagInfo.popularKeys);
+            $scope.fieldConfig.refreshSelectizeOptions(`${$scope.i}_${primaryGroupIndex}_key`, options, false);
+          });
+        });
+     
       }
     }
+
     if(this.primaryFormArray.length == 0){
       this.addPrimaryGroup($scope.i, null); 
     }
@@ -82,13 +94,9 @@ export class FeatureComponent {
 
   addPrimaryGroup(i: number, loadedGroup: FormGroup){
     var keyOptions = [];
-    if(loadedGroup){
-      keyOptions.push(<SelectizeOption>{text: loadedGroup['key'], value: loadedGroup['key']});
-    }
     var primaryKeyConfig = this.fieldConfig.getPrimaryKeyConfigSettings(keyOptions);
     this.fieldConfig.config.push(primaryKeyConfig);
     this.addPrimaryKeyControl(primaryKeyConfig, loadedGroup);
-
     this.tagInfo.getPopularKeyOptions();
     this.tagInfo.popularTagsRequest.add(() => {
       var options = keyOptions.concat(this.tagInfo.popularKeys);

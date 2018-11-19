@@ -6,6 +6,7 @@ import { Feature } from '../../shared/models/feature';
 import { FeaturesComponent } from './features/features.component';
 import { DiscouragedFeaturesComponent } from './discouraged-features/discouraged-features.component';
 import { MapRulesService } from '../../core/services/maprules.service';
+import { TagInfoService } from '../../core/services/tag-info.service';
 import { NavigationService } from '../../core/services/navigation.service'; 
 import { Router } from '@angular/router';
 
@@ -49,11 +50,13 @@ export class AttributionComponent implements OnChanges, OnInit {
   constructor(
     private fb: FormBuilder,
     private maprules: MapRulesService,
+    private tagInfo: TagInfoService,
     private nav: NavigationService,
     private router: Router
   ) {}
 
   ngOnInit() {
+    this.tagInfo.getPopularKeyOptions();
     this.form = this.createGroup();
     if (this.configId) {
       this.maprules.getMapRule(this.configId).subscribe(
