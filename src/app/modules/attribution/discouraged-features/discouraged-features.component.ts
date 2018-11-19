@@ -35,6 +35,7 @@ export class DiscouragedFeaturesComponent {
   panelIds: string[] = [];
 
   ngOnInit() {
+    this.tagInfo.getPopularKeyOptions();
     this.tagInfo.popularTagsRequest.add(() => {
       this.loadDiscouragedFeatures();
     });
