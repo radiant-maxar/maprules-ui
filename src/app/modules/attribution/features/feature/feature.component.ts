@@ -163,18 +163,20 @@ export class FeatureComponent {
     let featureComboMap = this.tagInfo.comboMap.get(this.i);
     let primaryValListener = primaryFormGroup.get('val').valueChanges.subscribe(val => {
       setTimeout(() => {
-        this.tagInfo.populateTagCombos(this.i, primaryFormGroup.get('key').value, val);
-        if (this.attribution.loadedForm && (<FormArray> this.attribution.presets.at(this.i).get('fields')).length === 0) {
-          if (!this.attribution.loadedForm['presets'][this.i]) {
-            return;
-          }
-          const guidelines = this.attribution.loadedForm['presets'][this.i].fields;
-          const $scope = this;
-          if (guidelines) {
-            guidelines.forEach(function(guideline) {
-              $scope.addGuideline($scope.i, guideline);
-            });
-          }
+        if(val){
+          this.tagInfo.populateTagCombos(this.i, primaryFormGroup.get('key').value, val);
+          if (this.attribution.loadedForm && (<FormArray> this.attribution.presets.at(this.i).get('fields')).length === 0) {
+            if (!this.attribution.loadedForm['presets'][this.i]) {
+              return;
+            }
+            const guidelines = this.attribution.loadedForm['presets'][this.i].fields;
+            const $scope = this;
+            if (guidelines) {
+              guidelines.forEach(function(guideline) {
+                $scope.addGuideline($scope.i, guideline);
+              });
+            }
+          }        
         }
       });
     });
