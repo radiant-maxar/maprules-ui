@@ -59,13 +59,13 @@ export class DiscouragedFeaturesComponent {
       keyOptions.push(<SelectizeOption>{text: loadedFeature['key'], value: loadedFeature['key']});
     }
     this.addDisabledKeyControl(keyOptions, loadedFeature);
-    this.tagInfo.getPopularKeyOptions();
+    this.tagInfo.getPopularKeyOptions(); //TODO call only once outside of this function
     this.tagInfo.popularTagsRequest.add(() => {
-      var allOptions = keyOptions.concat(this.tagInfo.popularKeys);
-      const index = this.attribution.disabledFeatures.length == 0 ? 0 : this.attribution.disabledFeatures.length - 1;
+      const allOptions = keyOptions.concat(this.tagInfo.popularKeys);
       const keys = $(document.querySelectorAll("#discouraged-feature-table .discouraged-key select"));
-      const lastKey = keys[index];
-      this.fieldConfig.refreshSelectizeOptions(lastKey, allOptions, false);
+      for(const key of keys) {
+        this.fieldConfig.refreshSelectizeOptions(key, allOptions, false);
+      }
     });
   }
 
