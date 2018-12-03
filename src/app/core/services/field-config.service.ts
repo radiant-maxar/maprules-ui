@@ -218,10 +218,9 @@ export class FieldConfigService {
     };
   }
   
-  refreshSelectizeOptions(id: string, valueOptions: SelectizeOption[], clearSelection: boolean){
-    var $select = $(document.getElementById(id));
-    if($select[0]){
-      var selectize = $select[0].selectize;
+  refreshSelectizeOptions(select: any, valueOptions: SelectizeOption[], clearSelection: boolean){
+    if(select){
+      var selectize = select.selectize;
       if(clearSelection){
         selectize.clear();
         selectize.clearOptions();

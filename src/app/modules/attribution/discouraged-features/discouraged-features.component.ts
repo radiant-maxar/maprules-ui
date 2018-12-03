@@ -46,10 +46,8 @@ export class DiscouragedFeaturesComponent {
       var disabledFeatures = this.attribution.loadedForm['disabledFeatures'];
       if(disabledFeatures){
         var $scope = this;
-        var index = 0;
         disabledFeatures.forEach(disabledFeature => {
           $scope.addDiscouragedFeature(disabledFeature);
-          index++;
         });
       }
     }
@@ -65,7 +63,9 @@ export class DiscouragedFeaturesComponent {
     this.tagInfo.popularTagsRequest.add(() => {
       var allOptions = keyOptions.concat(this.tagInfo.popularKeys);
       const index = this.attribution.disabledFeatures.length == 0 ? 0 : this.attribution.disabledFeatures.length - 1;
-      this.fieldConfig.refreshSelectizeOptions(`${index}_key`, allOptions, false);
+      const keys = $(document.querySelectorAll("#discouraged-feature-table .discouraged-key select"));
+      const lastKey = keys[index];
+      this.fieldConfig.refreshSelectizeOptions(lastKey, allOptions, false);
     });
   }
 
@@ -102,6 +102,9 @@ export class DiscouragedFeaturesComponent {
             valueOptions.push(<SelectizeOption>{text: val, value: val});
           });
         }
+        const vals = $(document.querySelectorAll("#discouraged-feature-table .discouraged-val select"));
+        const lastVal = vals[i];
+        this.fieldConfig.refreshSelectizeOptions(lastVal, valueOptions, true);
         this.addDisabledValueControl(disabledFormGroup, i, valueOptions, loadedVal);
         var popularValuesRequest = this.tagInfo.getPopularValues(val).subscribe(
           (data) => {
@@ -117,7 +120,9 @@ export class DiscouragedFeaturesComponent {
         );
        
         popularValuesRequest.add(() => {
-          this.fieldConfig.refreshSelectizeOptions(`${i}_val`, valueOptions, false);
+          const vals = $(document.querySelectorAll("#discouraged-feature-table .discouraged-val select"));
+          const lastVal = vals[i];
+          this.fieldConfig.refreshSelectizeOptions(lastVal, valueOptions, false);
         });
       });
     });
@@ -131,7 +136,6 @@ export class DiscouragedFeaturesComponent {
       this.fieldConfig.disabledFeatureConfig.get(i).push(disabledValueConfig);
       disabledFormGroup.addControl('val', this.attribution.createControl(disabledValueConfig)); 
     } else {
-      this.fieldConfig.refreshSelectizeOptions(i + "_val", valueOptions, true);
       featureConfigMap[1] = disabledValueConfig;
     }
     if(loadedVal && (<FormArray>this.attribution.form.get("disabledFeatures")).at(i).get("val").pristine){

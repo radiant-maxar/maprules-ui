@@ -7,7 +7,7 @@
   <div class="content-body disabled-features-body">
     <ng-container [formGroup]="attribution.form">
       <ng-container formArrayName="disabledFeatures">
-        <table class="table table-bordered feature-table" *ngIf="attribution.disabledFeatures.length > 0">
+        <table id="discouraged-feature-table" class="table table-bordered feature-table" *ngIf="attribution.disabledFeatures.length > 0">
           <thead class="feature-table-thead">
             <tr class="feature-table-head-row">
               <th class="feature-table-main feature-table-th" scope="col">Key</th>
@@ -18,11 +18,11 @@
           <tbody>
             <ng-container *ngFor="let disabledFeature of attribution.disabledFeatures.controls; let disabledFeatureIndex=index">
               <tr class="feature-table-body-row" >
-                <td class="feature-table-main feature-table-td">
+                <td class="feature-table-main feature-table-td discouraged-key">
                   <ng-container discouraged-feature field="key" [group]="attribution.form" [nestedGroupIndex]="disabledFeatureIndex">
                   </ng-container>
                 </td>
-                <td class="feature-table-main feature-table-td">
+                <td class="feature-table-main feature-table-td discouraged-val">
                   <ng-container *ngIf="attribution.disabledFeatures.at(disabledFeatureIndex).get('key') &&
                                 attribution.disabledFeatures.at(disabledFeatureIndex).get('key').value && attribution.disabledFeatures.at(disabledFeatureIndex).get('val')">
                     <ng-container discouraged-feature field="val" [group]="attribution.form" [nestedGroupIndex]="disabledFeatureIndex">

@@ -15,7 +15,7 @@ import { FieldConfig } from '../interfaces/field-config.interface';
             <span class="form-text text-muted">
               {{ config.hint }}
             </span>
-            <ng-selectize [id]="nestedGroupIndex + '_' + config.name" [formControlName]="config.name" [config]=config.selectizeConfig ngDefaultControl></ng-selectize>       
+            <ng-selectize [formControlName]="config.name" [config]=config.selectizeConfig ngDefaultControl></ng-selectize>       
           </div>
 
         </ng-container>
