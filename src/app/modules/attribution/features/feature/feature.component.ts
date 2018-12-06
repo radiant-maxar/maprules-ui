@@ -7,7 +7,7 @@ import { SelectizeOption } from '../../../../shared/interfaces/selectize-option.
 
 import { AttributionComponent } from '../../attribution.component';
 import { FieldConfigService } from '../../../../core/services/field-config.service';
-import { TagInfoService } from '../../../../core/services/tag-info/tag-info.service';
+import { TagInfoService } from '../../../../core/services/tag-info.service';
 declare var $: any;
 
 @Component({

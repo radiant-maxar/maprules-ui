@@ -22,7 +22,10 @@ export class TagInfoService {
   popularTagsRequest: any;
   tagComboRequest: any;
 
+  /* CACHE PROPS */
   static POPULAR_TAGS: string = 'popularTags';
+  public static popularValues(key: string): string { return `popularValues_${key} ` }
+
   static CACHE_SIZE: number = 1;
 
   $cache: Map<string, Observable<any>>;
