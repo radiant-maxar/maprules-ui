@@ -6,7 +6,7 @@ import { FieldConfig } from '../../../shared/interfaces/field-config.interface';
 import { SelectizeOption } from '../../../shared/interfaces/selectize-option.interface';
 import { AttributionComponent } from '../attribution.component';
 import { FieldConfigService } from '../../../core/services/field-config.service';
-import { TagInfoService } from '../../../core/services/tag-info/tag-info.service';
+import { TagInfoService } from '../../../core/services/tag-info.service';
 
 
 declare var $: any;
@@ -35,10 +35,8 @@ export class DiscouragedFeaturesComponent {
   panelIds: string[] = [];
 
   ngOnInit() {
-    this.tagInfo.getPopularKeyOptions();
-    this.tagInfo.popularTagsRequest.add(() => {
-      this.loadDiscouragedFeatures();
-    });
+    this.tagInfo
+      .getCache(TagInfoService.POPULAR_TAGS_URL, TagInfoService.POPULAR_TAGS, [this.tagInfo.popularTagsMapper()])
   }
 
   loadDiscouragedFeatures(){
@@ -53,20 +51,35 @@ export class DiscouragedFeaturesComponent {
     }
   }
 
-  addDiscouragedFeature(loadedFeature: FormGroup){
-    var keyOptions = [];
-    if(loadedFeature){
-      keyOptions.push(<SelectizeOption>{text: loadedFeature['key'], value: loadedFeature['key']});
+  loadOptions(keyOptions): void {
+    for(const key of $(document.querySelectorAll("#discouraged-feature-table .discouraged-key select"))) {
+      this.fieldConfig.refreshSelectizeOptions(key, keyOptions, false);
     }
-    this.addDisabledKeyControl(keyOptions, loadedFeature);
-    this.tagInfo.getPopularKeyOptions(); //TODO call only once outside of this function
-    this.tagInfo.popularTagsRequest.add(() => {
-      const allOptions = keyOptions.concat(this.tagInfo.popularKeys);
-      const keys = $(document.querySelectorAll("#discouraged-feature-table .discouraged-key select"));
-      for(const key of keys) {
-        this.fieldConfig.refreshSelectizeOptions(key, allOptions, false);
-      }
-    });
+  }
+
+  addDiscouragedFeature(loadedFeature: FormGroup){
+    // load up the initial selectize...
+    let keyOptions = [];
+    if (loadedFeature) {
+      keyOptions.push(<SelectizeOption>{ text: loadedFeature.get('key'), value: loadedFeature.get('key') });
+    }
+    
+    // if we're 'inflight', we don't let have something cached,
+    // then load the initial options.
+    if (this.tagInfo.isInflight(TagInfoService.POPULAR_TAGS)) {
+      this.loadOptions(keyOptions)
+    }
+
+    this.tagInfo
+      .getCache(TagInfoService.POPULAR_TAGS_URL, TagInfoService.POPULAR_TAGS, [this.tagInfo.popularTagsMapper()])
+      .subscribe(observer => {
+        // once we get response from tagInfo, or just can load from cache, load it up again.
+        observer.next((options) => {
+          keyOptions = keyOptions.concat(options);
+          this.loadOptions(keyOptions);
+        })
+      })
+    }
   }
 
 

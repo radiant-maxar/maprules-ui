@@ -1,8 +1,8 @@
 import { TestBed, inject } from "@angular/core/testing";
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { TagInfoService } from "./tag-info.service";
-import { environment } from "../../../../environments/environment";
-import { ServiceRequestInterceptor } from "../test/service-request-interceptor";
+import { TagInfoService } from "../../../app/core/services/tag-info/tag-info.service";
+import { environment } from "../../../environments/environment";
+import { ServiceRequestInterceptor } from "./service-request-interceptor";
 import { OperatorFunction } from "rxjs";
 
 describe("TagInfoService", () => {
