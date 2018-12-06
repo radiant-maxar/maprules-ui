@@ -7,7 +7,7 @@ import { SelectizeOption } from '../../../../shared/interfaces/selectize-option.
 
 import { AttributionComponent } from '../../attribution.component';
 import { FieldConfigService } from '../../../../core/services/field-config.service';
-import { TagInfoService } from '../../../../core/services/tag-info.service';
+import { TagInfoService } from '../../../../core/services/tag-info/tag-info.service';
 declare var $: any;
 
 @Component({
@@ -26,9 +26,16 @@ export class FeatureComponent {
   @Input()
   i: number;
 
+  constructor(
+    private fb: FormBuilder,
+    private attribution: AttributionComponent,
+    private fieldConfig: FieldConfigService,
+    private tagInfo: TagInfoService
+  ) {}
 
   ngOnInit(){
     setTimeout(() => {
+      this.tagInfo.getPopularTags();
       if (
         !this.attribution.loadedForm ||
         !this.attribution.loadedForm['presets'][this.i]) {
@@ -45,6 +52,24 @@ export class FeatureComponent {
     toggler.removeClass(`fa-plus-square-o`);
   }
 
+  cacheSubscription(
+    prop: string, 
+    keyOptions: Array<SelectizeOption>, 
+    fieldConfig: FieldConfigService,
+    i: number, 
+    primaryGroupIndex: number
+  ) {
+    return this.tagInfo.getCache(prop).subscribe({
+      next(tags) {
+        var options = keyOptions.concat(tags);
+        fieldConfig.refreshSelectizeOptions(`${i}_${primaryGroupIndex}_key`, options, false)
+      },
+      error(error) {
+        console.log(error);
+      }
+    })
+  }
+
   loadPrimaryGroups(){
     var $scope = this;
     var keyOptions = [];
@@ -58,13 +83,8 @@ export class FeatureComponent {
           keyOptions.push(<SelectizeOption>{text: loadedGroup['key'], value: loadedGroup['key']});
           $scope.addPrimaryKeyControl(primaryKeyConfig, loadedGroup);
           const primaryGroupIndex = $scope.primaryFormArray.length == 0 ? 0 : $scope.primaryFormArray.length - 1;
-          $scope.fieldConfig.refreshSelectizeOptions(`${$scope.i}_${primaryGroupIndex}_key`, keyOptions, false);
-          $scope.tagInfo.popularTagsRequest.add(() => {
-            var options = keyOptions.concat($scope.tagInfo.popularKeys);
-            $scope.fieldConfig.refreshSelectizeOptions(`${$scope.i}_${primaryGroupIndex}_key`, options, false);
-          });
+          $scope.cacheSubscription(TagInfoService.POPULAR_TAGS, keyOptions, $scope.fieldConfig, $scope.i, primaryGroupIndex);
         });
-     
       }
     }
 
@@ -85,25 +105,13 @@ export class FeatureComponent {
     return <FormArray> this.featureFormGroup.get('fields');
   }
 
-  constructor(
-    private fb: FormBuilder,
-    private attribution: AttributionComponent,
-    private fieldConfig: FieldConfigService,
-    private tagInfo: TagInfoService
-  ) {}
-
   addPrimaryGroup(i: number, loadedGroup: FormGroup){
     var keyOptions = [];
     var primaryKeyConfig = this.fieldConfig.getPrimaryKeyConfigSettings(keyOptions);
     this.fieldConfig.config.push(primaryKeyConfig);
     this.addPrimaryKeyControl(primaryKeyConfig, loadedGroup);
-    this.tagInfo.getPopularKeyOptions();
-    this.tagInfo.popularTagsRequest.add(() => {
-      var options = keyOptions.concat(this.tagInfo.popularKeys);
-      const primaryGroupIndex = this.primaryFormArray.length == 0 ? 0 : this.primaryFormArray.length - 1;
-      this.fieldConfig.refreshSelectizeOptions(`${i}_${primaryGroupIndex}_key`, options, false);
-    });
-
+    const primaryGroupIndex = this.primaryFormArray.length == 0 ? 0 : this.primaryFormArray.length - 1;
+    this.cacheSubscription(TagInfoService.POPULAR_TAGS, keyOptions, this.fieldConfig, this.i, primaryGroupIndex);
   }
 
   addPrimaryKeyControl(primaryKeyConfig: FieldConfig, loadedGroup: FormGroup){
@@ -135,6 +143,9 @@ export class FeatureComponent {
 
         var primaryValueConfig = this.fieldConfig.getPrimaryValueConfigSettings(valueOptions); 
         this.setPrimaryValues(primaryGroupIndex, valueOptions, primaryValueConfig, loadedVal, primaryFormGroup); 
+
+        this.tagInfo.getPopularValues(val)
+        this.cacheSubscription(`${val}_values`, valueOptions, this.fieldConfig, this.i, primaryGroupIndex);
 
         var popularValuesRequest = this.tagInfo.getPopularValues(val).subscribe(
           (data) => {

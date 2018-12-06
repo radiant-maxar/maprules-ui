@@ -63,7 +63,8 @@ export class StartMapRuleComponent {
 
   buildIdUrl(): string {
     const base = `${environment.maprules}/config/${this.configId}`;
-    return decodeURIComponent(`${environment.osm}?presets?${base}/presets/iD&validations=${base}/rules/iD`);
+    const osm = `${environment.osm}#background=Bing&disable_features=boundaries`;
+    return decodeURIComponent(`${osm}&presets=${base}/presets/iD&validations=${base}/rules/iD`);
   }
 
   buildJosmUrl(): string {
