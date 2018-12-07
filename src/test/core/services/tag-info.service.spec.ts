@@ -1,7 +1,6 @@
 import { TestBed, inject } from "@angular/core/testing";
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { TagInfoService } from "../../../app/core/services/tag-info.service";
-import { environment } from "../../../environments/environment";
 import { ServiceRequestInterceptor } from "./service-request-interceptor";
 import { OperatorFunction } from "rxjs";
 
@@ -30,15 +29,10 @@ describe("TagInfoService", () => {
       [TagInfoService],
       (service: TagInfoService) => {
         let numCalls = 0;
-        const mappers: Array<OperatorFunction<any,any>> = [
-          service.popularTagsMapper(), 
-          ServiceRequestInterceptor.counterMapper(numCalls)
-        ]
-
         // ask for cache multiple times, still just 1 api call...
         for (let i: number = 0; i < 5; i++) {
           service
-            .getCache(TagInfoService.POPULAR_TAGS_URL, TagInfoService.POPULAR_TAGS, mappers)
+            .getCache(TagInfoService.POPULAR_TAGS)
             .subscribe(observer => observer.next(() => { expect(numCalls).toEqual(1)  }))
         }
       })

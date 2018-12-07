@@ -41,8 +41,9 @@ export class DiscouragedFeaturesComponent {
   panelIds: string[] = [];
 
   ngOnInit() {
-    this.tagInfo.getCache(TagInfoService.POPULAR_TAGS_URL,TagInfoService.POPULAR_TAGS,[this.tagInfo.popularTagsMapper()]);
-    this.loadDiscouragedFeatures();    
+    if (this.attribution.loadedForm && this.attribution.loadedForm['disabledFeatures']) {
+      this.loadDiscouragedFeatures();    
+    }
   }
 
   loadDiscouragedFeatures() {
@@ -74,7 +75,7 @@ export class DiscouragedFeaturesComponent {
     }
 
     this.tagInfo
-      .getCache(TagInfoService.POPULAR_TAGS_URL, TagInfoService.POPULAR_TAGS, [this.tagInfo.popularTagsMapper()])
+      .getCache(TagInfoService.POPULAR_TAGS)
       .subscribe(observer => {
         // once we get response from tagInfo, or just can load from cache, load it up again.
         observer.next(options => {
@@ -125,15 +126,15 @@ export class DiscouragedFeaturesComponent {
       loadedVal!.forEach(val => valueOptions.push(<SelectizeOption>{ text: val, value: val }));
       $scope.addDisabledValueControl(disabledFormGroup, i, valueOptions, loadedVal);
 
-      const popularValues: string = TagInfoService.popularValues(val);
+      const tagValues: string = TagInfoService.tagValues(val);
 
       const lastVal = $(document.querySelectorAll("#discouraged-feature-table .discouraged-val select"))[i];
-      if ($scope.tagInfo.isInflight(popularValues)) {
+      if ($scope.tagInfo.isInflight(tagValues)) {
         $scope.fieldConfig.refreshSelectizeOptions(lastVal, valueOptions, true);
       }
 
       $scope.tagInfo
-        .getCache(TagInfoService.tagValuesUrl(val), popularValues, [$scope.tagInfo.tagValuesMapper()])
+        .getCache(tagValues)
         .subscribe(observer => {
           observer.next(options => {
             valueOptions = valueOptions
