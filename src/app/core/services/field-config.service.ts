@@ -125,37 +125,37 @@ export class FieldConfigService {
                           }
                          ];
   }
-  getPrimaryKeyConfigSettings(keyOptions: SelectizeOption[]){ 
-    return {  type: 'primary', 
-              name: 'key', 
-              validation: [Validators.required], 
-              selectizeConfig: { 
-                                create: true, 
-                                persist: true, 
-                                items: [""], 
-                                maxItems: 1, 
-                                options: keyOptions, 
-                                plugins: ['dropdown_direction'], 
-                                dropdownDirection: 'down'        
+  getPrimaryKeyConfigSettings(keyOptions: SelectizeOption[]) {
+    return {  type: 'primary',
+              name: 'key',
+              validation: [Validators.required],
+              selectizeConfig: {
+                                create: true,
+                                persist: true,
+                                items: [''],
+                                maxItems: 1,
+                                options: keyOptions,
+                                plugins: ['dropdown_direction'],
+                                dropdownDirection: 'down'
             }
     };
   }
- getPrimaryValueConfigSettings(valueOptions: SelectizeOption[]){
-  var valConfig = { 
-              type: 'primary', 
-              name: 'val', 
-              value: "", 
-              selectizeConfig: { 
+ getPrimaryValueConfigSettings(valueOptions: SelectizeOption[]) {
+  const valConfig = {
+              type: 'primary',
+              name: 'val',
+              value: '',
+              selectizeConfig: {
                                   create: true,
                                   persist: true,
                                   maxItems: 1,
-                                  items: [""],
+                                  items: [''],
                                   options: valueOptions,
                                   allowEmptyOption: true,
                                   plugins: ['dropdown_direction'],
-                                  dropdownDirection: 'down' 
-                                } 
-    }; 
+                                  dropdownDirection: 'down'
+                                }
+    };
     return valConfig;
   }
 
@@ -187,7 +187,7 @@ export class FieldConfigService {
     return this.disabledFeatureConfig.get(i).find((control) => control.name === name);
   }
 
-  getDisabledKeyConfig(keyOptions: SelectizeOption[]){
+  getDisabledKeyConfig(keyOptions: SelectizeOption[]) {
     return { type: 'selectize',
              name: 'key',
              selectizeConfig: {
@@ -200,12 +200,12 @@ export class FieldConfigService {
                               }
              };
   }
-  
-  getDisabledValueConfig(valueOptions: SelectizeOption[]){
-    return {  
+
+  getDisabledValueConfig(valueOptions: SelectizeOption[]) {
+    return {
       type: 'selectize',
       name: 'val',
-      value: "",
+      value: '',
       selectizeConfig: {
                           create: true,
                           persist: true,
@@ -213,15 +213,15 @@ export class FieldConfigService {
                           options: valueOptions,
                           allowEmptyOption: false,
                           plugins: ['dropdown_direction', 'remove_button'],
-                          dropdownDirection: 'down'      
+                          dropdownDirection: 'down'
                         }
     };
   }
-  
-  refreshSelectizeOptions(select: any, valueOptions: SelectizeOption[], clearSelection: boolean){
-    if(select){
-      var selectize = select.selectize;
-      if(clearSelection){
+
+  refreshSelectizeOptions(select: any, valueOptions: SelectizeOption[], clearSelection: boolean) {
+    if (select) {
+      const selectize = select.selectize;
+      if (clearSelection) {
         selectize.clear();
         selectize.clearOptions();
       }

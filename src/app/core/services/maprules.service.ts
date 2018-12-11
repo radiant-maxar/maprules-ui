@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
-import { environment } from '../../../environments/environment'
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -11,7 +11,7 @@ import { environment } from '../../../environments/environment'
 
 
 export class MapRulesService {
- 
+
   mapRulesUrl: string;
   comboMap: {};
 
@@ -25,26 +25,26 @@ export class MapRulesService {
     this.setMapRulesUrl();
   }
 
-  setMapRulesUrl(){
+  setMapRulesUrl() {
     this.mapRulesUrl = environment.maprulesConfig;
   }
 
-  save(configId: string, value: {[name: string]: any}){
+  save(configId: string, value: {[name: string]: any}) {
     const scrubbedForm = this.removeEmpty(value);
-    if(configId){
-      return this.http.put(this.mapRulesUrl + "/" + configId, scrubbedForm, this.httpOptions).pipe(
+    if (configId) {
+      return this.http.put(this.mapRulesUrl + '/' + configId, scrubbedForm, this.httpOptions).pipe(
         catchError(this.handleError)
       );
     }
     return this.saveNewConfig(scrubbedForm);
   }
 
-  saveForm(value: {[name: string]: any}){
+  saveForm(value: {[name: string]: any}) {
     const scrubbedForm = this.removeEmpty(value);
     return this.saveNewConfig(scrubbedForm);
   }
 
-  saveNewConfig(scrubbedForm: {[name: string]: any}){
+  saveNewConfig(scrubbedForm: {[name: string]: any}) {
     return this.http.post(this.mapRulesUrl, scrubbedForm, this.httpOptions).pipe(
       catchError(this.handleError)
     );
@@ -54,12 +54,12 @@ export class MapRulesService {
       return empty === '';
   }
 
-  removeEmpty(config: {[name: string]: any}){
-    var next = {}
-    var $scope = this;
+  removeEmpty(config: {[name: string]: any}) {
+    const next = {};
+    const $scope = this;
     Object.keys(config).forEach((key) => {
       if (Array.isArray(config[key])) {
-        var nextArray = [];
+        const nextArray = [];
         config[key].forEach(subVal => {
           if (subVal instanceof Object) {
             const flush = $scope.removeEmpty(subVal);
@@ -71,18 +71,18 @@ export class MapRulesService {
               nextArray.push(subVal);
             }
           }
-        })
+        });
         next[key] = nextArray;
       } else if (!$scope.isEmpty(config[key])) {
-          next[key] = config[key]
+          next[key] = config[key];
       }
-    })
+    });
     return next;
   }
 
 
-  getMapRule(configId: string){
-    return this.http.get(this.mapRulesUrl + "/" + configId).pipe(catchError(this.handleError));
+  getMapRule(configId: string) {
+    return this.http.get(this.mapRulesUrl + '/' + configId).pipe(catchError(this.handleError));
   }
 
   private handleError(error: HttpErrorResponse) {
@@ -91,5 +91,5 @@ export class MapRulesService {
       `: ${error.message}`);
     return throwError(
       error.error.message);
-  };
+  }
 }
