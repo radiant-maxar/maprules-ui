@@ -17,15 +17,11 @@ export class ServicesCache {
     this.$inflight.delete(url);
   }
 
-  get(req: HttpRequest<any>): HttpResponse<any> | undefined {
-    const url = req.urlWithParams;
-    const cached = this.$cache.get(url);
-
-    return cached ? cached.response : undefined;
+  get(url: string): HttpResponse<any> | undefined {
+    return this.$cache.get(url);
   }
 
-  put (req: HttpRequest<any>, response: HttpResponse<any>) : void {
-    const url = req.url;
+  put (url: string, response: HttpResponse<any>) : void {
     this.$cache.set(url, { url, response })
   }
 

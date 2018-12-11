@@ -7,8 +7,8 @@ import {
   HttpHandler
 } from '@angular/common/http';
 import { ServicesCache } from './services-cache';
-import { catchError, map, reduce, tap, first, retryWhen } from 'rxjs/operators';
-import { Observable, of } from 'rxjs';
+import { catchError, map, reduce, tap, first } from 'rxjs/operators';
+import { of } from 'rxjs';
 import { OperatorFunction } from 'rxjs';
 
 import { TagInfoService } from './tag-info.service';
@@ -87,7 +87,7 @@ export class ServiceCacheInterceptor implements HttpInterceptor {
 
   intercept(req: HttpRequest<any>, next: HttpHandler) {
     const cache = this.cache;
-    const cached = cache.get(req);
+    const cached = cache.get(req.urlWithParams);
     return (cached ? of(cached) : this.sendRequest(req, next, cache))
       .pipe(
         catchError(e => { // catch error, log it, and just return mock of api request...
@@ -98,10 +98,14 @@ export class ServiceCacheInterceptor implements HttpInterceptor {
   }
 
   sendRequest(req: HttpRequest<any>, next: HttpHandler, cache: ServicesCache) {
-    cache.isInflight(req.urlWithParams);
+    const url: string = req.urlWithParams;
+    cache.putInflight(url);
     return next.handle(req).pipe(
       first((e: any) => e instanceof HttpResponse),
-      tap((e: any) => cache.put(req, e))
+      tap((e: any) => { 
+        cache.removeInflight(url);
+        cache.put(url, e) 
+      })
     )
   }
 
