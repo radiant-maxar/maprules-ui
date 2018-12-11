@@ -148,10 +148,6 @@ describe('TagInfoService', () => {
     service = TestBed.get(TagInfoService);
     httpMock = TestBed.get(HttpTestingController);
   });
-
-  afterEach(() => {
-  });
-
   it('should be created', inject(
     [TagInfoService],
     (service: TagInfoService) => {
@@ -159,7 +155,7 @@ describe('TagInfoService', () => {
     }
   ));
 
-  describe('popularTags', () => {
+  describe('#popularTags', () => {
     it('calls api only once... otherwise, it uses the service cache', () => {
       service.popularTags().subscribe((data) => {
         expect(data).toEqual(popularTagsCache);
@@ -174,7 +170,7 @@ describe('TagInfoService', () => {
       httpMock.verify();
     })
   });
-  describe('tagValues', () => {
+  describe('#tagValues', () => {
     it('calls api only once... otherwise, it uses the service cache', () => {
       service.tagValues('building').subscribe((data) => {
         expect(data).toEqual(tagValuesCache);
@@ -189,7 +185,7 @@ describe('TagInfoService', () => {
       httpMock.verify()
     });
   });
-  describe('tagCombinations', () => {
+  describe('#tagCombinations', () => {
     it('calls api only once... otherwise, it uses the service cache', () => {
       service.tagCombinations('building', 'yes').subscribe((data) => {
         expect(data).toEqual(valueCombinationsCache);
