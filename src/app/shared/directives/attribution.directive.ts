@@ -1,15 +1,15 @@
 import { ComponentFactoryResolver, ComponentRef, Directive, Input, OnChanges, OnInit, Type, ViewContainerRef } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
-import { PrimaryGroupSelectizeComponent } from '../components/primary-group-selectize.component';
+import { PrimaryGroupSelectizeComponent } from '../components/primary-group-selectize/primary-group-selectize.component';
 import { EntitiesComponent } from '../components/entities.component';
 import { DiscouragedEntitiesComponent } from '../components/discouraged-entities.component';
-import { FormInputComponent } from '../components/form-input.component';
+import { FormInputComponent } from '../components/form-input/form-input.component';
 import { FormButtonComponent } from '../components/form-button.component';
 
 import { Field } from '../interfaces/field.interface';
 import { FieldConfig } from '../interfaces/field-config.interface';
-import { FieldConfigService } from '../../core/services/field-config.service'
+import { FieldConfigService } from '../../core/services/field-config.service';
 
 const components: {[type: string]: Type<Field>} = {
   primary: PrimaryGroupSelectizeComponent,

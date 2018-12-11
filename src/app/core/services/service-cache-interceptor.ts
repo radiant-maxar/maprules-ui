@@ -31,12 +31,6 @@ export class ServiceCacheInterceptor implements HttpInterceptor {
   /* CACHE OPERATOR FUNCTIONS */
   /* these are functions that take tagInfo responses and make them understandable to the ui... */
 
-  static catchInvalid(): OperatorFunction<any, any> {
-    return map((e: any): any => {
-      return (e instanceof HttpResponse) ? e : [];
-    })
-  }
-
   /**
    * returns popular tags resource's OperatorFunction
    * @return {OperatorFunction}
@@ -47,7 +41,7 @@ export class ServiceCacheInterceptor implements HttpInterceptor {
         data.push({
           key: datum.key,
           value: <SelectizeOption>{ text: datum.key, value: datum.key }
-        })
+        });
       });
       return data;
     }, []);
@@ -59,9 +53,9 @@ export class ServiceCacheInterceptor implements HttpInterceptor {
    */
   static tagValuesMapper(): OperatorFunction<any, any> {
     return reduce((data: Array<SelectizeOption>, response: any): any => {
-      response.data.forEach((datum: any) => { 
+      response.data.forEach((datum: any) => {
         data.push(<SelectizeOption>{ text: datum.value, value: datum.value });
-      })
+      });
       return data;
     }, []);
   }
@@ -71,7 +65,8 @@ export class ServiceCacheInterceptor implements HttpInterceptor {
    * @return {OperatorFunction}
    */
   static tagCombosMapper(): OperatorFunction<any, any> {
-    return reduce((tagCombos, response: any): any => { // turns array of single key/value combos into map of keys and each of their possible values...
+    return reduce((tagCombos, response: any): any => {
+      // turns array of single key/value combos into map of keys and each of their possible values...
       response.data.forEach((datum: any) => {
         const currentValues = (tagCombos[datum.other_key] || []);
         if (datum.other_value.length > 0) {
@@ -94,7 +89,7 @@ export class ServiceCacheInterceptor implements HttpInterceptor {
           console.log(`REQUEST FAILED: ${TagInfoService.POPULAR_TAGS_URL}`);
           return of([]);
         })
-      )
+      );
   }
 
   sendRequest(req: HttpRequest<any>, next: HttpHandler, cache: ServicesCache) {
@@ -102,11 +97,10 @@ export class ServiceCacheInterceptor implements HttpInterceptor {
     cache.putInflight(url);
     return next.handle(req).pipe(
       first((e: any) => e instanceof HttpResponse),
-      tap((e: any) => { 
+      tap((e: any) => {
         cache.removeInflight(url);
-        cache.put(url, e) 
+        cache.put(url, e);
       })
-    )
+    );
   }
-
 }

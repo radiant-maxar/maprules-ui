@@ -3,7 +3,7 @@ import { FormGroup } from '@angular/forms';
 
 import { Field } from '../interfaces/field.interface';
 import { FieldConfig } from '../interfaces/field-config.interface';
-import { NgbPanelChangeEvent } from '@ng-bootstrap/ng-bootstrap'; 
+import { NgbPanelChangeEvent } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'entity-input',
@@ -26,7 +26,7 @@ export class EntityInputComponent implements Field {
   config: FieldConfig;
   group: FormGroup;
 
-  private preventToggle( event:Event): void{
+  private preventToggle( event: Event): void {
     event.preventDefault();
     event.stopPropagation();
   }

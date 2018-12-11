@@ -5,7 +5,7 @@ import { DiscouragedSelectizeComponent } from '../components/discouraged-selecti
 
 import { Field } from '../interfaces/field.interface';
 import { FieldConfig } from '../interfaces/field-config.interface';
-import { FieldConfigService } from '../../core/services/field-config.service'
+import { FieldConfigService } from '../../core/services/field-config.service';
 
 const components: {[type: string]: Type<Field>} = {
   selectize: DiscouragedSelectizeComponent

@@ -6,7 +6,7 @@ import { FieldConfig } from '../interfaces/field-config.interface';
 
 @Component({
   selector: 'form-button',
-  styleUrls: ['../../modules/attribution/features/feature/feature.component.css'],
+  styleUrls: ['../../modules/attribution/feature/feature.component.css'],
   template: `
     <div [formGroup]="group">
       <button class="btn btn-light feature-button"

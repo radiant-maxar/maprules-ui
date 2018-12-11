@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgSelectizeModule } from 'ng-selectize';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap'; 
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { AttributionDirective } from '../../shared/directives/attribution.directive';
 import { PrimaryIdentifierDirective } from '../../shared/directives/primary-identifier.directive';
@@ -12,22 +12,22 @@ import { GuidelineDirective } from '../../shared/directives/guideline.directive'
 
 import { AttributionComponent } from './attribution.component';
 import { FeaturesComponent } from './features/features.component';
-import { FeatureComponent } from './features/feature/feature.component';
+import { FeatureComponent } from './feature/feature.component';
 import { DiscouragedFeaturesComponent } from './discouraged-features/discouraged-features.component';
 
 import { EntitiesComponent } from '../../shared/components/entities.component';
 import { DiscouragedEntitiesComponent } from '../../shared/components/discouraged-entities.component';
 import { DiscouragedSelectizeComponent } from '../../shared/components/discouraged-selectize.component';
-import { PrimaryGroupSelectizeComponent } from '../../shared/components/primary-group-selectize.component';
-import { GuidelineSelectComponent } from '../../shared/components/guideline-select.component';
-import { GuidelineSelectizeComponent } from '../../shared/components/guideline-selectize.component';
+import { PrimaryGroupSelectizeComponent } from '../../shared/components/primary-group-selectize/primary-group-selectize.component';
+import { GuidelineSelectComponent } from '../../shared/components/guideline-select/guideline-select.component';
+import { GuidelineSelectizeComponent } from '../../shared/components/guideline-selectize/guideline-selectize.component';
 import { ValueSelectComponent } from '../../shared/components/value-select.component';
-import { ValueSelectizeComponent } from '../../shared/components/value-selectize.component';
-import { GuidelineInputComponent } from '../../shared/components/guideline-input.component';
-import { FormInputComponent } from '../../shared/components/form-input.component';
+import { ValueSelectizeComponent } from '../../shared/components/value-selectize/value-selectize.component';
+import { GuidelineInputComponent } from '../../shared/components/guideline-input/guideline-input.component';
+import { FormInputComponent } from '../../shared/components/form-input/form-input.component';
 import { FormButtonComponent } from '../../shared/components/form-button.component';
 import { EntityInputComponent } from '../../shared/components/entity-input.component';
-import { EntitySelectizeComponent } from '../../shared/components/entity-selectize.component';
+import { EntitySelectizeComponent } from '../../shared/components/entity-selectize/entity-selectize.component';
 
 @NgModule({
   imports: [

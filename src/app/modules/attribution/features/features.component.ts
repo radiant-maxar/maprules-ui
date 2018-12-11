@@ -6,7 +6,7 @@ import { FieldConfig } from '../../../shared/interfaces/field-config.interface';
 import { SelectizeOption } from '../../../shared/interfaces/selectize-option.interface';
 import { AttributionComponent } from '../attribution.component';
 import { FieldConfigService } from '../../../core/services/field-config.service';
-import { NgbPanelChangeEvent } from '@ng-bootstrap/ng-bootstrap'; 
+import { NgbPanelChangeEvent } from '@ng-bootstrap/ng-bootstrap';
 import { Event } from '@angular/router';
 import { TagInfoService } from 'src/app/core/services/tag-info.service';
 
@@ -17,7 +17,7 @@ declare var $: any;
   styleUrls: [
     '../../../shared/components/content.group.css',
     './features.component.css',
-    './feature/feature.component.css'
+    '../feature/feature.component.css'
   ],
   templateUrl: './features.html',
   encapsulation: ViewEncapsulation.None
@@ -38,16 +38,14 @@ export class FeaturesComponent {
   ngOnInit() {
     setTimeout(() => {
       const $scope = this;
-      // get popular tags initially when we load up the features... 
-      this.tagInfo.addCache(TagInfoService.POPULAR_TAGS);
-      
+      this.tagInfo.popularTags().subscribe(); // go get and cache popularTags...
       if (this.attribution.loadedForm && this.attribution.loadedForm['presets']) {
-        this.attribution.loadedForm['presets'].forEach(function(preset, presetIndex){
+        this.attribution.loadedForm['presets'].forEach(function(preset, presetIndex) {
           $scope.addFeatureCard();
-          const presetControls = (<FormGroup>(<FormGroup>(<FormArray>$scope.attribution.form.get("presets")).at(presetIndex))); 
-          presetControls.get("name").setValue(preset.name);
-          presetControls.get("geometry").setValue(preset.geometry);
-        })
+          const presetControls = (<FormGroup>(<FormGroup>(<FormArray>$scope.attribution.form.get('presets')).at(presetIndex)));
+          presetControls.get('name').setValue(preset.name);
+          presetControls.get('geometry').setValue(preset.geometry);
+        });
       }
     });
   }

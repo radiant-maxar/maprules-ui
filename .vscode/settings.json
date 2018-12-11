@@ -1,4 +1,6 @@
 {
     "editor.tabSize": 2,
+    "tslint.alwaysShowRuleFailuresAsWarnings": true,
+    "tslint.alwaysShowStatus": true,
     "editor.renderWhitespace": "boundary"
 }

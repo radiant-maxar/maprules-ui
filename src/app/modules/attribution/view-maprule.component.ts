@@ -18,7 +18,7 @@ declare var $: any;
     './view-maprule.css',
     '../../icons/icon.component.css',
     '../../shared/components/tags/tags.component.css'
-    
+
   ],
   templateUrl: './view-maprule.html',
   encapsulation: ViewEncapsulation.None
@@ -48,8 +48,8 @@ export class ViewMapRuleComponent {
           });
         }
         const nav = queryParam['nav'];
-        if(nav){
-          if(nav == "hide"){
+        if (nav) {
+          if (nav === 'hide') {
             this.nav.hide();
           } else {
             this.nav.show();

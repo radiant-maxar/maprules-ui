@@ -2,11 +2,11 @@ import { ComponentFactoryResolver, ComponentRef, Directive, Input, OnChanges, On
 import { FormGroup } from '@angular/forms';
 
 import { EntityInputComponent } from '../components/entity-input.component';
-import { EntitySelectizeComponent } from '../components/entity-selectize.component';
+import { EntitySelectizeComponent } from '../components/entity-selectize/entity-selectize.component';
 
 import { Field } from '../interfaces/field.interface';
 import { FieldConfig } from '../interfaces/field-config.interface';
-import { FieldConfigService } from '../../core/services/field-config.service'
+import { FieldConfigService } from '../../core/services/field-config.service';
 
 const components: {[type: string]: Type<Field>} = {
   input: EntityInputComponent,

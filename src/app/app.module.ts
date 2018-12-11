@@ -3,9 +3,9 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AttributionModule } from './modules/attribution/attribution.module';
-import { NavigationBarComponent } from './shared/components/navigation-bar.component';
+import { NavigationBarComponent } from './shared/components/navigation-bar/navigation-bar.component';
 import { EditMapRuleComponent } from './modules/attribution/edit-maprule.component';
 import { ViewMapRuleComponent } from './modules/attribution/view-maprule.component';
 import { StartMapRuleComponent } from './modules/attribution/start-maprule.component';
@@ -20,6 +20,8 @@ import { TagsComponent } from './shared/components/tags/tags.component';
 import { ValTooltipComponent } from './shared/components/val-tooltip/val-tooltip.component';
 import { DecodeConditionPipe } from './decode-condition.pipe';
 import { EncodeClassPipe } from './encode-class.pipe';
+import { ServiceCacheInterceptor } from './core/services/service-cache-interceptor';
+import { ServicesCache } from './core/services/services-cache';
 
 const appRoutes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -56,7 +58,10 @@ const appRoutes: Routes = [
     HttpClientModule,
     RouterModule.forRoot(appRoutes)
   ],
-  providers: [],
+  providers: [
+    ServicesCache,
+    { provide: HTTP_INTERCEPTORS, useClass: ServiceCacheInterceptor, multi: true }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

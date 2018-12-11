@@ -42,9 +42,9 @@ export class ValueSelectComponent implements Field {
   nestedArrayIndex: number;
   options: string[];
 
-  ngOnInit(){
+  ngOnInit() {
     setTimeout(() => {
-      if(this.config.optionMap){
+      if (this.config.optionMap) {
         this.options = Array.from(this.config.optionMap.keys());
       }
     });

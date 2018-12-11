@@ -39,15 +39,14 @@ export class TagInfoService {
 
   constructor(private http: HttpClient) { }
 
-  
   popularTags() {
     return this.http.get(TagInfoService.POPULAR_TAGS_URL)
-      .pipe(ServiceCacheInterceptor.getMapper(TagInfoService.POPULAR_TAGS))
+      .pipe(ServiceCacheInterceptor.getMapper(TagInfoService.POPULAR_TAGS));
   }
 
   tagValues(key: string) {
     return this.http.get(TagInfoService.tagValuesUrl(key))
-      .pipe(ServiceCacheInterceptor.getMapper(TagInfoService.TAG_VALUES))
+      .pipe(ServiceCacheInterceptor.getMapper(TagInfoService.TAG_VALUES));
   }
 
   tagCombinations(key: string, value: string) {

@@ -13,7 +13,7 @@ declare var $: any;
 @Component({
   exportAs: 'feature',
   selector: 'app-feature',
-  styleUrls: ['../../../../shared/components/content.group.css', './feature.component.css'],
+  styleUrls: ['../../../shared/components/content.group.css', './feature.component.css'],
   templateUrl: './feature.html'
 })
 export class FeatureComponent {
@@ -22,7 +22,7 @@ export class FeatureComponent {
 
   @Input()
   preset: {};
-  
+
   @Input()
   i: number;
 
@@ -33,70 +33,68 @@ export class FeatureComponent {
     private tagInfo: TagInfoService
   ) {}
 
-  ngOnInit(){
-    if (!this.attribution.loadedForm!.get('presets')![this.i]) {
+  ngOnInit() {
+    if (!this.attribution.loadedForm || !this.attribution.loadedForm.get('presets')[this.i]) {
       this.maximizeCard();
     }
     this.loadPrimaryGroups();
   }
 
-  maximizeCard(){
+  maximizeCard() {
     $(`#preset-card-panel-${this.i}`).css('max-height', 'initial');
     const toggler: any = $(`#preset-accordion-toggler-${this.i}`);
     toggler.addClass(`fa-minus-square-o`);
     toggler.removeClass(`fa-plus-square-o`);
   }
 
-  loadPrimaryGroups(){
-    var $scope = this;
-    var keyOptions = [];
-    if(this.attribution.loadedForm && this.primaryFormArray.length == 0){    
+  loadPrimaryGroups() {
+    const $scope = this;
+    if (this.attribution.loadedForm && this.primaryFormArray.length === 0) {
+      const keyOptions = [];
       const preset = this.attribution.loadedForm['presets'][this.i];
-      if(preset && preset.primary){
-        var primaryKeyConfig;
+      if (preset && preset.primary) {
+        let primaryKeyConfig;
         primaryKeyConfig = $scope.fieldConfig.getPrimaryKeyConfigSettings(keyOptions);
-        this.fieldConfig.config.push(primaryKeyConfig); //TODO is this being used properly?
-        preset.primary.forEach(function(loadedGroup){
+        this.fieldConfig.config.push(primaryKeyConfig); // TODO is this being used properly?
+        preset.primary.forEach(function(loadedGroup) {
           keyOptions.push(<SelectizeOption>{text: loadedGroup['key'], value: loadedGroup['key']});
           $scope.addPrimaryKeyControl(primaryKeyConfig, loadedGroup);
-          const primaryGroupIndex = $scope.primaryFormArray.length == 0 ? 0 : $scope.primaryFormArray.length - 1;
         });
       }
     }
 
-    if(this.primaryFormArray.length == 0){
-      this.addPrimaryGroup($scope.i, null); 
+    if (this.primaryFormArray.length === 0) {
+      this.addPrimaryGroup($scope.i, null);
     }
   }
 
-  get featureFormGroup(){
-    return <FormGroup> this.attribution.presets.at(this.i); 
+  get featureFormGroup() {
+    return <FormGroup> this.attribution.presets.at(this.i);
   }
-  
-  get primaryFormArray(){
+
+  get primaryFormArray() {
     return <FormArray> this.featureFormGroup.get('primary');
   }
 
-  get fields(){
+  get fields() {
     return <FormArray> this.featureFormGroup.get('fields');
   }
 
-  addPrimaryGroup(i: number, loadedGroup: FormGroup){
-    var keyOptions = [];
-    var primaryKeyConfig = this.fieldConfig.getPrimaryKeyConfigSettings(keyOptions);
+  addPrimaryGroup(i: number, loadedGroup: FormGroup) {
+    const keyOptions = [];
+    const primaryKeyConfig = this.fieldConfig.getPrimaryKeyConfigSettings(keyOptions);
     this.fieldConfig.config.push(primaryKeyConfig);
     this.addPrimaryKeyControl(primaryKeyConfig, loadedGroup);
-    const primaryGroupIndex = this.primaryFormArray.length == 0 ? 0 : this.primaryFormArray.length - 1;
   }
-
-  addPrimaryKeyControl(primaryKeyConfig: FieldConfig, loadedGroup: FormGroup){
+  
+  addPrimaryKeyControl(primaryKeyConfig: FieldConfig, loadedGroup: FormGroup) {
     this.primaryFormArray.push(this.fb.group({}));
 
-    const primaryGroupIndex = this.primaryFormArray.length == 0 ? 0 : this.primaryFormArray.length - 1;
+    const primaryGroupIndex = this.primaryFormArray.length === 0 ? 0 : this.primaryFormArray.length - 1;
     const primaryGroup = <FormGroup>this.primaryFormArray.at(primaryGroupIndex);
-    primaryGroup.addControl("key", this.attribution.createControl(primaryKeyConfig));
+    primaryGroup.addControl('key', this.attribution.createControl(primaryKeyConfig));
 
-    if(loadedGroup){
+    if (loadedGroup) {
       this.addPrimaryKeyListener(primaryGroup, primaryGroupIndex, loadedGroup);
       primaryGroup.get('key').setValue(loadedGroup['key']);
     } else {
@@ -104,58 +102,55 @@ export class FeatureComponent {
     }
   }
 
- addPrimaryKeyListener(primaryFormGroup: FormGroup, primaryGroupIndex: number, loadedGroup: FormGroup){
-    var loadedVal;
-    if(loadedGroup){
+ addPrimaryKeyListener(primaryFormGroup: FormGroup, primaryGroupIndex: number, loadedGroup: FormGroup) {
+    let loadedVal;
+    if (loadedGroup) {
       loadedVal = loadedGroup['val'];
     }
-    primaryFormGroup.get('key').valueChanges.subscribe(val => { 
+    primaryFormGroup.get('key').valueChanges.subscribe(val => {
       setTimeout(() => {
-        var valueOptions = [];
-        if(loadedVal) {
+        let valueOptions = [];
+        if (loadedVal) {
           valueOptions.push(<SelectizeOption>{text: loadedVal, value: loadedVal});
         }
 
-        var primaryValueConfig = this.fieldConfig.getPrimaryValueConfigSettings(valueOptions); 
-        this.setPrimaryValues(primaryGroupIndex, valueOptions, primaryValueConfig, loadedVal, primaryFormGroup); 
+        const primaryValueConfig = this.fieldConfig.getPrimaryValueConfigSettings(valueOptions);
+        this.setPrimaryValues(primaryGroupIndex, valueOptions, primaryValueConfig, loadedVal, primaryFormGroup);
 
-        this.tagInfo.getCache(TagInfoService.POPULAR_TAGS)
-          .subscribe(observer => {
-            observer.next(data => {
-              this.fieldConfig.refreshSelectizeOptions(this.i + "_" + primaryGroupIndex + "_val", valueOptions, !loadedVal);
-            })
-          })
+        this.tagInfo.popularTags().subscribe(selectizeOptions => {
+          valueOptions = valueOptions.concat(selectizeOptions);
+          this.fieldConfig.refreshSelectizeOptions(this.i + '_' + primaryGroupIndex + '_val', valueOptions, !loadedVal);
+        });
 
-        if(!this.attribution.presets.at(this.i).get("name").value) {
-          this.attribution.presets.at(this.i).get("name").patchValue(val);
+        if (!this.attribution.presets.at(this.i).get('name').value) {
+          this.attribution.presets.at(this.i).get('name').patchValue(val);
         }
       });
     });
   }
 
   addPrimaryValueListener(primaryGroupIndex: number) {
-    let primaryFormGroup = <FormGroup> this.primaryFormArray.at(primaryGroupIndex);
+    const primaryFormGroup = <FormGroup> this.primaryFormArray.at(primaryGroupIndex);
     primaryFormGroup.get('val').valueChanges.subscribe(val => {
       setTimeout(() => {
-        if(val){
+        if (val) {
           const key: string = primaryFormGroup.get('key').value;
-          this.tagInfo.addCache(TagInfoService.tagCombinations(key, val))
-          
-          if (this.doNotPopulateTagCombos(this.attribution, this.i)){
+          this.tagInfo.tagCombinations(key, val).subscribe();
+          if (this.doNotPopulateTagCombos(this.attribution, this.i)) {
             const guidelines = this.attribution.loadedForm['presets'][this.i].fields;
             if (guidelines) {
-              for (let guideline of guidelines) {
+              for (const guideline of guidelines) {
                 this.addGuideline(this.i, guideline, key, val);
               }
             }
           }
-        };
-      })
-    })
+        }
+      });
+    });
   }
 
   private doNotPopulateTagCombos(attribution: AttributionComponent, index: number): boolean {
-    return attribution.loadedForm 
+    return attribution.loadedForm
       && (<FormArray> attribution.presets.at(index).get('fields')).length === 0
       && !attribution.loadedForm['presets'][index].fields;
   }
@@ -180,27 +175,25 @@ export class FeatureComponent {
     }));
     const guidelineGroupIndex = this.fields.length === 0 ? 0 : this.fields.length - 1;
     const guidelineGroup = <FormGroup>this.fields.at(guidelineGroupIndex);
-    
-    var keyOptions = [];
-    
+
+    const keyOptions = [];
+
     if (loadedGuideline) {
       keyOptions.push(<SelectizeOption> {text: loadedGuideline['key'], value: loadedGuideline['key']});
     }
     const guidelineFields = this.fieldConfig.getGuidelineFieldConfig(this.i, guidelineGroupIndex, keyOptions);
-    const guidelineMap = (this.fieldConfig.getFeatureGuidelineConfig(this.i) || new Map<number, FieldConfig[]>())
+    const guidelineMap = (this.fieldConfig.getFeatureGuidelineConfig(this.i) || new Map<number, FieldConfig[]>());
 
     guidelineMap.set(guidelineGroupIndex, guidelineFields);
     this.fieldConfig.guidelineConfig.set(this.i, guidelineMap);
     guidelineGroup.addControl('keyCondition', this.attribution.createControl(guidelineFields[0]));
-    
-    this.tagInfo
-      .getCache(TagInfoService.tagCombinations(key, val))
-      .subscribe(observer => {
-        observer.next(data => {
-          const featureKeyOptions: SelectizeOption[] = Object.keys(data).map(key => <SelectizeOption>{ text: key, value: key });
-          $scope.fieldConfig.refreshSelectizeOptions(`${$scope.i}_associated_key_${guidelineGroupIndex}`, featureKeyOptions, false)
-        })
-      })
+
+    this.tagInfo.tagCombinations(key, val).subscribe(tagCombos => {
+      const featureKeyOptions: SelectizeOption[] = Object.keys(tagCombos).map(tagInfoKey => {
+        return <SelectizeOption>{ text: tagInfoKey, value: tagInfoKey };
+      });
+      $scope.fieldConfig.refreshSelectizeOptions(`${$scope.i}_associated_key_${guidelineGroupIndex}`, featureKeyOptions, false);
+    });
 
     this.addKeyConditionListener(guidelineGroupIndex, loadedGuideline, key, val);
   }
@@ -208,7 +201,7 @@ export class FeatureComponent {
   addKeyConditionListener(guidelineIndex: number, loadedGuideline: FormGroup, key: string, value: string) {
     const guidelineGroup = <FormGroup> this.fields.at(guidelineIndex);
 
-    guidelineGroup.get('keyCondition').valueChanges.subscribe(val => {
+    guidelineGroup.get('keyCondition').valueChanges.subscribe(keyConditionVal => {
       setTimeout(() => {
 
         guidelineGroup.addControl(
@@ -244,7 +237,7 @@ export class FeatureComponent {
         const $select = $(document.getElementById(this.i + '_associated_values_' + guidelineIndex));
         const placeholderCtrl = guidelineGroup.get('placeholder');
 
-        if (val === 0) {
+        if (keyConditionVal === 0) {
           valConditionCtrl.setValue('');
           valConditionCtrl.disable();
 
@@ -290,22 +283,19 @@ export class FeatureComponent {
     const guidelineFormGroup = <FormGroup> this.fields.at(guidelineGroupIndex);
     guidelineFormGroup.get('key').valueChanges.subscribe(val => {
       setTimeout(() => {
-        this.tagInfo.getCache(TagInfoService.tagCombinations(key, val))
-          .subscribe(observer => {
-            observer.next(comboMap => {
-              const valueOptions = [];
-              // add extant values && those then those from tagInfo
-              for (let value of loadedValues) { valueOptions.push({ text: value, value: value }); }
-              comboMap.get(key).forEach(value => valueOptions.push({ text: value, value: value }));
-              $scope.fieldConfig.getFeatureGuidelineField(this.i, guidelineGroupIndex, 'values').selectizeConfig.options = valueOptions;
-              $scope.fieldConfig.refreshSelectizeOptions(this.i + '_associated_values_' + guidelineGroupIndex, valueOptions, true);
+        this.tagInfo.tagCombinations(key, val).subscribe(comboMap => {
+          const valueOptions = [];
+          // add extant values && those then those from tagInfo
+          for (const loadedVal of loadedValues) { valueOptions.push({ text: loadedVal, value: loadedVal }); }
+          comboMap.get(key).forEach(comboVal => valueOptions.push({ text: comboVal, value: comboVal }));
+          
+          $scope.fieldConfig.getFeatureGuidelineField(this.i, guidelineGroupIndex, 'values').selectizeConfig.options = valueOptions;
+          $scope.fieldConfig.refreshSelectizeOptions(this.i + '_associated_values_' + guidelineGroupIndex, valueOptions, true);
 
-              if (loadedValues && (<FormGroup>guidelineFormGroup).get('key').pristine) {
-                (<FormArray>guidelineFormGroup.get('values')).at(0).get('values').setValue(loadedValues);
-              }
-            })
-          })
-
+          if (loadedValues && (<FormGroup>guidelineFormGroup).get('key').pristine) {
+            (<FormArray>guidelineFormGroup.get('values')).at(0).get('values').setValue(loadedValues);
+          }
+        })
       });
     });
   }
@@ -314,25 +304,26 @@ export class FeatureComponent {
     this.fields.removeAt(i);
   }
 
-  setPrimaryValues(primaryGroupIndex: number, valueOptions: SelectizeOption[], primaryValueConfig: any, loadedVal: string, primaryFormGroup: FormGroup){ 
-    let featureConfig = this.fieldConfig.getFeaturePrimaryConfig(this.i); 
-    
-    if(featureConfig) { 
-      let primaryGroupMap = featureConfig; 
-      primaryGroupMap.set(primaryGroupIndex, primaryValueConfig); 
-    } else { 
-      const primaryGroupMap = new Map<number, FieldConfig>(); 
-      primaryGroupMap.set(primaryGroupIndex, primaryValueConfig); 
-      this.fieldConfig.primaryGroupConfig.set(this.i, primaryGroupMap); 
-    } 
-    this.fieldConfig.refreshSelectizeOptions(this.i + "_" + primaryGroupIndex + "_val", valueOptions, true);
+  setPrimaryValues(primaryGroupIndex: number, valueOptions: SelectizeOption[],
+    primaryValueConfig: any, loadedVal: string, primaryFormGroup: FormGroup) {
+    const featureConfig = this.fieldConfig.getFeaturePrimaryConfig(this.i);
+
+    if (featureConfig) {
+      const primaryGroupMap = featureConfig;
+      primaryGroupMap.set(primaryGroupIndex, primaryValueConfig);
+    } else {
+      const primaryGroupMap = new Map<number, FieldConfig>();
+      primaryGroupMap.set(primaryGroupIndex, primaryValueConfig);
+      this.fieldConfig.primaryGroupConfig.set(this.i, primaryGroupMap);
+    }
+    this.fieldConfig.refreshSelectizeOptions(this.i + '_' + primaryGroupIndex + '_val', valueOptions, true);
     primaryFormGroup.addControl('val', this.attribution.createControl(primaryValueConfig));
 
-    setTimeout(() => { 
-      this.addPrimaryValueListener(primaryGroupIndex); 
-      if(loadedVal && primaryFormGroup.get('val').pristine) { 
-        primaryFormGroup.get('val').setValue(loadedVal); 
-      } 
-    }); 
+    setTimeout(() => {
+      this.addPrimaryValueListener(primaryGroupIndex);
+      if (loadedVal && primaryFormGroup.get('val').pristine) {
+        primaryFormGroup.get('val').setValue(loadedVal);
+      }
+    });
   }
 }

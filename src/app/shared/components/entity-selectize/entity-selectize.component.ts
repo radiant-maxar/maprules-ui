@@ -6,7 +6,7 @@ import { FieldConfig } from '../../interfaces/field-config.interface';
 
 @Component({
   selector: 'entity-selectize',
-  templateUrl: './entity-selectize.html'
+  templateUrl: './entity-selectize.component.html'
 })
 export class EntitySelectizeComponent implements Field {
   config: FieldConfig;

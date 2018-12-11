@@ -1,6 +1,6 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { NavigationService } from './core/services/navigation.service'; 
+import { NavigationService } from './core/services/navigation.service';
 
 @Component({
   selector: 'app-root',
@@ -12,6 +12,6 @@ export class AppComponent implements OnInit {
   constructor(private nav: NavigationService) { }
 
   ngOnInit() {
-  	this.nav.show();
+    this.nav.show();
   }
 }

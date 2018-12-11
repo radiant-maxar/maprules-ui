@@ -21,8 +21,7 @@ export class ServicesCache {
     return this.$cache.get(url);
   }
 
-  put (url: string, response: HttpResponse<any>) : void {
-    this.$cache.set(url, { url, response })
+  put(url: string, response: HttpResponse<any>): void {
+    this.$cache.set(url, { url, response });
   }
-
 }

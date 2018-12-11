@@ -6,9 +6,9 @@
     "start": "ng serve",
     "build": "ng build && npm run makeapidocs",
     "makeapidocs": "apidoc -f maprules-ui.docs.js && apidoc-markdown2 -p doc -o maprules-ui.apidocs.md",
-    "test:application": "ng test",
-    "test:services": "TESTING_ENV=services karma start ./src/karma.conf.js",
+    "test": "ng test",
     "lint": "ng lint",
+    "lint:factory": "tslint --project tsconfig.json -t verbose",
     "e2e": "ng e2e"
   },
   "private": true,
@@ -16,7 +16,7 @@
     "@angular/animations": "^6.1.0",
     "@angular/common": "^6.1.0",
     "@angular/compiler": "^6.1.0",
-    "@angular/core": "^7.1.2",
+    "@angular/core": "^6.1.0",
     "@angular/flex-layout": "^7.0.0-beta.19",
     "@angular/forms": "^6.1.0",
     "@angular/http": "^6.1.0",
@@ -47,18 +47,15 @@
     "fs": "0.0.1-security",
     "jasmine-core": "~2.99.1",
     "jasmine-spec-reporter": "~4.2.1",
-    "karma": "^2.0.0",
+    "karma": "~1.7.1",
     "karma-chrome-launcher": "~2.2.0",
     "karma-coverage-istanbul-reporter": "~2.0.0",
     "karma-jasmine": "~1.1.1",
     "karma-jasmine-html-reporter": "^0.2.2",
-    "karma-typescript": "^3.0.13",
-    "karma-typescript-preprocessor": "^0.3.0",
     "path": "^0.12.7",
     "protractor": "~5.3.0",
-    "sinon": "^7.1.1",
     "ts-node": "~5.0.1",
     "tslint": "~5.9.1",
-    "typescript": "~2.7.2"
+    "typescript": "2.8"
   }
 }

@@ -2,11 +2,8 @@ import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angu
 import { Validators, FormGroup, FormBuilder, FormArray } from '@angular/forms';
 
 import { FieldConfig } from '../../shared/interfaces/field-config.interface';
-import { Feature } from '../../shared/models/feature';
-import { FeaturesComponent } from './features/features.component';
-import { DiscouragedFeaturesComponent } from './discouraged-features/discouraged-features.component';
 import { MapRulesService } from '../../core/services/maprules.service';
-import { NavigationService } from '../../core/services/navigation.service'; 
+import { NavigationService } from '../../core/services/navigation.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -14,7 +11,7 @@ import { Router } from '@angular/router';
   selector: 'attribution',
   styleUrls: [
     '../../shared/components/content.group.css',
-    './features/feature/feature.component.css',
+    './feature/feature.component.css',
     './features/features.component.css',
     './attribution.component.css',
   ],
@@ -57,8 +54,8 @@ export class AttributionComponent implements OnChanges, OnInit {
     this.form = this.createGroup();
     if (this.configId) {
       this.maprules.getMapRule(this.configId).subscribe(
-        (data) => {
-            this.form.get('name').setValue(data['name']);
+        (data: any) => {
+            this.form.get('name').setValue(data.name);
             this.loadedForm = <FormGroup> data;
         },
         error => {
@@ -125,7 +122,7 @@ export class AttributionComponent implements OnChanges, OnInit {
   }
 
   setValue(name: string, value: any): void {
-    this.form.get("name").setValue(value, {emitEvent: true});
+    this.form.get('name').setValue(value, {emitEvent: true});
   }
 
   saveForm(): void {
