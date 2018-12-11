@@ -62,43 +62,40 @@ describe('ServiceCacheInterceptor', () => {
           multi: true,
         },
       ]
-    })
+    });
     servicesCache = TestBed.get(ServicesCache);
     tagInfo = TestBed.get(TagInfoService);
     httpMock = TestBed.get(HttpTestingController);
-  })
+  });
   it('should be created', inject(
     [ServiceCacheInterceptor],
     (service: ServiceCacheInterceptor) => {
       expect(service).toBeTruthy();
     }
-  ))
+  ));
   describe('#intercept', () => {
     it('intercepts and prevent multiple successive requests to single endpoint', () => {
       const getPopular = tagInfo.popularTags();
       getPopular.subscribe(() => { // popularTags leads to intercept...
         getPopular.subscribe();
         httpMock.expectNone(TagInfoService.POPULAR_TAGS_URL);
-      })
+      });
 
       const req = httpMock.expectOne(TagInfoService.POPULAR_TAGS_URL);
       expect(req.request.method).toEqual('GET');
       req.flush(popularTagsResponse);
       httpMock.verify();
-    })
+    });
     it('caches responses, using cache after 1st request to given url', () => {
       const getPopular = tagInfo.popularTags();
       getPopular.subscribe(() => {
         const cached: any = servicesCache.get(TagInfoService.POPULAR_TAGS_URL);
         expect(cached).toBeTruthy(); // response has been cached.
-      })
+      });
       const req = httpMock.expectOne(TagInfoService.POPULAR_TAGS_URL);
       expect(req.request.method).toEqual('GET');
       req.flush(popularTagsResponse);
       httpMock.verify();
-    })
-  })
-  describe('#sendRequest', () => {
-    // it('adds \'inflight\' requests to inflight cache', () => {})
-  })
-})
+    });
+  });
+});

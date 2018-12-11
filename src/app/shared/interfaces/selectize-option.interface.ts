@@ -1,4 +1,5 @@
 export interface SelectizeOption {
-  text: any
-  value: any
+  text: any;
+  value: any;
 }
+

@@ -1,3 +1,3 @@
 export class Guideline {
-	key: string
+  key: string;
 }

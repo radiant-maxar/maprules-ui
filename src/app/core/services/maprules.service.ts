@@ -82,7 +82,8 @@ export class MapRulesService {
 
 
   getMapRule(configId: string) {
-    return this.http.get(this.mapRulesUrl + '/' + configId).pipe(catchError(this.handleError));
+    return this.http.get(this.mapRulesUrl + '/' + configId)
+      .pipe(catchError(this.handleError));
   }
 
   private handleError(error: HttpErrorResponse) {

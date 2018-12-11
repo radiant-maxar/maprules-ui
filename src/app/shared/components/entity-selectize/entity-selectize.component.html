@@ -1,0 +1,11 @@
+<ng-container [formGroup]="group">
+  <ng-container formArrayName="presets">
+    <ng-container [formGroupName]="nestedGroupIndex">
+      <div class="form-group">
+        <label>{{ config.label }}</label>
+        <ng-selectize [formControlName]="config.name" [config]=config.selectizeConfig ngDefaultControl data-toggle="tooltip"
+          data-placement="bottom" title="{{config.hint}}"></ng-selectize>
+      </div>
+    </ng-container>
+  </ng-container>
+</ng-container>
