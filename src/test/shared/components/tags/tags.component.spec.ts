@@ -1,6 +1,13 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TagsComponent } from './tags.component';
+import { TagsComponent } from 'src/app/shared/components/tags/tags.component';
+import {
+  appModules,
+  appComponents,
+  appProviders
+} from 'src/test/helpers';
+
+
 
 describe('TagsComponent', () => {
   let component: TagsComponent;
@@ -8,7 +15,9 @@ describe('TagsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ TagsComponent ]
+      imports: appModules,
+      declarations: [ TagsComponent ].concat(appComponents),
+      providers: appProviders
     })
     .compileComponents();
   }));

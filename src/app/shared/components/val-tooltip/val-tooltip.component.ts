@@ -1,6 +1,4 @@
 import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
-import { fromEvent, timer } from 'rxjs';
-import { debounce } from 'rxjs/operators';
 
 @Component({
   selector: 'app-val-tooltip',

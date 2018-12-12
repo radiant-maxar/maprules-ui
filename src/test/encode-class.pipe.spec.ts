@@ -1,4 +1,4 @@
-import { EncodeClassPipe } from './encode-class.pipe';
+import { EncodeClassPipe } from 'src/app/encode-class.pipe';
 
 describe('EncodeClassPipe', () => {
   it('create an instance', () => {

@@ -1,4 +1,4 @@
-import { DecodeConditionPipe } from './decode-condition.pipe';
+import { DecodeConditionPipe } from 'src/app/decode-condition.pipe';
 
 describe('DecodeConditionPipe', () => {
   it('create an instance', () => {
