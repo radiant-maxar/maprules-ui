@@ -1,9 +1,5 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, ViewEncapsulation } from '@angular/core';
-import { Validators, FormGroup } from '@angular/forms';
-import { Router, ActivatedRoute, ParamMap } from '@angular/router';
-import { FieldConfig } from '../../shared/interfaces/field-config.interface';
-import { AttributionComponent } from '../../modules/attribution/attribution.component';
-import { FieldConfigService } from '../../core/services/field-config.service';
+import { Component, ViewEncapsulation } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 import { MapRulesService } from '../../core/services/maprules.service';
 import { environment } from '../../../environments/environment';
 import { fromEvent, timer } from 'rxjs';
@@ -32,7 +28,6 @@ export class StartMapRuleComponent {
   constructor(
      private route: ActivatedRoute,
      private router: Router,
-     private fieldConfig: FieldConfigService,
      private maprules: MapRulesService
   ) {
     fromEvent(window, 'click')

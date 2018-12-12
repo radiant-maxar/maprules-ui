@@ -1,5 +1,4 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
 import { NavigationService } from './core/services/navigation.service';
 
 @Component({

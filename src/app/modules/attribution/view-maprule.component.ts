@@ -31,8 +31,6 @@ export class ViewMapRuleComponent {
 
   constructor(
      private route: ActivatedRoute,
-     private router: Router,
-     private fieldConfig: FieldConfigService,
      private maprules: MapRulesService,
      private nav: NavigationService) {
   }

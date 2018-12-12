@@ -35,7 +35,6 @@ const appRoutes: Routes = [
 @NgModule({
   declarations: [
     AppComponent,
-    NavigationBarComponent,
     EditMapRuleComponent,
     ViewMapRuleComponent,
     StartMapRuleComponent,
@@ -48,6 +47,7 @@ const appRoutes: Routes = [
     ValTooltipComponent,
     DecodeConditionPipe,
     EncodeClassPipe,
+    NavigationBarComponent,
   ],
   imports: [
     BrowserModule,
@@ -64,4 +64,4 @@ const appRoutes: Routes = [
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}
