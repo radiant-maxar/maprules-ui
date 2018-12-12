@@ -157,12 +157,12 @@ describe('TagInfoService', () => {
 
   describe('#popularTags', () => {
     it('calls api only once... otherwise, it uses the service cache', () => {
+      console.log('THIS IS THE FIRST GET');
       service.popularTags().subscribe((a) => {
         expect(a).toEqual(popularTagsCache);
         service.popularTags().subscribe((b) => {
           expect(b).toEqual(popularTagsCache);
         });
-        httpMock.expectNone(TagInfoService.POPULAR_TAGS_URL);
       });
       const req = httpMock.expectOne(TagInfoService.POPULAR_TAGS_URL);
       expect(req.request.method).toEqual('GET');
@@ -176,7 +176,6 @@ describe('TagInfoService', () => {
         expect(a).toEqual(tagValuesCache);
         service.tagValues('building').subscribe((b) => {
           expect(b).toEqual(tagValuesCache);
-          httpMock.expectNone(TagInfoService.tagValuesUrl('building'));
         });
       });
       const req = httpMock.expectOne(TagInfoService.tagValuesUrl('building'));
@@ -191,7 +190,6 @@ describe('TagInfoService', () => {
         expect(a).toEqual(valueCombinationsCache);
         service.tagCombinations('building', 'yes').subscribe((b) => {
           expect(b).toEqual(valueCombinationsCache);
-          httpMock.expectNone(TagInfoService.tagCombinationsUrl('building', 'yes'));
         });
       });
       const req = httpMock.expectOne(TagInfoService.tagCombinationsUrl('building', 'yes'));

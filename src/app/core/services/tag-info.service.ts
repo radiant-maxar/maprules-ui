@@ -1,10 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { of } from 'rxjs';
-import { catchError, reduce, tap } from 'rxjs/operators';
 import { ServiceCacheInterceptor } from './service-cache-interceptor';
 import { environment } from '../../../environments/environment';
-import { SelectizeOption } from '../../shared/interfaces/selectize-option.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -16,7 +13,7 @@ export class TagInfoService {
   public static TAG_COMBINATIONS = 'tagCombinations';
 
   /* URL BUILDERS/STRINGS */
-  static POPULAR_TAGS_URL = '/api/4/tags/popular?page=1&rp=2&sortname=count_all&sortorder=desc';
+  static POPULAR_TAGS_URL = `${environment.taginfo}tags/popular?page=1&rp=2&sortname=count_all&sortorder=desc`;
 
   /**
    * Builds url for getting popular values for a given key
@@ -39,17 +36,32 @@ export class TagInfoService {
 
   constructor(private http: HttpClient) { }
 
+  /**
+   * Returns Observable with popular tags selectize options, be it from cache or an http request
+   * @return {Observable<SelectizeOption[]>} popular tag values' observable
+   */
   popularTags() {
     return this.http.get(TagInfoService.POPULAR_TAGS_URL)
       .pipe(ServiceCacheInterceptor.getMapper(TagInfoService.POPULAR_TAGS));
   }
 
+  /**
+   * Returns Observable with tag values selectize options, be it from cache or an http request
+   * @param key {string} key to get tag values for...
+   * @return {Observable<SelectizeOption[]>}
+   */
   tagValues(key: string) {
     return this.http.get(TagInfoService.tagValuesUrl(key))
       .pipe(ServiceCacheInterceptor.getMapper(TagInfoService.TAG_VALUES));
   }
 
-  tagCombinations(key: string, value: string) {
+  /**
+   * Return Observable with tag combinations for given key/value selectize options, be it from cache or an http request
+   * @param key {string} combination key
+   * @param value {string} combination value
+   * @return {Observable<SelectizeOption[]>}
+   */
+  tagCombinations(key:string, value: string) {
     return this.http.get(TagInfoService.tagCombinationsUrl(key, value))
       .pipe(ServiceCacheInterceptor.getMapper(TagInfoService.TAG_COMBINATIONS));
   }

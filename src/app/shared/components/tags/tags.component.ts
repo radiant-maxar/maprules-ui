@@ -18,7 +18,6 @@ export class TagsComponent implements OnInit {
       hasValues: <boolean> (tags.values && tags.values.length > 0),
       screen: <string> (this.isDesktop() ? 'desktop' : 'mobile')
     };
-
   }
 
   // observe window resizes to update mobile...

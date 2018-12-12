@@ -1,9 +1,12 @@
 import { TestBed, inject } from '@angular/core/testing';
 import { ServicesCache } from 'src/app/core/services/services-cache';
-import { HttpResponse } from '@angular/common/http';
+import { HttpResponse, HttpRequest } from '@angular/common/http';
 
 describe('ServicesCache', () => {
   let servicesCache: ServicesCache;
+  const osm: string = 'https://osm.org';
+  const request: HttpRequest<any> = new HttpRequest('GET', osm);
+  const response: HttpResponse<any> = new HttpResponse();
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [ServicesCache]
@@ -30,22 +33,21 @@ describe('ServicesCache', () => {
   });
   describe('#removeInflight', () => {
     it('removes from inflight cache', () => {
-      servicesCache.putInflight('https://osm.org');
+      servicesCache.putInflight(osm)
       expect(servicesCache.$inflight.size).toEqual(1);
-      servicesCache.removeInflight('https://osm.org');
+      servicesCache.removeInflight(osm)
       expect(servicesCache.$inflight.size).toEqual(0);
     });
   });
   describe('#get', () => {
     it ('gets what\'s in cache', () => {
-      const response: HttpResponse<any> = new HttpResponse();
-      servicesCache.put('https://osm.org', response);
+      servicesCache.put(request, response);
       expect(servicesCache.$cache.size).toEqual(1);
     });
   });
   describe('#put', () => {
     it('adds to request cache', () => {
-      servicesCache.put('https://osm.org', new HttpResponse());
+      servicesCache.put(request, new HttpResponse());
       expect(servicesCache.$cache.size).toEqual(1);
     });
   });

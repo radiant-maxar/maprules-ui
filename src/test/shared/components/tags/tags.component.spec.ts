@@ -25,6 +25,11 @@ describe('TagsComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(TagsComponent);
     component = fixture.componentInstance;
+    component.config = {
+      tags: <object> {},
+      hasValues: false,
+      screen: 'desktop'
+    }
     fixture.detectChanges();
   });
 

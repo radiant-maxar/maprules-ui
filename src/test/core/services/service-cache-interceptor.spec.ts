@@ -1,11 +1,9 @@
 import { TestBed, inject } from '@angular/core/testing';
 import { ServiceCacheInterceptor } from 'src/app/core/services/service-cache-interceptor';
 import { ServicesCache } from 'src/app/core/services/services-cache';
-import { HttpTestingController, HttpClientTestingModule, TestRequest } from '@angular/common/http/testing';
+import { HttpTestingController, HttpClientTestingModule } from '@angular/common/http/testing';
 import { TagInfoService } from 'src/app/core/services/tag-info.service';
-import { HTTP_INTERCEPTORS, HttpRequest, HttpHandler, HttpEvent } from '@angular/common/http';
-import { Observable, of, throwError } from 'rxjs';
-import { retry, tap } from 'rxjs/operators';
+import { HTTP_INTERCEPTORS, HttpRequest } from '@angular/common/http';
 
 describe('ServiceCacheInterceptor', () => {
   const popularTagsResponse: any = {
@@ -78,7 +76,6 @@ describe('ServiceCacheInterceptor', () => {
       const getPopular = tagInfo.popularTags();
       getPopular.subscribe(() => { // popularTags leads to intercept...
         getPopular.subscribe();
-        httpMock.expectNone(TagInfoService.POPULAR_TAGS_URL);
       });
 
       const req = httpMock.expectOne(TagInfoService.POPULAR_TAGS_URL);
@@ -89,7 +86,8 @@ describe('ServiceCacheInterceptor', () => {
     it('caches responses, using cache after 1st request to given url', () => {
       const getPopular = tagInfo.popularTags();
       getPopular.subscribe(() => {
-        const cached: any = servicesCache.get(TagInfoService.POPULAR_TAGS_URL);
+        const request = new HttpRequest('GET', TagInfoService.POPULAR_TAGS_URL);
+        const cached: any = servicesCache.get(request);
         expect(cached).toBeTruthy(); // response has been cached.
       });
       const req = httpMock.expectOne(TagInfoService.POPULAR_TAGS_URL);
