@@ -1,7 +1,7 @@
 import { TestBed, inject } from '@angular/core/testing';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { TagInfoService } from '../../../app/core/services/tag-info.service';
+import { TagInfoService } from 'src/app/core/services/tag-info.service';
 import { ServiceCacheInterceptor } from 'src/app/core/services/service-cache-interceptor';
 import { ServicesCache } from 'src/app/core/services/services-cache';
 
