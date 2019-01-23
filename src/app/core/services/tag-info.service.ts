@@ -25,7 +25,7 @@ export class TagInfoService {
 
   setTagInfoUrl(){
     this.tagInfoUrl = environment.taginfo;
-  };
+  }
 
   get popularTags(){
     return this.http.get(this.tagInfoUrl + "tags/popular?rp=50").pipe(
