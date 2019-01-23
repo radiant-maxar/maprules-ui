@@ -1,0 +1,25 @@
+.clear-button {
+  border: none;
+  background: none;
+}
+
+.val-pill-tooltip-control {
+  width: 50px;
+}
+
+.val-pill-tooltip-control:hover {
+  background: #f8f9faa9;
+}
+
+.val-tooltip .tooltip-inner {
+  color: black;
+  background: #ebebeb;
+  border: 1px solid rgba(0, 0, 0, 0.4);
+  border-radius: 10px;
+  margin-bottom: 2px;
+}
+
+
+.val-tooltip .arrow::before {
+  border: none; 
+}

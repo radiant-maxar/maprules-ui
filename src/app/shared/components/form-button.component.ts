@@ -6,9 +6,10 @@ import { FieldConfig } from '../interfaces/field-config.interface';
 
 @Component({
   selector: 'form-button',
+  styleUrls: ['../../modules/attribution/features/feature/feature.component.css'],
   template: `
     <div [formGroup]="group">
-      <button class="btn btn-primary float-right"
+      <button class="btn btn-light feature-button"
         [disabled]="config.disabled"
         type="submit">
         {{ config.label }}

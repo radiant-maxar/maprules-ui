@@ -1,3 +1,6 @@
+.content-group-container {
+    margin: 30px 100px;
+}
 .content-group {
     margin: 20px;
 }
@@ -13,12 +16,16 @@
 .content-label h5 {
     font-size: 30px;
     font-weight: bold;
-    /* text-decoration: underline; */
-    color: #418a99ca;
-    /* color: rgba(57,57,57, 0.7) */
+    color:rgba(31, 73, 98, 0.746)
 }
 
 .maprule-name {
     margin-left: 10px;
     width: 20%;
 }
+
+/* #14676C sea green */
+/* #1F7C67 sea green light */
+/* #3F9A5B sea green lightest */
+/* #B3C8BF sea green grey */
+/* #1F4962 midnight blue */

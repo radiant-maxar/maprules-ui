@@ -1,0 +1,22 @@
+.val-pill {
+  margin: auto;
+  background: white;
+  border: 1px solid rgba(0,0,0,.300);
+  border-radius: 10px;
+  padding: 2px 5px;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.val-pill-tooltip {}
+
+@media (max-width: 650px) {
+  .val-pill {
+    font-size: 14px;
+  }
+}
+@media (max-width: 420px) {
+    .val-pill {
+      font-size: 12px;
+    }
+} 

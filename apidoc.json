@@ -1,0 +1,10 @@
+{
+    "name": "MapRules UI",
+    "version": "0.0.1",
+    "description": "UI for Creating Custom Mapping Presets and Validation rules",
+    "title": "MapRules UI",
+    "template": {
+        "withCompare": true,
+        "withGenerator": true
+    }
+}
