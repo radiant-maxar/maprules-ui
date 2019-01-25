@@ -34,7 +34,6 @@ export class FieldConfigService {
   ];
 
   featureConfig: Map<number, FieldConfig[]> = new Map<number, FieldConfig[]>();
-  primaryKeyConfig: Map<number, FieldConfig> = new Map<number, FieldConfig>();
   primaryGroupConfig: Map<number, Map<number, FieldConfig>> = new Map<number, Map<number, FieldConfig>>();
   guidelineConfig: Map<number, Map<number, FieldConfig[]>> = new Map<number, Map<number, FieldConfig[]>>();
   disabledFeatureConfig: Map<number, FieldConfig[]> = new Map<number, FieldConfig[]>();
@@ -74,9 +73,6 @@ export class FieldConfigService {
    return this.primaryGroupConfig.get(i);
   }
 
-  getPrimaryKeyConfig(i: number) {
-    return this.primaryKeyConfig.get(i);
-  }
   getGuidelineFieldConfig(i: number, guidelineGroupIndex: number, keyOptions: SelectizeOption[]) {
     return [ {
                             type: 'guideline',
