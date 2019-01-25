@@ -30,11 +30,10 @@ export class DiscouragedFeaturesComponent {
     private attribution: AttributionComponent,
     private fieldConfig: FieldConfigService,
     private tagInfo: TagInfoService
-  ) {}
-
-  panelIds: string[] = [];
+  ) {}  
 
   ngOnInit() {
+    this.fieldConfig.disabledFeatureConfig = [];
     setTimeout(() => {
       this.tagInfo.popularTagsRequest.add(() => {
         this.loadDiscouragedFeatures();
