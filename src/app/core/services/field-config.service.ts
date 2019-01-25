@@ -38,18 +38,6 @@ export class FieldConfigService {
   primaryGroupConfig: Map<number, Map<number, FieldConfig>> = new Map<number, Map<number, FieldConfig>>();
   guidelineConfig: Map<number, Map<number, FieldConfig[]>> = new Map<number, Map<number, FieldConfig[]>>();
   disabledFeatureConfig: Map<number, FieldConfig[]> = new Map<number, FieldConfig[]>();
-  valConditionMap: Map<string, number> = new Map<string, number>()
-    .set('must be', 1)
-    .set('may be', 2)
-    .set('must not be', 0)
-    .set('<', 3)
-    .set('<=', 4)
-    .set('>', 5)
-    .set('>=', 6);
-  keyConditionMap: Map<string, number> = new Map<string, number>()
-    .set('must have', 1)
-    .set('may have', 2)
-    .set('should not have', 0);
 
   constructor() {}
 
@@ -70,10 +58,24 @@ export class FieldConfigService {
     return this.primaryKeyConfig.get(i);
   }
   getGuidelineFieldConfig(i: number, guidelineGroupIndex: number, keyOptions: SelectizeOption[]) {
+    let keyConditionMap: Map<string, number> = new Map<string, number>()
+      .set('must have', 1)
+      .set('may have', 2)
+      .set('should not have', 0);
+
+    let valConditionMap: Map<string, number> = new Map<string, number>()
+      .set('must be', 1)
+      .set('may be', 2)
+      .set('must not be', 0)
+      .set('<', 3)
+      .set('<=', 4)
+      .set('>', 5)
+      .set('>=', 6);
+
     return [ {
                             type: 'guideline',
                             name: 'keyCondition',
-                            optionMap: this.keyConditionMap,
+                            optionMap: keyConditionMap,
                             validation: [Validators.required] // TODO make validation work for these fields
                           },
                           {
@@ -93,7 +95,7 @@ export class FieldConfigService {
                           {
                             type: 'valueSelect',
                             name: 'valCondition',
-                            optionMap: this.valConditionMap
+                            optionMap: valConditionMap
                            },
                           {
                             type: 'valueSelectize',
