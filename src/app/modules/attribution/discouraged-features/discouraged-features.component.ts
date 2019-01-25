@@ -64,14 +64,13 @@ export class DiscouragedFeaturesComponent {
     this.addDisabledKeyControl(keyOptions, loadedFeature);
   }
 
-
   addDisabledKeyControl(keyOptions: SelectizeOption[], loadedFeature: any){
     var disabledKeyConfig = this.fieldConfig.getDisabledKeyConfig(keyOptions);
 
     this.attribution.disabledFeatures.push(this.fb.group({}));
 
     const index = this.attribution.disabledFeatures.length == 0 ? 0 : this.attribution.disabledFeatures.length - 1;
-    this.fieldConfig.disabledFeatureConfig.set(index, [disabledKeyConfig]); 
+    this.fieldConfig.disabledFeatureConfig.push([disabledKeyConfig]); 
 
     const disabledGroup = <FormGroup>this.attribution.disabledFeatures.at(index);
     disabledGroup.addControl("key", this.attribution.createControl(disabledKeyConfig));
@@ -119,9 +118,9 @@ export class DiscouragedFeaturesComponent {
 
   addDisabledValueControl(disabledFormGroup: FormGroup, i: number, valueOptions: SelectizeOption[], loadedVal: any){
     var disabledValueConfig = this.fieldConfig.getDisabledValueConfig(valueOptions);
-    var featureConfigMap = this.fieldConfig.getDisabledFeatureConfigMap(i);
+    var featureConfigMap = this.fieldConfig.disabledFeatureConfig[i];
     if(featureConfigMap.length == 1){          
-      this.fieldConfig.disabledFeatureConfig.get(i).push(disabledValueConfig);
+      this.fieldConfig.disabledFeatureConfig[i].push(disabledValueConfig);
       disabledFormGroup.addControl('val', this.attribution.createControl(disabledValueConfig)); 
     } else {
       this.fieldConfig.refreshSelectizeOptions(i + "_val", valueOptions);
@@ -133,7 +132,7 @@ export class DiscouragedFeaturesComponent {
   }
  
   removeDisabledFeature(i: number){
-    const control = this.attribution.disabledFeatures;
-    control.removeAt(i);
+    this.attribution.disabledFeatures.removeAt(i);
+    this.fieldConfig.disabledFeatureConfig.splice(i,1);
   }
 }

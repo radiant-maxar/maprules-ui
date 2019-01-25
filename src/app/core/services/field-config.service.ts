@@ -37,7 +37,7 @@ export class FieldConfigService {
   primaryKeyConfig: Map<number, FieldConfig> = new Map<number, FieldConfig>();
   primaryGroupConfig: Map<number, Map<number, FieldConfig>> = new Map<number, Map<number, FieldConfig>>();
   guidelineConfig: Map<number, Map<number, FieldConfig[]>> = new Map<number, Map<number, FieldConfig[]>>();
-  disabledFeatureConfig: Map<number, FieldConfig[]> = new Map<number, FieldConfig[]>();
+  disabledFeatureConfig: FieldConfig[][] = [];
 
   constructor() {}
 
@@ -57,6 +57,7 @@ export class FieldConfigService {
   getPrimaryKeyConfig(i: number) {
     return this.primaryKeyConfig.get(i);
   }
+
   getGuidelineFieldConfig(i: number, guidelineGroupIndex: number, keyOptions: SelectizeOption[]) {
     let keyConditionMap: Map<string, number> = new Map<string, number>()
       .set('must have', 1)
@@ -174,11 +175,11 @@ export class FieldConfigService {
   }
 
   getDisabledFeatureConfigMap(i: number) {
-    return this.disabledFeatureConfig.get(i);
+    return this.disabledFeatureConfig[i];
   }
 
   getDisabledFeatureConfig(i: number, name: string) {
-    return this.disabledFeatureConfig.get(i).find((control) => control.name === name);
+    return this.disabledFeatureConfig[i].find((control) => control.name === name);
   }
 
   getDisabledKeyConfig(keyOptions: SelectizeOption[]){
