@@ -8,6 +8,7 @@ import { SelectizeOption } from '../../../../shared/interfaces/selectize-option.
 import { AttributionComponent } from '../../attribution.component';
 import { FieldConfigService } from '../../../../core/services/field-config.service';
 import { TagInfoService } from '../../../../core/services/tag-info.service';
+import { AccordionService } from '../../../../core/services/accordion.service';
 declare var $: any;
 
 @Component({
@@ -30,21 +31,13 @@ export class FeatureComponent {
   ngOnInit(){
     setTimeout(() => {
       if (
-        !this.attribution.loadedForm ||
-        !this.attribution.loadedForm['presets'][this.i]) {
-        this.maximizeCard();
+        !this.attribution.loadedForm) {
+          this.accordion.maximizeCard("preset-card-panel", this.i);
       }
       this.tagInfo.popularTagsRequest.add(() => {
        this.loadPrimaryGroups();
       });
     });
-  }
-
-  maximizeCard(){
-    $(`#preset-card-panel-${this.i}`).css('max-height', 'initial');
-    const toggler: any = $(`#preset-accordion-toggler-${this.i}`);
-    toggler.addClass(`fa-minus-square-o`);
-    toggler.removeClass(`fa-plus-square-o`);
   }
 
   loadPrimaryGroups(){
@@ -79,13 +72,16 @@ export class FeatureComponent {
     private fb: FormBuilder,
     private attribution: AttributionComponent,
     private fieldConfig: FieldConfigService,
-    private tagInfo: TagInfoService
+    private tagInfo: TagInfoService,
+    private accordion: AccordionService
   ) {}
 
   addPrimaryGroup(i: number, loadedGroup: FormGroup){
     var keyOptions = this.tagInfo.popularKeys; 
     if(loadedGroup){
       keyOptions.push(<SelectizeOption>{text: loadedGroup['key'], value: loadedGroup['key']});
+    } else {
+        this.accordion.maximizeCard("preset-card-panel", i);
     }
     var primaryKeyConfig = this.fieldConfig.getPrimaryKeyConfigSettings(keyOptions);
     this.fieldConfig.config.push(primaryKeyConfig);

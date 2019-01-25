@@ -11,11 +11,25 @@
 			<ng-container *ngFor="let preset of maprule.presets; let i = index">
 				<div class="view-card">
 					<div class="content-header view-header">
-						<label class="content-label view-label">
-							<h5>{{preset.name}}</h5>
-						</label>
+						<div class="d-flex flex-row">
+							<div class="mr-auto preset-features-header p-3">
+								<label class="content-label view-label">
+									<h5>{{preset.name}}</h5>
+								</label>
+							</div>
+							<div class="preset-accordion-button-container">
+								<button 
+									class="form-control btn preset-accordion-button" 
+									(click)="animateAccordion($event, i)" type="button">
+									<i   
+										id="preset-accordion-toggler-{{i}}"
+										class="fa fa-minus-square-o">
+									</i>
+								</button>		
+							</div>
+						</div>
 					</div>
-					<div class="content-body view-panel d-flex flex-column">
+					<div class="content-body view-panel d-flex flex-column"  id="view-panel-{{i}}">
 						<div class="view-panel-content">
 							<div class="view-panel-header">
 								<label class="view-label">
