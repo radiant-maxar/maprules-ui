@@ -8,6 +8,7 @@ import { AttributionComponent } from '../attribution.component';
 import { FieldConfigService } from '../../../core/services/field-config.service';
 import { NgbPanelChangeEvent } from '@ng-bootstrap/ng-bootstrap'; 
 import { Event } from '@angular/router';
+import { AccordionService } from '../../../core/services/accordion.service';
 
 declare var $: any;
 
@@ -28,7 +29,8 @@ export class FeaturesComponent {
   constructor(
     private fb: FormBuilder,
     private attribution: AttributionComponent,
-    private fieldConfig: FieldConfigService
+    private fieldConfig: FieldConfigService,
+    private accordion: AccordionService
   ) {}
 
   ngOnInit() {
@@ -97,30 +99,9 @@ export class FeaturesComponent {
     control.removeAt(i);
   }
 
+  
   private animateAccordion(e: any, index: number) {
-    e.preventDefault();
-    const presetCard: any = $(`#preset-card-panel-${index}`);
-    if (presetCard.length) {
-      const height: number = Number($(presetCard).css('height').replace('px', ''));
-
-      let newClass = '';
-      let oldClass = '';
-
-      if (height > 1) {
-        oldClass = 'minus';
-        newClass = 'plus';
-      } else {
-        oldClass = 'plus';
-        newClass = 'minus';
-      }
-
-      const toggler: any = $(`#preset-accordion-toggler-${index}`);
-      toggler.addClass(`fa-${newClass}-square-o`);
-      toggler.removeClass(`fa-${oldClass}-square-o`);
-
-      $(presetCard).css('max-height', height > 1 ? 0 : 'initial');
-
-    }
+    this.accordion.animate(e, "preset-card-panel", index);
   }
 }
 
