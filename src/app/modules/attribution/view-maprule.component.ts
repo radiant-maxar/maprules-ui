@@ -7,7 +7,7 @@ import { FieldConfigService } from '../../core/services/field-config.service';
 import { MapRulesService } from '../../core/services/maprules.service';
 import { NavigationService } from '../../core/services/navigation.service';
 import { combineLatest } from 'rxjs';
-
+import { AccordionService} from '../../core/services/accordion.service';
 declare var $: any;
 
 @Component({
@@ -34,7 +34,8 @@ export class ViewMapRuleComponent {
      private router: Router,
      private fieldConfig: FieldConfigService,
      private maprules: MapRulesService,
-     private nav: NavigationService) {
+     private nav: NavigationService,
+     private accordion: AccordionService) {
   }
 
   ngOnInit() {
@@ -65,4 +66,7 @@ export class ViewMapRuleComponent {
     });
   }
 
+  private animateAccordion(e: any, index: number) {
+    this.accordion.animate(e, "view-panel", index);
+  }
 }

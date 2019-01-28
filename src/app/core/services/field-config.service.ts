@@ -36,29 +36,9 @@ export class FieldConfigService {
   featureConfig: Map<number, FieldConfig[]> = new Map<number, FieldConfig[]>();
   primaryGroupConfig: Map<number, Map<number, FieldConfig>> = new Map<number, Map<number, FieldConfig>>();
   guidelineConfig: Map<number, Map<number, FieldConfig[]>> = new Map<number, Map<number, FieldConfig[]>>();
-  disabledFeatureConfig: Map<number, FieldConfig[]> = new Map<number, FieldConfig[]>();
+  disabledFeatureConfig: FieldConfig[][] = [];
 
   constructor() {}
-
-  get valConditionMap() {
-    const valConditionMap = new Map<string, number>();
-    valConditionMap.set('must be', 1);
-    valConditionMap.set('may be', 2);
-    valConditionMap.set('must not be', 0);
-    valConditionMap.set('<', 3);
-    valConditionMap.set('<=', 4);
-    valConditionMap.set('>', 5);
-    valConditionMap.set('>=', 6);
-    return valConditionMap;
-  }
-
-  get keyConditionMap() {
-    const keyConditionMap = new Map<string, number>();
-    keyConditionMap.set('must have', 1);
-    keyConditionMap.set('may have', 2);
-    keyConditionMap.set('should not have', 0);
-    return keyConditionMap;
-  }
 
   getFieldConfig(name: string) {
     const field = this.config.find((control) => control.name === name);
@@ -74,10 +54,24 @@ export class FieldConfigService {
   }
 
   getGuidelineFieldConfig(i: number, guidelineGroupIndex: number, keyOptions: SelectizeOption[]) {
+    let keyConditionMap: Map<string, number> = new Map<string, number>()
+      .set('must have', 1)
+      .set('may have', 2)
+      .set('should not have', 0);
+
+    let valConditionMap: Map<string, number> = new Map<string, number>()
+      .set('must be', 1)
+      .set('may be', 2)
+      .set('must not be', 0)
+      .set('<', 3)
+      .set('<=', 4)
+      .set('>', 5)
+      .set('>=', 6);
+
     return [ {
                             type: 'guideline',
                             name: 'keyCondition',
-                            optionMap: this.keyConditionMap,
+                            optionMap: keyConditionMap,
                             validation: [Validators.required] // TODO make validation work for these fields
                           },
                           {
@@ -97,7 +91,7 @@ export class FieldConfigService {
                           {
                             type: 'valueSelect',
                             name: 'valCondition',
-                            optionMap: this.valConditionMap
+                            optionMap: valConditionMap
                            },
                           {
                             type: 'valueSelectize',
@@ -176,11 +170,11 @@ export class FieldConfigService {
   }
 
   getDisabledFeatureConfigMap(i: number) {
-    return this.disabledFeatureConfig.get(i);
+    return this.disabledFeatureConfig[i];
   }
 
   getDisabledFeatureConfig(i: number, name: string) {
-    return this.disabledFeatureConfig.get(i).find((control) => control.name === name);
+    return this.disabledFeatureConfig[i].find((control) => control.name === name);
   }
 
   getDisabledKeyConfig(keyOptions: SelectizeOption[]){
