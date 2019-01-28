@@ -76,7 +76,7 @@ export class FeaturesComponent {
                           }
                         ];
     const featureIndex = control.value.length - 1;
-    this.fieldConfig.featureConfig.set(featureIndex, featureConfig);
+    this.fieldConfig.featureConfig[featureIndex] = featureConfig;
   }
 
   private clearFeatureCards(): void {

@@ -33,7 +33,7 @@ export class FieldConfigService {
     }
   ];
 
-  featureConfig: Map<number, FieldConfig[]> = new Map<number, FieldConfig[]>();
+  featureConfig: FieldConfig[][] = [];
   primaryGroupConfig: Map<number, Map<number, FieldConfig>> = new Map<number, Map<number, FieldConfig>>();
   guidelineConfig: Map<number, Map<number, FieldConfig[]>> = new Map<number, Map<number, FieldConfig[]>>();
   disabledFeatureConfig: FieldConfig[][] = [];
@@ -46,7 +46,7 @@ export class FieldConfigService {
   }
 
   getFeatureConfig(i: number, name: string) {
-    return this.featureConfig.get(i).find((control) => control.name === name);
+    return this.featureConfig[i].find((control) => control.name === name);
   }
 
   getFeaturePrimaryConfig(i: number) {
