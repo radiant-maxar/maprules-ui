@@ -31,8 +31,6 @@ export class FeaturesComponent {
     private fieldConfig: FieldConfigService
   ) {}
 
-  panelIds: string[] = [];
-
   ngOnInit() {
     setTimeout(() => {
       const $scope = this;
