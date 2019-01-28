@@ -118,7 +118,7 @@ export class DiscouragedFeaturesComponent {
   addDisabledValueControl(disabledFormGroup: FormGroup, i: number, valueOptions: SelectizeOption[], loadedVal: any){
     var disabledValueConfig = this.fieldConfig.getDisabledValueConfig(valueOptions);
     var featureConfigMap = this.fieldConfig.disabledFeatureConfig[i];
-    if(featureConfigMap.length == 1){          
+    if(featureConfigMap && featureConfigMap.length == 1){          
       this.fieldConfig.disabledFeatureConfig[i].push(disabledValueConfig);
       disabledFormGroup.addControl('val', this.attribution.createControl(disabledValueConfig)); 
     } else {
