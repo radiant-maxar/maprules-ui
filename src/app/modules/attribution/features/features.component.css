@@ -47,3 +47,7 @@
 .features-button {
   font-size: 20px;
 }
+
+.card-closed {
+  overflow: hidden;
+}

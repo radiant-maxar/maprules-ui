@@ -35,7 +35,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-md-12 preset-card-panel" id="preset-card-panel-{{i}}">
+                <div [ngClass]="panelClass(i)" id="preset-card-panel-{{i}}">
                   <app-feature [config]=config [preset]=preset [i]=i></app-feature>
                 </div>
               </div>

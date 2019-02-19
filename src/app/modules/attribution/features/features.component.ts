@@ -99,7 +99,12 @@ export class FeaturesComponent {
     control.removeAt(i);
   }
 
-  
+  private panelClass(i: number): string {
+    const presetCard: any = $(`#preset-card-panel-${i}`);
+    const height: number = presetCard.length ? Number(presetCard.css('height').replace('px', '')) : 0;
+    return `col-md-12 preset-card-panel${height > 1 ? '': ' card-closed'}`
+  }
+
   private animateAccordion(e: any, index: number) {
     this.accordion.animate(e, "preset-card-panel", index);
   }

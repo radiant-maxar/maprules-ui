@@ -8,7 +8,7 @@ declare var $: any;
   
 export class AccordionService {
     animate(e: any, id: string, index: number){
-        e.preventDefault();
+        if (e) e.preventDefault();
         const presetCard: any = $(`#${id}-${index}`);
         if (presetCard.length) {
           const height: number = Number($(presetCard).css('height').replace('px', ''));
@@ -19,9 +19,13 @@ export class AccordionService {
           if (height > 1) {
             oldClass = 'minus';
             newClass = 'plus';
+            presetCard.addClass('card-closed');
+            presetCard.parent().addClass('card-closed')
           } else {
             oldClass = 'plus';
             newClass = 'minus';
+            presetCard.removeClass('card-closed');
+            presetCard.parent().removeClass('card-closed')
           }
     
           const toggler: any = $(`#preset-accordion-toggler-${index}`);
