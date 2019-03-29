@@ -129,9 +129,12 @@ export class AttributionComponent implements OnChanges, OnInit {
   }
 
   saveForm(): void {
-    this.maprules.saveForm(this.form.value)
+    this.maprules.save(this.form.value)
       .subscribe(data => {
-        this.router.navigateByUrl(`/${data['id']}/start`);
+        // if route has new, grab id from maprules service. otherwise, use existing...
+        const uuid: RegExp = /[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}/g;
+        const configId: string = /new/.test(this.router.url) ? data['id'] : this.router.url.match(uuid)[0];
+        this.router.navigateByUrl(`/${configId}/start`);
       });
   }
 

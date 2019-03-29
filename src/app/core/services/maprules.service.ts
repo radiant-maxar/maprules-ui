@@ -4,6 +4,7 @@ import { HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
 import { environment } from '../../../environments/environment'
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -21,7 +22,7 @@ export class MapRulesService {
     })
   };
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private router: Router) {
     this.setMapRulesUrl();
   }
 
@@ -29,25 +30,21 @@ export class MapRulesService {
     this.mapRulesUrl = environment.maprulesConfig;
   }
 
-  save(configId: string, value: {[name: string]: any}){
+  save(value: {[name: string]: any}){
     const scrubbedForm = this.removeEmpty(value);
-    if(configId){
+    // if on new route, post for new uuid
+    if (/new/.test(this.router.url)) {
+      return this.http.post(this.mapRulesUrl, scrubbedForm, this.httpOptions).pipe(
+        catchError(this.handleError)
+      )
+    } else {
+      // otherwise (working on existing), do put method on existing route...
+      const uuid: RegExp = /[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}/g;
+      const configId: string = this.router.url.match(uuid)[0]
       return this.http.put(this.mapRulesUrl + "/" + configId, scrubbedForm, this.httpOptions).pipe(
         catchError(this.handleError)
       );
     }
-    return this.saveNewConfig(scrubbedForm);
-  }
-
-  saveForm(value: {[name: string]: any}){
-    const scrubbedForm = this.removeEmpty(value);
-    return this.saveNewConfig(scrubbedForm);
-  }
-
-  saveNewConfig(scrubbedForm: {[name: string]: any}){
-    return this.http.post(this.mapRulesUrl, scrubbedForm, this.httpOptions).pipe(
-      catchError(this.handleError)
-    );
   }
 
   isEmpty(empty: any) {

@@ -70,7 +70,7 @@ export class EditMapRuleComponent implements AfterViewInit {
   }
   
   save(configId: string, origin: string){
-    this.maprules.save(configId, this.form.value).subscribe( 
+    this.maprules.save(this.form.value).subscribe(
       data => {
         window.parent.postMessage(data['id'], "*");
       },
