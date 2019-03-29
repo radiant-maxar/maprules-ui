@@ -3,11 +3,11 @@ import { Validators, FormGroup } from '@angular/forms';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { combineLatest } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import { FieldConfig } from '../../shared/interfaces/field-config.interface';
-import { AttributionComponent } from '../../modules/attribution/attribution.component';
-import { FieldConfigService } from '../../core/services/field-config.service';
-import { MapRulesService } from '../../core/services/maprules.service';
-import { NavigationService } from '../../core/services/navigation.service';
+import { FieldConfig } from '../../../shared/interfaces/field-config.interface';
+import { AttributionComponent } from '../attribution.component';
+import { FieldConfigService } from '../../../core/services/field-config.service';
+import { MapRulesService } from '../../../core/services/maprules.service';
+import { NavigationService } from '../../../core/services/navigation.service';
 
 declare var $: any;
 

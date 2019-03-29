@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { HttpHeaders, HttpErrorResponse } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { Observable, throwError, Subject } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
 import { environment } from '../../../environments/environment'
+import { EventEmitter } from 'protractor';
 
 @Injectable({
   providedIn: 'root',
@@ -13,6 +14,7 @@ import { environment } from '../../../environments/environment'
 export class MapRulesService {
  
   mapRulesUrl: string;
+  events: EventEmitter = new EventEmitter();
   comboMap: {};
 
   httpOptions = {

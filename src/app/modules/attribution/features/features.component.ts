@@ -9,6 +9,7 @@ import { FieldConfigService } from '../../../core/services/field-config.service'
 import { NgbPanelChangeEvent } from '@ng-bootstrap/ng-bootstrap'; 
 import { Event } from '@angular/router';
 import { AccordionService } from '../../../core/services/accordion.service';
+import { MapRulesService } from 'src/app/core/services/maprules.service';
 
 declare var $: any;
 
@@ -25,88 +26,90 @@ declare var $: any;
 export class FeaturesComponent {
   @Input()
   config: FieldConfig[] = [];
+  geoms: String[] = [ 'Point', 'Line', 'Polygon' ]
 
   constructor(
     private fb: FormBuilder,
     private attribution: AttributionComponent,
     private fieldConfig: FieldConfigService,
-    private accordion: AccordionService
+    private accordion: AccordionService,
+    private maprules: MapRulesService
   ) {}
 
   ngOnInit() {
-    setTimeout(() => {
-      const $scope = this;
-      let presetIndex = 0;
-      if (this.attribution.loadedForm && this.attribution.loadedForm['presets']){
-        this.attribution.loadedForm['presets'].forEach(function(preset){
-          $scope.addFeatureCard();
-          const presetControls = (<FormGroup>(<FormGroup>(<FormArray>$scope.attribution.form.get("presets")).at(presetIndex))); 
-          presetControls.get("name").setValue(preset.name);
-          presetControls.get("geometry").setValue(preset.geometry);
-          presetIndex++;
-        });
-      }
-    });
+    let that = this;
+    this.maprules.events.on('new-config', function(config) {
+      config.presets.forEach(function(preset) {
+        // make form group for preset
+        let presetFormGroup: FormGroup = that.fb.group({
+          primary: that.fb.array([]),
+          name: preset.name,
+          geometry: preset.geometry
+          // fields: that.fb.array([])
+        })
+        that.attribution.presets.push(presetFormGroup);
+      })
+    })
   }
 
-  private addFeatureCard(): void {
-    const control = this.attribution.presets;
-    control.push(this.getFeature());
-    const featureConfig = [
-                          {
-                            type: 'input',
-                            name: 'name',
-                            placeholder: 'Preset ' + control.value.length,
-                          },
-                          {
-                            type: 'selectize',
-                            name: 'geometry',
-                            hint: 'Select preset geometry',
-                            selectizeConfig: {
-                              persist: false,
-                              maxItems: null,
-                              plugins: ['dropdown_direction', 'remove_button'],
-                              dropdownDirection: 'down',
-                              options: [
-                                <SelectizeOption>{text: 'Point', value: 'Point'},
-                                <SelectizeOption>{text: 'Line', value: 'Line'},
-                                <SelectizeOption>{text: 'Area', value: 'Area'}
-                              ]
-                            }
-                          }
-                        ];
-    const featureIndex = control.value.length - 1;
-    this.fieldConfig.featureConfig[featureIndex] = featureConfig;
-  }
 
-  private clearFeatureCards(): void {
-    const control = this.attribution.presets;
-    while (control.length !== 0) {
-      control.removeAt(0);
-    }
-  }
 
-  private getFeature(): FormGroup {
-    return this.fb.group({  primary: this.fb.array([]),
-                            name: '',
-                            geometry: [['Point', 'Line', 'Area']],
-                            fields: this.fb.array([])
-                        });
-  }
+  // private addFeatureCard(): void {
+  //   const featureConfig = [
+  //                         {
+  //                           type: 'input',
+  //                           name: 'name',
+  //                           placeholder: 'Preset ' + control.value.length,
+  //                         },
+  //                         {
+  //                           type: 'selectize',
+  //                           name: 'geometry',
+  //                           hint: 'Select preset geometry',
+  //                           selectizeConfig: {
+  //                             persist: false,
+  //                             maxItems: null,
+  //                             plugins: ['dropdown_direction', 'remove_button'],
+  //                             dropdownDirection: 'down',
+  //                             options: [
+  //                               <SelectizeOption>{text: 'Point', value: 'Point'},
+  //                               <SelectizeOption>{text: 'Line', value: 'Line'},
+  //                               <SelectizeOption>{text: 'Area', value: 'Area'}
+  //                             ]
+  //                           }
+  //                         }
+  //                       ];
+  //   const featureIndex = control.value.length - 1;
+  //   this.fieldConfig.featureConfig[featureIndex] = featureConfig;
+  // }
 
-  private removeFeatureCard(i: number): void {
-    const control = this.attribution.presets;
-    control.removeAt(i);
-  }
+  // private clearFeatureCards(): void {
+  //   const control = this.attribution.presets;
+  //   while (control.length !== 0) {
+  //     control.removeAt(0);
+  //   }
+  // }
 
-  private panelClass(i: number): string {
-    const presetCard: any = $(`#preset-card-panel-${i}`);
-    const height: number = presetCard.length ? Number(presetCard.css('height').replace('px', '')) : 0;
-    return `col-md-12 preset-card-panel${height > 1 ? '': ' card-closed'}`
-  }
+  // private getFeature(): FormGroup {
+  //   return this.fb.group({  primary: this.fb.array([]),
+  //                           name: '',
+  //                           geometry: [['Point', 'Line', 'Area']],
+  //                           fields: this.fb.array([])
+  //                       });
+  // }
 
-  private animateAccordion(e: any, index: number) {
-    this.accordion.animate(e, "preset-card-panel", index);
-  }
+  // private removeFeatureCard(i: number): void {
+  //   const control = this.attribution.presets;
+  //   control.removeAt(i);
+  // }
+
+  // private panelClass(i: number): string {
+  //   const presetCard: any = $(`#preset-card-panel-${i}`);
+  //   const height: number = presetCard.length ? Number(presetCard.css('height').replace('px', '')) : 0;
+  //   return `col-md-12 preset-card-panel${height > 1 ? '': ' card-closed'}`
+  // }
+
+  // private animateAccordion(e: any, index: number) {
+  //   this.accordion.animate(e, "preset-card-panel", index);
+  // }
 }
 

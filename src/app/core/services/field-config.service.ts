@@ -38,7 +38,29 @@ export class FieldConfigService {
   guidelineConfig: Map<number, Map<number, FieldConfig[]>> = new Map<number, Map<number, FieldConfig[]>>();
   disabledFeatureConfig: FieldConfig[][] = [];
 
+  keyConditions: String[] = [
+    'must have',
+    'may have',
+    'should not have'
+  ];
+
+  valConditions: String[] = [
+    'must be',
+    'may be',
+    'must not be',
+    '<', '<=',
+    '>', '>='
+  ]
+
   constructor() {}
+
+  keyCondition(condition: number) {
+    return this.keyConditions[condition];
+  }
+
+  valCondition(condition: number) {
+    return this.valCondition[condition];
+  }
 
   getFieldConfig(name: string) {
     const field = this.config.find((control) => control.name === name);

@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
-import { Validators, FormGroup, FormBuilder, FormArray } from '@angular/forms';
+import { Validators, FormGroup, FormBuilder, FormArray, FormControl } from '@angular/forms';
 
 import { FieldConfig } from '../../shared/interfaces/field-config.interface';
 import { Feature } from '../../shared/models/feature';
@@ -8,6 +8,8 @@ import { DiscouragedFeaturesComponent } from './discouraged-features/discouraged
 import { MapRulesService } from '../../core/services/maprules.service';
 import { NavigationService } from '../../core/services/navigation.service'; 
 import { Router } from '@angular/router';
+import { FieldConfigService } from 'src/app/core/services/field-config.service';
+import { preserveWhitespacesDefault } from '@angular/compiler';
 
 @Component({
   exportAs: 'attribution',
@@ -50,22 +52,25 @@ export class AttributionComponent implements OnChanges, OnInit {
     private fb: FormBuilder,
     private maprules: MapRulesService,
     private nav: NavigationService,
-    private router: Router
+    private router: Router,
+    private fieldConfig: FieldConfigService
   ) {}
 
   ngOnInit() {
-    this.form = this.createGroup();
-    if (this.configId) {
+    let that = this;
+    this.createMapRuleFormGroup();
+    if (this.configId) { // if existing config, get it, then build FromGroup...
       this.maprules.getMapRule(this.configId).subscribe(
-        (data) => {
-            this.form.get('name').setValue(data['name']);
-            this.loadedForm = <FormGroup> data;
+        function(data: any) {
+          that.form.get('name').setValue(data.name);
+          data.presets.forEach(that.createPresetFormGroup.bind(that));
+          data.disabledFeatures.forEach(that.createDisabledFormGroup.bind(that));
         },
-        error => {
+        function(error) {
           console.error(error);
         }
       );
-    } else if (this.name) {
+    } else if (this.name) { // otherwise, leave blank...
       this.form.get('name').setValue(this.name);
     }
   }
@@ -88,14 +93,57 @@ export class AttributionComponent implements OnChanges, OnInit {
     }
   }
 
-  createGroup() {
-    const group = this.fb.group({
+  /**
+   * Creates Form Group for preset.
+   * @param preset {any} Preset in maprules config presets array
+   */
+  createPresetFormGroup(preset: any) {
+    let fb: FormBuilder = this.fb, fieldConfig = this.fieldConfig;
+    let presets: FormArray = <FormArray> this.form.get('presets');
+
+    // primary key controls
+    let primaries: FormArray = preset.primary.map(function(primary) {
+      return fb.group({
+        key: fb.control(primary.key, Validators.required),
+        value:fb.control(primary.value, Validators.required)
+      })
+    })
+
+    let fields: FormArray = preset.fields.map(function(field) {
+      let keyCondition: String = fieldConfig.keyCondition(field.keyCondition);
+      let valCondition: String = fieldConfig.valCondition(field.valCondition)
+        
+      return fb.group({
+        keyCondition: fb.control(keyCondition, Validators.required),
+        key: fb.control(field.key, Validators.required),
+        valCondition: fb.control(valCondition),
+        val: fb.control('')
+      })
+    })
+
+    presets.push(fb.group({
+      primary: primaries,
+      name: preset.name,
+      geometry: [preset.geometry],
+      fields: fields
+    }));
+  }
+
+  createDisabledFormGroup(disabledFeature: any) {
+    let disabledFeatures: FormArray = <FormArray> this.form.get('disabledFeatures');
+
+    disabledFeatures.push(this.fb.group({
+      key: this.fb.control(disabledFeature.key),
+      val: this.fb.control('')
+    }));
+  }
+
+  createMapRuleFormGroup() {
+    this.form = this.fb.group({
       name : ['', [Validators.required]],
       presets: this.fb.array([]),
       disabledFeatures: this.fb.array([])
     });
-    this.controls.forEach(control => group.addControl(control.name, this.createControl(control)));
-    return group;
   }
 
   createControl(config: FieldConfig) {
