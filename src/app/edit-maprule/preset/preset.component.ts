@@ -9,9 +9,6 @@ import { Event } from '@angular/router';
 import { AccordionService } from '../../core/services/accordion.service';
 import { MapRulesService } from 'src/app/core/services/maprules.service';
 import { EditMapRuleComponent } from '../edit-maprule.component';
-import { fbind } from 'q';
-
-declare var $: any;
 
 @Component({
   selector: 'app-preset',
@@ -32,8 +29,6 @@ export class PresetComponent {
     private fb: FormBuilder,
     private editMapRule: EditMapRuleComponent,
     private fieldConfig: FieldConfigService,
-    private accordion: AccordionService,
-    private maprules: MapRulesService
   ) { }
 
   /* GETTERS FOR NESTED PARTS OF PRESET GROUP */
@@ -76,6 +71,10 @@ export class PresetComponent {
       fieldValCondition: this.fb.control(''),
       fieldVal: this.fb.control('')
     }))
+  }
+
+  private removePreset(presetIndex: number): void {
+    this.editMapRule.presets.removeAt(presetIndex);
   }
 
   private removePrimaryGroup(presetIndex: number, primaryIndex: number): void {

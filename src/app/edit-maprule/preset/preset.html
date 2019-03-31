@@ -7,6 +7,9 @@
             <div class="mr-auto preset-features-header p-3">
               <div class="content-body">
                 <input class="form-input" formControlName="presetName" />
+                <button class="btn" (click)="removePreset(presetIndex)">
+                  <i class="fa fa-times"></i>
+                </button>
               </div>
             </div>
           </div>
@@ -38,8 +41,8 @@
                         <input class="form-input" formControlName="primaryVal" />
                       </td>
                       <td class="feature-table-delete feature-table-td">
-                        <button class="btn btn-sm btn-light feature-button feature-table-delete-button" type="button"
-                          (click)="removePrimaryGroup(presetIndex, primaryIndex)">
+                      <button class="btn btn-sm btn-light feature-button feature-table-delete-button" 
+                        type="button" (click)="removePrimaryGroup(presetIndex, primaryIndex)">
                           <i class="fa fa-times"> </i>
                         </button>
                       </td>

@@ -1,0 +1,35 @@
+<div class="row" [formGroup]="editMapRule.form">
+  <div class="col-md-12" formArrayName="disabledFeatures">
+    <div class="content-body feature-body">
+      <table class="table table-bordered feature-table" *ngIf="disabledFeaturesFormArray().length > 0">
+        <thead class="feature-table-thead">
+          <th class="feature-table-main feature-table-th" scope="col">key</th>
+          <th class="feature-table-main feature-table-th" scope="col">values</th>
+          <th class="feature-table-main feature-table-th" scope="col"></th>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let disabledFeature of disabledFeaturesFormArray().controls; let disabledFeatureIndex=index">
+            <tr class="feature-table-body-row" [formGroupName]="disabledFeatureIndex">
+              <td class="feature-table-main feature-table-td">
+                <input class="form-input" formControlName="disabledKey" />
+              </td>
+              <td class="feature-table-main feature-table-td">
+                <input class="form-input" formControlName="disabledVal" />
+              </td>
+              <td class="feature-table-delete feature-table-td">
+                <button class="btn btn-sm btn-light feature-button feature-button-delete"
+                  type="button" (click)="removeDisabledFeature(disabledFeatureIndex)">
+                  <i class="fa fa-times"></i>
+                </button>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+      <button class="btn btn-sm btn-light feature-button feature-button-round"
+        type="button" (click)="addDisabledFeature()">
+        <i class="fa fa-plus"></i> Add Disabled Feature
+      </button>
+    </div>
+  </div>
+</div>

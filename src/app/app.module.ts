@@ -4,7 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { EditMapRuleModule } from './modules/EditMapRuleModule';
+import { EditMapRuleModule } from './modules/edit-maprule.module';
 import { NavigationBarComponent } from './shared/components/navigation-bar.component';
 import { EditMapRuleComponent } from './edit-maprule/edit-maprule.component';
 import { ViewMapRuleComponent } from './modules/attribution/view-maprule.component';

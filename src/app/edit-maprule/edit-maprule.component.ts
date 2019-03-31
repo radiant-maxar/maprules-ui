@@ -4,12 +4,11 @@ import { Validators, FormGroup, FormBuilder, FormArray, FormControl } from '@ang
 import { FieldConfig } from '../shared/interfaces/field-config.interface';
 import { Feature } from '../shared/models/feature';
 import { PresetComponent } from './preset/preset.component';
-import { DiscouragedFeaturesComponent } from '../modules/attribution/discouraged-features/discouraged-features.component';
+import { DisabledFeatureComponent} from './disabled-feature/disabled-feature.component'
 import { MapRulesService } from '../core/services/maprules.service';
 import { NavigationService } from '../core/services/navigation.service'; 
 import { Router, ActivatedRoute } from '@angular/router';
 import { FieldConfigService } from 'src/app/core/services/field-config.service';
-import { preserveWhitespacesDefault } from '@angular/compiler';
 
 @Component({
   exportAs: 'edit-maprule',
@@ -20,27 +19,11 @@ import { preserveWhitespacesDefault } from '@angular/compiler';
   ],
   templateUrl: './edit-maprule.html'
 })
-export class EditMapRuleComponent implements OnChanges, OnInit {
-  @Input()
-  configId: string;
-
-  @Input()
-  name: number;
-
-  @Input()
-  config: FieldConfig[] = [];
-
+export class EditMapRuleComponent implements OnInit {
   @Output()
   submit: EventEmitter<any> = new EventEmitter<any>();
-
-  loadedForm: FormGroup;
-
   form: FormGroup;
 
-  get controls() { return this.config.filter(({type}) => type !== 'button'); }
-  get changes() { return this.form.valueChanges; }
-  get valid() { return this.form.valid; }
-  get value() { return this.form.value; }
   get presets() { return this.form.get('presets') as FormArray; }
   get disabledFeatures() {
     return this.form.get('disabledFeatures') as FormArray;
@@ -77,23 +60,23 @@ export class EditMapRuleComponent implements OnChanges, OnInit {
     )
   }
 
-  ngOnChanges() {
-    if (this.form) {
-      const controls = Object.keys(this.form.controls);
-      const configControls = this.controls.map((item) => item.name);
+  // ngOnChanges() {
+  //   if (this.form) {
+  //     const controls = Object.keys(this.form.controls);
+  //     const configControls = this.controls.map((item) => item.name);
 
-      controls
-        .filter((control) => !configControls.includes(control))
-        .forEach((control) => this.form.removeControl(control));
+  //     controls
+  //       .filter((control) => !configControls.includes(control))
+  //       .forEach((control) => this.form.removeControl(control));
 
-      configControls
-        .filter((control) => !controls.includes(control))
-        .forEach((name) => {
-          const config = this.config.find((control) => control.name === name);
-          this.form.addControl(name, this.createControl(config));
-        });
-    }
-  }
+  //     configControls
+  //       .filter((control) => !controls.includes(control))
+  //       .forEach((name) => {
+  //         const config = this.config.find((control) => control.name === name);
+  //         this.form.addControl(name, this.createControl(config));
+  //       });
+  //   }
+  // }
 
   /**
    * Creates Form Group for preset.
@@ -165,23 +148,23 @@ export class EditMapRuleComponent implements OnChanges, OnInit {
   handleSubmit(event: Event) {
     event.preventDefault();
     event.stopPropagation();
-    this.submit.emit(this.value);
+   // this.submit.emit(this.value);
   }
 
-  setDisabled(name: string, disable: boolean) {
-    if (this.form.get(name)) {
-      const method = disable ? 'disable' : 'enable';
-      this.form.get(name)[method]();
-      return;
-    }
+  // setDisabled(name: string, disable: boolean) {
+  //   if (this.form.get(name)) {
+  //     const method = disable ? 'disable' : 'enable';
+  //     this.form.get(name)[method]();
+  //     return;
+  //   }
 
-    this.config = this.config.map((item) => {
-      if (item.name === name) {
-        item.disabled = disable;
-      }
-      return item;
-    });
-  }
+  //   this.config = this.config.map((item) => {
+  //     if (item.name === name) {
+  //       item.disabled = disable;
+  //     }
+  //     return item;
+  //   });
+  // }
 
   setValue(name: string, value: any): void {
     this.form.get("name").setValue(value, {emitEvent: true});
