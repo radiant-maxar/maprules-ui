@@ -53,7 +53,7 @@ export class PresetComponent {
 
   private addPreset(): void {
     this.editMapRule.createPresetFormGroup({
-      primary: [],
+      primary: [ { key: '', val: '' } ],
       name: '',
       geometry: this.fieldConfig.geometry,
       fields: []

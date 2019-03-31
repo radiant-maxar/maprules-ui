@@ -108,9 +108,11 @@ export class EditMapRuleComponent implements OnChanges, OnInit {
     preset.primary.forEach(function(primary) {
       primaries.push(fb.group({
         primaryKey: fb.control(primary.key, Validators.required),
-        primaryVal: fb.control(primary.value, Validators.required)
+        primaryVal: fb.control(primary.val, Validators.required)
       }))
     })
+
+    if (primaries.length === 0) primaries.push(fb.group({  }))
 
     let fields: FormArray = this.fb.array([]);
     preset.fields.forEach(function(field) {
