@@ -1,0 +1,129 @@
+<div class="row" [formGroup]="editMapRule.form">
+  <div class="col-md-12" formArrayName="presets">
+    <ng-container *ngFor="let preset of editMapRule.form.controls.presets.controls; let presetIndex=index">
+      <div class="preset-card" [formGroupName]="presetIndex">
+        <div class="col-md-12 preset-card-header">
+          <div class="d-flex flex-row">
+            <div class="mr-auto preset-features-header p-3">
+              <div class="content-body">
+                <input class="form-input" formControlName="presetName" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="preset-card-panel">
+          <div class="content-group">
+            <div class="feature-header">
+              <label class="content-label">
+                <h5>Identifying Tags</h5>
+              </label>
+            </div>
+            <div class="content-body feature-body">
+              <table class="table table-bordered feature-table" *ngIf="primaryFormArray(presetIndex).length > 0">
+                <thead class="feature-table-thead">
+                  <tr class="feature-table-head-row">
+                    <th class="feature-table-main feature-table-th" scope="col">key</th>
+                    <th class="feature-table-main feature-table-th" scope="col">value</th>
+                    <th class="feature-table-delete feature-table-th" scope="col"></th>
+                  </tr>
+                </thead>
+                <tbody formArrayName="primary">
+                  <ng-container
+                    *ngFor="let primaryGroup of primaryFormArray(presetIndex).controls; let primaryIndex=index">
+                    <tr class="feature-table-body-row" [formGroupName]="primaryIndex">
+                      <td class="feature-table-main feature-table-td">
+                        <input class="form-input" formControlName="primaryKey" />
+                      </td>
+                      <td class="feature-table-main feature-table-td">
+                        <input class="form-input" formControlName="primaryVal" />
+                      </td>
+                      <td class="feature-table-delete feature-table-td">
+                        <button class="btn btn-sm btn-light feature-button feature-table-delete-button" type="button"
+                          (click)="removePrimaryGroup(presetIndex, primaryIndex)">
+                          <i class="fa fa-times"> </i>
+                        </button>
+                      </td>
+                    </tr>
+                  </ng-container>
+                </tbody>
+              </table>
+              <button class="btn-btn-sm btn-light feature-button feature-button-round" type="button"
+                (click)="addPrimaryGroup(presetIndex)">
+                <i class="fa fa-plus"></i> Add Identifying Tag
+              </button>
+            </div>
+          </div>
+          <div class="content-group">
+            <div class="feature-header">
+              <label class="content-label feature-label">
+                <h5>Geometry</h5>
+              </label>
+            </div>
+            <div class="content-body feature-body">
+              <label formArrayName='geometry'
+                *ngFor="let geometry of geometryArray(presetIndex).controls; let geometryIndex=index">
+                <input type="checkbox" [formControlName]='geometryIndex'>
+                {{ geometry.value }}
+              </label>
+            </div>
+          </div>
+          <div class="content-group">
+            <div class="content-header feature-header">
+              <label class="content-label feature-label">
+                <h5>Fields</h5>
+              </label>
+            </div>
+            <div class="content-body feature-body">
+              <table class="table table-bordered feature-table" *ngIf="fieldsFormArray(presetIndex).length > 0">
+                <thead class="feature-table-thead">
+                  <tr>
+                    <th class="feature-table-main feature-table-th field-table-main" scope="col">Key Condition</th>
+                    <th class="feature-table-main feature-table-th field-table-main" scope="col">Key</th>
+                    <th class="feature-table-main feature-table-th field-table-main" scope="col">Value Condition</th>
+                    <th class="feature-table-main feature-txable-th field-table-main" scope="col">Value(s)</th>
+                    <th class="feature-table-delete feature-table-th" scope="col"></th>
+                  </tr>
+                </thead>
+                <tbody formArrayName="fields">
+                  <ng-container *ngFor="let fields of fieldsFormArray(presetIndex).controls; let fieldIndex=index">
+                    <tr class="feature-table-body-row" [formGroupName]="fieldIndex">
+                      <td class="feature-table-main feature-table-td">
+                        <input class="form-control" formControlName="fieldKeyCondition">
+                      </td>
+                      <td class="feature-table-main feature-table-td">
+                        <input class="form-control" formControlName="fieldKey">
+                      </td>
+                      <td class="feature-table-main feature-table-td">
+                        <input class="form-control" formControlName="valKeyCondition">
+                      </td>
+                      <td class="feature-table-main feature-table-td">
+                        <input class="form-control" formControlName="valCondition">
+                      </td>
+                      <td class="feature-table-delete feature-table-td">
+                        <button class="bt-btn-sm btn-light feature-button feature-table-delete-button"
+                          type="button" (click)="removeField(presetIndex, fieldIndex)">
+                          <i class="fa fa-times"></i>
+                        </button>
+                      </td>
+                  </ng-container>
+                </tbody>
+              </table>
+              <button class="btn btn-lg btn-light feature-button feature-button-round"
+                type="button" (click)="addField(presetIndex)">
+                <i class="fa fa-plus"></i> Add Field
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+  <div class='col-md-12 feature-content'>
+    <div class="d-flex flex-row-reverse">
+      <button type="button" class="btn btn-light feature-button feature-button-round features-button"
+        (click)="addPreset();" data-toggle="tooltip" data-placement="bottom" title="sdf">
+        <i class="fa fa-plus"> </i> Add Preset
+      </button>
+    </div>
+  </div>
+</div>

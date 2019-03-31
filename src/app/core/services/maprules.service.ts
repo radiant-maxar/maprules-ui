@@ -2,9 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError, Subject } from 'rxjs';
-import { catchError, retry } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment'
-import { EventEmitter } from 'protractor';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +13,7 @@ import { EventEmitter } from 'protractor';
 export class MapRulesService {
  
   mapRulesUrl: string;
-  events: EventEmitter = new EventEmitter();
+  currentMapRule: any;
   comboMap: {};
 
   httpOptions = {
@@ -84,7 +83,10 @@ export class MapRulesService {
 
 
   getMapRule(configId: string){
-    return this.http.get(this.mapRulesUrl + "/" + configId).pipe(catchError(this.handleError));
+    return this.http.get(this.mapRulesUrl + "/" + configId).pipe(
+      tap((maprule: any) => this.currentMapRule = maprule),
+      catchError(this.handleError)
+    );
   }
 
   private handleError(error: HttpErrorResponse) {

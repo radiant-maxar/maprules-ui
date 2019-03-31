@@ -1,28 +1,26 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { Validators, FormGroup, FormBuilder, FormArray, FormControl } from '@angular/forms';
 
-import { FieldConfig } from '../../shared/interfaces/field-config.interface';
-import { Feature } from '../../shared/models/feature';
-import { FeaturesComponent } from './features/features.component';
-import { DiscouragedFeaturesComponent } from './discouraged-features/discouraged-features.component';
-import { MapRulesService } from '../../core/services/maprules.service';
-import { NavigationService } from '../../core/services/navigation.service'; 
-import { Router } from '@angular/router';
+import { FieldConfig } from '../shared/interfaces/field-config.interface';
+import { Feature } from '../shared/models/feature';
+import { PresetComponent } from './preset/preset.component';
+import { DiscouragedFeaturesComponent } from '../modules/attribution/discouraged-features/discouraged-features.component';
+import { MapRulesService } from '../core/services/maprules.service';
+import { NavigationService } from '../core/services/navigation.service'; 
+import { Router, ActivatedRoute } from '@angular/router';
 import { FieldConfigService } from 'src/app/core/services/field-config.service';
 import { preserveWhitespacesDefault } from '@angular/compiler';
 
 @Component({
-  exportAs: 'attribution',
-  selector: 'attribution',
+  exportAs: 'edit-maprule',
+  selector: 'app-edit-maprule',
   styleUrls: [
-    '../../shared/components/content.group.css',
-    './features/feature/feature.component.css',
-    './features/features.component.css',
-    './attribution.component.css',
+    '../shared/components/content.group.css',
+    './edit-maprule.component.css'
   ],
-  templateUrl: './attribution.html'
+  templateUrl: './edit-maprule.html'
 })
-export class AttributionComponent implements OnChanges, OnInit {
+export class EditMapRuleComponent implements OnChanges, OnInit {
   @Input()
   configId: string;
 
@@ -45,34 +43,38 @@ export class AttributionComponent implements OnChanges, OnInit {
   get value() { return this.form.value; }
   get presets() { return this.form.get('presets') as FormArray; }
   get disabledFeatures() {
-    return <FormArray> this.form.get('disabledFeatures') as FormArray;
+    return this.form.get('disabledFeatures') as FormArray;
   }
 
   constructor(
     private fb: FormBuilder,
     private maprules: MapRulesService,
     private nav: NavigationService,
+    private route: ActivatedRoute,
     private router: Router,
     private fieldConfig: FieldConfigService
   ) {}
 
   ngOnInit() {
-    let that = this;
-    this.createMapRuleFormGroup();
-    if (this.configId) { // if existing config, get it, then build FromGroup...
-      this.maprules.getMapRule(this.configId).subscribe(
-        function(data: any) {
-          that.form.get('name').setValue(data.name);
-          data.presets.forEach(that.createPresetFormGroup.bind(that));
-          data.disabledFeatures.forEach(that.createDisabledFormGroup.bind(that));
-        },
-        function(error) {
-          console.error(error);
-        }
-      );
-    } else if (this.name) { // otherwise, leave blank...
-      this.form.get('name').setValue(this.name);
-    }
+    this.route.params.subscribe(
+      (next) => {
+        this.createMapRuleFormGroup();
+        if (next.hasOwnProperty('id')) {
+          this.maprules.getMapRule(next.id).subscribe(
+            (data: any) => {
+              this.form.get('mapruleName').setValue(data.name);
+              data.presets.forEach(this.createPresetFormGroup.bind(this));
+              data.disabledFeatures.forEach(this.createDisabledFormGroup.bind(this));
+            },
+            (error) => {
+              console.error(error);
+            }
+          );
+        } else {
+          this.form.get('mapruleName').setValue('');
+        }  
+      }
+    )
   }
 
   ngOnChanges() {
@@ -99,32 +101,39 @@ export class AttributionComponent implements OnChanges, OnInit {
    */
   createPresetFormGroup(preset: any) {
     let fb: FormBuilder = this.fb, fieldConfig = this.fieldConfig;
-    let presets: FormArray = <FormArray> this.form.get('presets');
+    let presets: FormArray = this.form.get('presets') as FormArray;
 
     // primary key controls
-    let primaries: FormArray = preset.primary.map(function(primary) {
-      return fb.group({
-        key: fb.control(primary.key, Validators.required),
-        value:fb.control(primary.value, Validators.required)
-      })
+    let primaries: FormArray = this.fb.array([]);
+    preset.primary.forEach(function(primary) {
+      primaries.push(fb.group({
+        primaryKey: fb.control(primary.key, Validators.required),
+        primaryVal: fb.control(primary.value, Validators.required)
+      }))
     })
 
-    let fields: FormArray = preset.fields.map(function(field) {
+    let fields: FormArray = this.fb.array([]);
+    preset.fields.forEach(function(field) {
       let keyCondition: String = fieldConfig.keyCondition(field.keyCondition);
       let valCondition: String = fieldConfig.valCondition(field.valCondition)
         
-      return fb.group({
-        keyCondition: fb.control(keyCondition, Validators.required),
-        key: fb.control(field.key, Validators.required),
-        valCondition: fb.control(valCondition),
-        val: fb.control('')
-      })
+      fields.push(fb.group({
+        fieldKeyCondition: fb.control(keyCondition, Validators.required),
+        fieldKey: fb.control(field.key, Validators.required),
+        fieldValCondition: fb.control(valCondition),
+        fieldVal: fb.control('')
+      }))
+    })
+
+    let geometries = fb.array([]);
+    preset.geometry.forEach(function(geometry) {
+      geometries.push(fb.control(geometry))
     })
 
     presets.push(fb.group({
       primary: primaries,
-      name: preset.name,
-      geometry: [preset.geometry],
+      presetName: fb.control(preset.name),
+      geometry: geometries,
       fields: fields
     }));
   }
@@ -133,14 +142,14 @@ export class AttributionComponent implements OnChanges, OnInit {
     let disabledFeatures: FormArray = <FormArray> this.form.get('disabledFeatures');
 
     disabledFeatures.push(this.fb.group({
-      key: this.fb.control(disabledFeature.key),
-      val: this.fb.control('')
+      disabledKey: this.fb.control(disabledFeature.key),
+      disabledVal: this.fb.control('')
     }));
   }
 
   createMapRuleFormGroup() {
     this.form = this.fb.group({
-      name : ['', [Validators.required]],
+      mapruleName : ['', [Validators.required]],
       presets: this.fb.array([]),
       disabledFeatures: this.fb.array([])
     });

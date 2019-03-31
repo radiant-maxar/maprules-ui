@@ -7,9 +7,9 @@ import { FieldConfig } from '../interfaces/field-config.interface';
 @Component({
   selector: 'entities',
   styleUrls: ['./entities.component.css', './content.group.css'],
-  template: `
-	<app-features [config]="config"></app-features>
-  `
+  template: ``
+	// <app-features [config]="config"></app-features>
+  // `
 })
 export class EntitiesComponent implements Field {
   config: FieldConfig;

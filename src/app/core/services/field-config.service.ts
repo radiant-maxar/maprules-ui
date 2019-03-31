@@ -52,7 +52,13 @@ export class FieldConfigService {
     '>', '>='
   ]
 
+  geom: String[] = [ 'Point', 'Line', 'Area' ]
+
   constructor() {}
+
+  get geometry() {
+    return this.geom;
+  }
 
   keyCondition(condition: number) {
     return this.keyConditions[condition];

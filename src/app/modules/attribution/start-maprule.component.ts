@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnChanges, OnInit, Output, ViewEncapsul
 import { Validators, FormGroup } from '@angular/forms';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { FieldConfig } from '../../shared/interfaces/field-config.interface';
-import { AttributionComponent } from '../../modules/attribution/attribution.component';
+// import { AttributionComponent } from '../../form/edit-maprule.component';
 import { FieldConfigService } from '../../core/services/field-config.service';
 import { MapRulesService } from '../../core/services/maprules.service';
 import { environment } from '../../../environments/environment';
@@ -32,7 +32,7 @@ export class StartMapRuleComponent {
   constructor(
      private route: ActivatedRoute,
      private router: Router,
-     private fieldConfig: FieldConfigService,
+    //  private fieldConfig: FieldConfigService,
      private maprules: MapRulesService
   ) {
     fromEvent(window, 'click')

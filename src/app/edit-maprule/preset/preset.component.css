@@ -5,6 +5,9 @@
 }
 
 .preset-card-header {
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  overflow: hidden;
   background-color: #f8f9fa;
   border-bottom: 1px solid rgba(0,0,0,.125);
   margin:auto;
@@ -38,10 +41,6 @@
 
 .preset-accordion-button i {
   font-size: 20px;
-}
-
-.preset-card-panel {
-  max-height: 0;
 }
 
 .features-button {

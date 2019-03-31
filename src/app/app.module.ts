@@ -4,9 +4,9 @@ import { RouterModule, Routes } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { AttributionModule } from './modules/attribution/attribution.module';
+import { EditMapRuleModule } from './modules/EditMapRuleModule';
 import { NavigationBarComponent } from './shared/components/navigation-bar.component';
-import { EditMapRuleComponent } from './modules/attribution/edit-maprule.component';
+import { EditMapRuleComponent } from './edit-maprule/edit-maprule.component';
 import { ViewMapRuleComponent } from './modules/attribution/view-maprule.component';
 import { StartMapRuleComponent } from './modules/attribution/start-maprule.component';
 import { MainComponent } from './modules/main/main.component';
@@ -50,7 +50,7 @@ const appRoutes: Routes = [
   imports: [
     BrowserModule,
     ReactiveFormsModule,
-    AttributionModule,
+    EditMapRuleModule,
     NgbModule,
     NgSelectizeModule,
     HttpClientModule,

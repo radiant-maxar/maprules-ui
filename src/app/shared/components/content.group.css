@@ -19,9 +19,17 @@
     color:rgba(31, 73, 98, 0.746)
 }
 
-.maprule-name {
-    margin-left: 10px;
-    width: 20%;
+.form-input {
+    /* width: 30%; */
+    border-radius: 10px;
+    border: 1px solid rgba(0,0,0,.3);
+    padding: 5px 15px;
+    font-size: 14px;
+}
+
+.form-input:focus,
+.form-input textarea:focus {
+    outline: none;
 }
 
 /* #14676C sea green */
