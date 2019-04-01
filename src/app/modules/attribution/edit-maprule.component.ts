@@ -63,13 +63,13 @@ export class EditMapRuleComponent implements AfterViewInit {
       //TODO check if OAuth authorized app
       var message = event.data.split(":");
       if(message[0] == "save"){
-          app.save(message[1], event.origin);
+          app.save();
       }
     });
 
   }
   
-  save(configId: string, origin: string){
+  save(){
     this.maprules.save(this.form.value).subscribe(
       data => {
         window.parent.postMessage(data['id'], "*");
