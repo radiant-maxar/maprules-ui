@@ -20,6 +20,7 @@ import { TagsComponent } from './shared/components/tags/tags.component';
 import { ValTooltipComponent } from './shared/components/val-tooltip/val-tooltip.component';
 import { DecodeConditionPipe } from './decode-condition.pipe';
 import { EncodeClassPipe } from './encode-class.pipe';
+import { ComboboxModule } from './modules/combobox.module';
 
 const appRoutes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -45,10 +46,11 @@ const appRoutes: Routes = [
     TagsComponent,
     ValTooltipComponent,
     DecodeConditionPipe,
-    EncodeClassPipe,
+    EncodeClassPipe
   ],
   imports: [
     BrowserModule,
+    ComboboxModule,
     ReactiveFormsModule,
     EditMapRuleModule,
     NgbModule,

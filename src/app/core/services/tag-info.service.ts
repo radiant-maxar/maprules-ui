@@ -9,7 +9,6 @@ import { environment } from '../../../environments/environment'
   providedIn: 'root',
 })
 
-
 export class TagInfoService {
  
   tagInfoUrl: string;
@@ -72,4 +71,14 @@ export class TagInfoService {
       this.popularKeys = popularKeyOptions;
     });
   }
+
+  getDatalist(): Observable<any> {
+    return new Observable((observer) => {
+      observer.next([
+        { "name": "Afghanistan", "code": "AF" },
+        { "name": "Åland Islands", "code": "AX" }
+      ]);
+    })
+  }
+
 }

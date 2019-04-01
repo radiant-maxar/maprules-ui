@@ -1,0 +1,24 @@
+<div class="combo=container">
+  <span class="drop-down">
+    <input
+      type="text"
+      class="form-control"
+      [ngModel]="sortText"
+      (ngModelChange)="textChange($event)"
+      (keyup)="onKeyDownAction($event)"
+      (focus)="onFocusEventAction()"
+      (blur)="onBlurEventAction()"/>
+    <button class="drop-down-button"
+      (click)="toggleDropDown()" >
+      <i class="fa fa-angle-down"></i>
+    </button>
+  </span>
+  <div class="data-container" *ngIf="showDropDown">
+    <p *ngFor="let data of dummyDataList; let i=index;"
+      class="data-list"
+      (click)="updateTextBox(data.name)"
+      [ngClass]="{highlight:checkHighlight(i)}">
+      {{data.name}}
+    </p>
+  </div>
+</div>

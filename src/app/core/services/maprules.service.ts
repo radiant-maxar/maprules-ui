@@ -96,4 +96,5 @@ export class MapRulesService {
     return throwError(
       error.error.message);
   };
+
 }
