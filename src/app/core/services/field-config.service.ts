@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, EventEmitter } from '@angular/core';
 import { FieldConfig } from '../../shared/interfaces/field-config.interface';
 import { SelectizeOption } from '../../shared/interfaces/selectize-option.interface';
 import { Validators} from '@angular/forms';
@@ -37,6 +37,8 @@ export class FieldConfigService {
   primaryGroupConfig: Map<number, Map<number, FieldConfig>> = new Map<number, Map<number, FieldConfig>>();
   guidelineConfig: Map<number, Map<number, FieldConfig[]>> = new Map<number, Map<number, FieldConfig[]>>();
   disabledFeatureConfig: FieldConfig[][] = [];
+
+  emitter: EventEmitter<any> = new EventEmitter();
 
   keyConditions: String[] = [
     'must have',

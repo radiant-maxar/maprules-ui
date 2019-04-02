@@ -2,13 +2,13 @@ import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angu
 import { Validators, FormGroup, FormBuilder, FormArray, FormControl } from '@angular/forms';
 
 import { FieldConfig } from '../shared/interfaces/field-config.interface';
-import { Feature } from '../shared/models/feature';
 import { PresetComponent } from './preset/preset.component';
 import { DisabledFeatureComponent} from './disabled-feature/disabled-feature.component'
 import { MapRulesService } from '../core/services/maprules.service';
 import { NavigationService } from '../core/services/navigation.service'; 
 import { Router, ActivatedRoute } from '@angular/router';
 import { FieldConfigService } from 'src/app/core/services/field-config.service';
+import { TagInfoService } from '../core/services/tag-info.service';
 
 @Component({
   exportAs: 'edit-maprule',
@@ -32,6 +32,7 @@ export class EditMapRuleComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private maprules: MapRulesService,
+    private tagInfoSevice: TagInfoService,
     private nav: NavigationService,
     private route: ActivatedRoute,
     private router: Router,
@@ -45,6 +46,7 @@ export class EditMapRuleComponent implements OnInit {
         if (next.hasOwnProperty('id')) {
           this.maprules.getMapRule(next.id).subscribe(
             (data: any) => {
+              this.tagInfoSevice.popularKeys().subscribe();
               this.form.get('mapruleName').setValue(data.name);
               data.presets.forEach(this.createPresetFormGroup.bind(this));
               data.disabledFeatures.forEach(this.createDisabledFormGroup.bind(this));
@@ -90,7 +92,7 @@ export class EditMapRuleComponent implements OnInit {
     let primaries: FormArray = this.fb.array([]);
     preset.primary.forEach(function(primary) {
       primaries.push(fb.group({
-        primaryKey: fb.control(primary.key, Validators.required),
+        primaryKey: fb.control(primary.key),
         primaryVal: fb.control(primary.val, Validators.required)
       }))
     })

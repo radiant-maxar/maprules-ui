@@ -6,7 +6,7 @@
           <div class="d-flex flex-row">
             <div class="mr-auto preset-features-header p-3">
               <div class="content-body">
-                <input class="form-input" formControlName="presetName" />
+                <input class="form-input form-input-full" formControlName="presetName" />
                 <button class="btn" (click)="removePreset(presetIndex)">
                   <i class="fa fa-times"></i>
                 </button>
@@ -35,10 +35,18 @@
                     *ngFor="let primaryGroup of primaryFormArray(presetIndex).controls; let primaryIndex=index">
                     <tr class="feature-table-body-row" [formGroupName]="primaryIndex">
                       <td class="feature-table-main feature-table-td">
-                        <input class="form-input" formControlName="primaryKey" />
+                        <app-combobox
+                          [dataSource]="'tagInfoService:popularKeys'"
+                          [comboIndex]="presetIndex + ':' + primaryIndex"
+                          formControlName="primaryKey">
+                        </app-combobox>
                       </td>
                       <td class="feature-table-main feature-table-td">
-                        <input class="form-input" formControlName="primaryVal" />
+                        <app-combobox
+                          [dataSource]="'tagInfoService:tagValues'"
+                          [comboIndex]="presetIndex + ':' + primaryIndex"
+                          formControlName="primaryVal">
+                        </app-combobox>
                       </td>
                       <td class="feature-table-delete feature-table-td">
                       <button class="btn btn-sm btn-light feature-button feature-table-delete-button" 

@@ -78,8 +78,9 @@ export class PresetComponent {
   }
 
   private removePrimaryGroup(presetIndex: number, primaryIndex: number): void {
-    if (this.editMapRule.presets.length === 1) return;
-    this.primaryFormArray(presetIndex).removeAt(primaryIndex)
+    let primaryFormArray = this.primaryFormArray(presetIndex) as FormArray;
+    if (primaryFormArray.length === 1) return;
+    primaryFormArray.removeAt(primaryIndex)
   }
 
   private removeFeatureCard(presetIndex: number): void {

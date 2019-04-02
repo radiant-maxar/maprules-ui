@@ -1,5 +1,7 @@
 .content-group-container {
     margin: 30px 100px;
+    /* display: flex; */
+    /* max-width: 800px; */
 }
 .content-group {
     margin: 20px;
@@ -20,7 +22,6 @@
 }
 
 .form-input {
-    /* width: 30%; */
     border-radius: 10px;
     border: 1px solid rgba(0,0,0,.3);
     padding: 5px 15px;
@@ -30,6 +31,10 @@
 .form-input:focus,
 .form-input textarea:focus {
     outline: none;
+}
+
+.form-input-full {
+    width: 100%;
 }
 
 /* #14676C sea green */

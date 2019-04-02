@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { NgSelectizeModule } from 'ng-selectize';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap'; 
 
@@ -12,13 +12,16 @@ import { GuidelineDirective } from '../shared/directives/guideline.directive';
 
 import { PresetComponent } from '../edit-maprule/preset/preset.component';
 import { DisabledFeatureComponent } from '../edit-maprule/disabled-feature/disabled-feature.component';
+import { ComboboxModule } from './combobox.module';
+import { BrowserModule } from '@angular/platform-browser';
 
 @NgModule({
   imports: [
     CommonModule,
     ReactiveFormsModule,
     NgSelectizeModule,
-    NgbModule
+    NgbModule,
+    ComboboxModule
   ],
   declarations: [
     AttributionDirective,
