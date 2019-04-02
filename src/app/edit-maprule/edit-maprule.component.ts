@@ -5,7 +5,7 @@ import { FieldConfig } from '../shared/interfaces/field-config.interface';
 import { PresetComponent } from './preset/preset.component';
 import { DisabledFeatureComponent} from './disabled-feature/disabled-feature.component'
 import { MapRulesService } from '../core/services/maprules.service';
-import { NavigationService } from '../core/services/navigation.service'; 
+import { NavigationService } from '../core/services/navigation.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FieldConfigService } from 'src/app/core/services/field-config.service';
 import { TagInfoService } from '../core/services/tag-info.service';
@@ -57,7 +57,7 @@ export class EditMapRuleComponent implements OnInit {
           );
         } else {
           this.form.get('mapruleName').setValue('');
-        }  
+        }
       }
     )
   }
@@ -93,7 +93,7 @@ export class EditMapRuleComponent implements OnInit {
     preset.primary.forEach(function(primary) {
       primaries.push(fb.group({
         primaryKey: fb.control(primary.key),
-        primaryVal: fb.control(primary.val, Validators.required)
+        primaryVal: fb.control(primary.val)
       }))
     })
 
@@ -103,7 +103,7 @@ export class EditMapRuleComponent implements OnInit {
     preset.fields.forEach(function(field) {
       let keyCondition: String = fieldConfig.keyCondition(field.keyCondition);
       let valCondition: String = fieldConfig.valCondition(field.valCondition)
-        
+
       fields.push(fb.group({
         fieldKeyCondition: fb.control(keyCondition, Validators.required),
         fieldKey: fb.control(field.key, Validators.required),

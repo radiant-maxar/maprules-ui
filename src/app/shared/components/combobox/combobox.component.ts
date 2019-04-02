@@ -1,10 +1,10 @@
-import { Component, Input, OnInit, forwardRef, AfterViewInit, Injector } from '@angular/core';
-import { ComboboxPipe } from './combobox.pipe';
-import { NG_VALUE_ACCESSOR, ControlValueAccessor, NgControl, FormControl, FormControlName, FormArray } from '@angular/forms';
-import { TagInfoService } from '../../../core/services/tag-info.service';
-import { EditMapRuleComponent } from 'src/app/edit-maprule/edit-maprule.component';
+import { AfterViewInit, Component, forwardRef, Injector, Input, OnInit } from '@angular/core';
+import { ControlValueAccessor, FormControl, NgControl, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { of, Observable } from 'rxjs';
 import { FieldConfigService } from 'src/app/core/services/field-config.service';
-import { Observable } from 'rxjs';
+import { EditMapRuleComponent } from 'src/app/edit-maprule/edit-maprule.component';
+import { TagInfoService } from '../../../core/services/tag-info.service';
+import { ComboboxPipe } from './combobox.pipe';
 
 export enum KEY_CODE {
   UP_ARROW = 38,
@@ -19,13 +19,13 @@ export enum KEY_CODE {
   selector: 'app-combobox',
   templateUrl: './combobox.component.html',
   styleUrls: ['./combobox.component.css'],
-  providers: [ 
+  providers: [
     ComboboxPipe,
     {
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => ComboboxComponent),
       multi: true
-    } 
+    }
   ]
 })
 export class ComboboxComponent implements OnInit, AfterViewInit, ControlValueAccessor {
@@ -61,7 +61,7 @@ export class ComboboxComponent implements OnInit, AfterViewInit, ControlValueAcc
   onKeyDownAction(event: KeyboardEvent): void {
     if (!event.currentTarget['value'].length && event.keyCode === KEY_CODE.BACKSPACE) {
       this.dummyDataList = this.dataList;
-      this.showDropDown = false;  
+      this.showDropDown = false;
       return;
     }
 
@@ -137,7 +137,7 @@ export class ComboboxComponent implements OnInit, AfterViewInit, ControlValueAcc
     }
 
     this.sortText = this._formControl ? this._formControl.value : '';
-    let resourceObservable: Observable<any>
+    let resourceObservable: Observable<any>;
 
     switch (this._dataSource) {
       case 'tagInfoService:popularKeys': {
@@ -145,7 +145,9 @@ export class ComboboxComponent implements OnInit, AfterViewInit, ControlValueAcc
         break;
       }
       case 'tagInfoService:tagValues': {
-        resourceObservable = this.tagInfoService.tagValues(this._formControl.value);
+        let key: string = this._formControl.parent.get('primaryKey').value;
+        // if key exists, use it to get tagValues, otherwise generate an empty list...
+        resourceObservable = key.length ? this.tagInfoService.tagValues(key) : of([]);
         break;
       }
       default: {
@@ -170,7 +172,7 @@ export class ComboboxComponent implements OnInit, AfterViewInit, ControlValueAcc
     this._formControl.valueChanges.subscribe(val => {
       that.textChange(val) // update dropdown list...
       switch (that._formControlName) { // emit event relevant to partner input...
-        case 'primaryKey': { 
+        case 'primaryKey': {
           that.comboKeyChanged(val, 'primaryVal');
           break;
         }
