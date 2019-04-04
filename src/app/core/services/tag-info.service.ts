@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ServiceCacheInterceptor } from './service-cache-interceptor';
 import { environment } from '../../../environments/environment';
+import { OperatorFunction } from 'rxjs';
+import { reduce } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -12,6 +14,7 @@ export class TagInfoService {
   public static POPULAR_KEYS = '/api/4/keys/all';
   public static TAG_VALUES = 'tagValues';
   public static TAG_COMBINATIONS = 'tagCombinations';
+  public static KEY_COMBINATIONS = 'keyCombinations';
 
   /* URL BUILDERS/STRINGS */
   static POPULAR_TAGS_URL = `${environment.taginfo}tags/popular?page=1&rp=20&sortname=count_all&sortorder=desc`;
@@ -35,6 +38,28 @@ export class TagInfoService {
     return `${environment.taginfo}tag/combinations?key=${key}&value=${value}&page=1&rp=50&sortname=together_count&sortorder=desc`;
   }
 
+  /**
+   * Builds url for getting specific key combinations
+   * @param key {string} combo key
+   * @param value {string} combo value
+   * @return {string} key combinations url string...
+   */
+  static keyCombinationsUrl(key: string, value: string): string {
+    return `${environment.taginfo}key/combinations?key=${key}&value=${value}&page=1&rp=50&sortname=together_count&sortorder=desc`;
+  }
+
+  static reducer(nameKey: string, valKey: string): OperatorFunction<any, any> {
+    return reduce((data: Array < any >, response: any) => {
+      response.data.forEach((datum: any) => {
+        data.push({
+          name: datum[nameKey],
+          value: datum[valKey]
+        })
+      })
+      return data;
+    }, [])
+  }
+
   constructor(private http: HttpClient) { }
 
   /**
@@ -43,12 +68,12 @@ export class TagInfoService {
    */
   popularTags() {
     return this.http.get(TagInfoService.POPULAR_TAGS_URL)
-      .pipe(ServiceCacheInterceptor.getMapper(TagInfoService.POPULAR_TAGS));
+      .pipe(TagInfoService.reducer('key', 'key'));
   }
 
   popularKeys() {
     return this.http.get(TagInfoService.POPULAR_KEYS_URL)
-      .pipe(ServiceCacheInterceptor.getMapper(TagInfoService.POPULAR_KEYS))
+      .pipe(TagInfoService.reducer('key', 'key'))
   }
 
   /**
@@ -58,7 +83,7 @@ export class TagInfoService {
    */
   tagValues(key: string) {
     return this.http.get(TagInfoService.tagValuesUrl(key))
-      .pipe(ServiceCacheInterceptor.getMapper(TagInfoService.TAG_VALUES));
+      .pipe(TagInfoService.reducer('value', 'value'))
   }
 
   /**
@@ -67,8 +92,21 @@ export class TagInfoService {
    * @param value {string} combination value
    * @return {Observable<SelectizeOption[]>}
    */
-  tagCombinations(key:string, value: string) {
-    return this.http.get(TagInfoService.tagCombinationsUrl(key, value))
-      .pipe(ServiceCacheInterceptor.getMapper(TagInfoService.TAG_COMBINATIONS));
+  // tagCombinations(key:string, value: string) {
+  //   return this.http.get(TagInfoService.tagCombinationsUrl(key, value))
+  //     .pipe(TagInfoService.reducer('other_key', 'other_key'));
+  // }
+
+  /**
+   * Return Observable with tag combinations for given key/value selectize options, be it from cache or an http request
+   * @param key {string} combination key
+   * @param value {string} combination value
+   * @return {Observable<SelectizeOption[]>}
+   */
+  keyCombinations(key: string, value: string) {
+    return this.http.get(TagInfoService.keyCombinationsUrl(key, value))
+      .pipe(TagInfoService.reducer('other_key', 'other_key'))
+    // 'https://taginfo.openstreetmap.org/api/4/key/combinations?key=amenity&value=clinic&page=1&rp=10&sortname=together_count&sortorder=desc'
+    // return of([]);
   }
 }

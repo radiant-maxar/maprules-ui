@@ -20,66 +20,6 @@ import { environment } from 'src/environments/environment';
 
 @Injectable()
 export class ServiceCacheInterceptor implements HttpInterceptor {
-  static getMapper(prop: string): OperatorFunction<any, any> {
-    if (prop === TagInfoService.POPULAR_TAGS || prop === TagInfoService.POPULAR_KEYS) {
-      return ServiceCacheInterceptor.popularTagsMapper();
-    } else if (prop === TagInfoService.TAG_COMBINATIONS) {
-      return ServiceCacheInterceptor.tagCombosMapper();
-    } else if (prop === TagInfoService.TAG_VALUES) {
-      return ServiceCacheInterceptor.tagValuesMapper();
-    }
-  }
-
-  /* CACHE OPERATOR FUNCTIONS */
-  /* these are functions that take tagInfo responses and make them understandable to the ui... */
-
-  /**
-   * returns popular tags resource's OperatorFunction
-   * @return {OperatorFunction}
-   */
-  static popularTagsMapper(): OperatorFunction<any, any> {
-    return reduce((data: Array<any>, response: any) => {
-      response.data.forEach((datum: any) => {
-        data.push({
-          name: datum.key,
-          value: datum.key
-        });
-      });
-      return data;
-    }, []);
-  }
-
-  /**
-   * returns a tag values resource's OperatorFunction
-   * @return {OperatorFunction}
-   */
-  static tagValuesMapper(): OperatorFunction<any, any> {
-    return reduce((data: Array<any>, response: any): any => {
-      response.data.forEach((datum: any) => {
-        data.push({ name: datum.value, value: datum.value });
-      });
-      return data;
-    }, []);
-  }
-
-  /**
-   * returns a tag combo resource's OperatorFunction
-   * @return {OperatorFunction}
-   */
-  static tagCombosMapper(): OperatorFunction<any, any> {
-    return reduce((tagCombos, response: any): any => {
-      // turns array of single key/value combos into map of keys and each of their possible values...
-      response.data.forEach((datum: any) => {
-        const currentValues = (tagCombos[datum.other_key] || []);
-        if (datum.other_value.length > 0) {
-          currentValues.push(datum.other_value);
-        }
-        tagCombos[datum.other_key] = currentValues;
-      });
-      return tagCombos;
-    }, {});
-  }
-
   constructor(private cache: ServicesCache) { }
 
   /**
@@ -96,7 +36,7 @@ export class ServiceCacheInterceptor implements HttpInterceptor {
 
     let requestObservable: Observable<any>;
     const cached = this.cache.get(req);
-    
+
     if (cached !== null) {
       requestObservable = of(cached);
     } else {

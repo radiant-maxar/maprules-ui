@@ -36,14 +36,12 @@
                     <tr class="feature-table-body-row" [formGroupName]="primaryIndex">
                       <td class="feature-table-main feature-table-td">
                         <app-combobox
-                          [dataSource]="'tagInfoService:popularKeys'"
                           [comboIndex]="presetIndex + ':' + primaryIndex"
                           formControlName="primaryKey">
                         </app-combobox>
                       </td>
                       <td class="feature-table-main feature-table-td">
                         <app-combobox
-                          [dataSource]="'tagInfoService:tagValues'"
                           [comboIndex]="presetIndex + ':' + primaryIndex"
                           formControlName="primaryVal">
                         </app-combobox>

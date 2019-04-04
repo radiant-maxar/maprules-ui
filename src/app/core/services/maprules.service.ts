@@ -11,7 +11,6 @@ import { environment } from '../../../environments/environment'
 
 
 export class MapRulesService {
- 
   mapRulesUrl: string;
   currentMapRule: any;
   comboMap: {};

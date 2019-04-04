@@ -101,8 +101,8 @@ export class EditMapRuleComponent implements OnInit {
 
     let fields: FormArray = this.fb.array([]);
     preset.fields.forEach(function(field) {
-      let keyCondition: String = fieldConfig.keyCondition(field.keyCondition);
-      let valCondition: String = fieldConfig.valCondition(field.valCondition)
+      let keyCondition: String = FieldConfigService.keyCondition(field.keyCondition);
+      let valCondition: String = FieldConfigService.valCondition(field.valCondition)
 
       fields.push(fb.group({
         fieldKeyCondition: fb.control(keyCondition, Validators.required),

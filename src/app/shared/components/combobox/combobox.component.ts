@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, forwardRef, Injector, Input, OnInit } from '@angular/core';
-import { ControlValueAccessor, FormControl, NgControl, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, FormControl, NgControl, NG_VALUE_ACCESSOR, FormArray, FormGroup } from '@angular/forms';
 import { of, Observable } from 'rxjs';
 import { FieldConfigService } from 'src/app/core/services/field-config.service';
 import { EditMapRuleComponent } from 'src/app/edit-maprule/edit-maprule.component';
@@ -32,11 +32,6 @@ export class ComboboxComponent implements OnInit, AfterViewInit, ControlValueAcc
   private _formControl: FormControl;
   private _formControlName: string;
 
-  private _dataSource: string;
-  @Input() set dataSource(dataSource: string) {
-    this._dataSource = dataSource;
-  };
-
   private _comboIndex: string;
   @Input() set comboIndex(comboIndex: string) {
     this._comboIndex = comboIndex;
@@ -48,7 +43,6 @@ export class ComboboxComponent implements OnInit, AfterViewInit, ControlValueAcc
   counter: number;
   sortText: string = '';
   _value: string = '';
-  eventName: string;
 
   onFocusEventAction(): void {
     this.counter = -1;
@@ -119,7 +113,7 @@ export class ComboboxComponent implements OnInit, AfterViewInit, ControlValueAcc
     this.showDropDown = false;
   }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   // https://stackoverflow.com/questions/44731894/get-access-to-formcontrol-from-the-custom-form-component-in-angular
   ngAfterViewInit(): void {
@@ -131,106 +125,223 @@ export class ComboboxComponent implements OnInit, AfterViewInit, ControlValueAcc
     if (controlName) {
       this._formControl = controlName.control as FormControl;
       this._formControlName = controlName.name;
-      this.eventName = `${this._comboIndex}:${this._formControlName}`
-
-      // also make sure to initialize the input value!
     }
 
+    // make sure to initialize the input value!
     this.sortText = this._formControl ? this._formControl.value : '';
-    let resourceObservable: Observable<any>;
 
-    switch (this._dataSource) {
-      case 'tagInfoService:popularKeys': {
-        resourceObservable = this.tagInfoService.popularKeys();
-        break;
+    this.getResourceObservable().subscribe(
+      (next) => {
+        // set dataList to response from tagInfoService
+        that.dataList = next
+      },
+      (error) => {
+        // or on fail, just init w/empty list...
+        console.log(error);
+        that.dataList = []
       }
-      case 'tagInfoService:tagValues': {
-        let key: string = this._formControl.parent.get('primaryKey').value;
-        // if key exists, use it to get tagValues, otherwise generate an empty list...
-        resourceObservable = key.length ? this.tagInfoService.tagValues(key) : of([]);
-        break;
-      }
-      default: {
-        break;
-      }
-    }
-
-    resourceObservable.subscribe(
-      (next) => that.dataList = next, // set dataList to response from tagInfoService
-      (error) => { console.log(error); that.dataList = [] } // or on fail, just init w/empty list...
     )
 
     this.fieldConfig.emitter.subscribe(
       (next) => {
-        if (next.name === this.eventName) { // if emitted change val is for this combo, update dataList...
-          this.dataList = next.data
+        // if emitted change val is for this combo, update dataList...
+        if (next.name === `${this._comboIndex}:${this._formControlName}`) {
+          switch (next.type) {
+            case 'data': {
+              this.dataList = next.data
+              break;
+            }
+            case 'condition': {
+              // handle condition change
+              break;
+            }
+            default: {
+              break;
+            }
+          }
         }
       },
-      (error) => console.log(error)
+      (error) => {
+        console.log(error)
+      }
     )
 
     this._formControl.valueChanges.subscribe(val => {
-      that.textChange(val) // update dropdown list...
-      switch (that._formControlName) { // emit event relevant to partner input...
-        case 'primaryKey': {
-          that.comboKeyChanged(val, 'primaryVal');
-          break;
-        }
-        // case 'primaryVal': {}
-        default: {
-          break;
-        }
+      // update this combobox dropdown...
+      that.textChange(val)
+
+      if (this.dataList.findIndex(function (d) { return d.name === val; }) === -1) {
+        return;
+      }
+
+      if (/(fields|primary)Key/.test(this._formControlName)) {
+        that.comboKeyChanged(val)
+      } else if (/(fields|primary)Val/.test(this._formControlName)) {
+        that.comboValChanged(val);
+      } else if (/(key|val)Condition/.test(this._formControlName) && this.dataList.findIndex(val) === 3) { // 3rd element in these lists === must/should not be...
+        that.conditionChanged(val);
+      } else if (/disabledFeatureKey/.test(this._formControlName)) {
+        that.disabledKeyChanged(val);
+      } else {
+        // just remove from show list...
       }
     })
   }
 
-  /**
-   * when new input value is known in dataList, get matching values
-   * and emit event to update its partner combobox...
-   * @param key {string} tag key inputted in combobox
-   * @param parterKey {string} the partner combobox's key...that combo only will update its dataList when given that event...
-   */
-  comboKeyChanged(key: string, partnerKey: string) {
-    if (this.dataList.find(function(d) { return d.name === key; })) {
-      this.tagInfoService.tagValues(key).subscribe(
-        (next) => {
-          let partnerEvent = `${this._comboIndex}:${partnerKey}`;
-          this.fieldConfig.emitter.emit({ name: partnerEvent, data: next })
-        }
-      );
+  getPartnerEvent(partnerKey: string, nextIndex: boolean): string {
+    let partnerIndex: string;
+    if (nextIndex) {
+      let [formArrayIndex, formGroupIndex] = this._comboIndex.split(':').map(function (pIndex) { return Number(pIndex); });
+      partnerIndex = `${formArrayIndex + 1}:${formGroupIndex + 1}`;
+    } else {
+      partnerIndex = this._comboIndex;
     }
+    return `${partnerIndex}:${partnerKey}`
   }
 
-  // '0:0:primaryKey'
-  // '0:0:primaryVal'
-  // '0:0:fieldKey'
-  // '0:0:fieldVal'
-  // '0:disabledKey'
+  disabledKeyChanged(key: string): void {
+    this.tagInfoService.tagValues(key).subscribe(
+      (next) => {
+        this.fieldConfig.emitter.emit({
+          name: this.getPartnerEvent('disabledVal', false),
+          type: 'data',
+          data: next
+        })
+      },
+      (error) => {
+        console.log(error);
+      }
+    )
+  }
 
-  // comboValChanged(val: string, keyType: string) {
-  //   let primaryArray = this._formControl.parent.parent as FormArray;
-  //   let [ presetIndex, primaryIndex ] = this._comboIndex.split(':');
-  //   let nextPrimary = Number(primaryIndex)
-  //   if (primaryArray.length - 1 === nextPrimary) {
-  //     return;
-  //   }
+  conditionChanged(key: string): void {
+    let partnerKey: string = /key/i.test(key) ? 'fieldsKey' : 'fieldsVal';
+    this.fieldConfig.emitter.emit({
+      name: this.getPartnerEvent(partnerKey, false),
+      type: 'condition'
+    })
+  }
 
-  //   if (this.dataList.find(function(d) { return d.name === val; })) {
-  //     let key = this._formControl.parent.get('primaryKey').value;
-  //     let nextIndex = `${presetIndex}:${nextPrimary}`
-  //     this.tagInfoService.tagCombinations(key, val).subscribe(
-  //       (next) => {
-  //         let partnerEvent = `${keyType}:Key`
-  //       }
-  //     )
-  //   }
+  /**
+   * when new input value exists in the dataList, get matching values
+   * and emit event to update its partner combobox...
+   * @param key {string} tag key inputted in combobox
+   */
+  comboKeyChanged(key: string): void {
+    let partnerKey: string = /primary/.test(this._formControlName) ? 'primaryVal' : 'fieldsVal'
+    this.tagInfoService.tagValues(key).subscribe(
+      (next) => {
+        this.fieldConfig.emitter.emit({
+          name: this.getPartnerEvent(partnerKey, false),
+          type: 'data',
+          data: next
+        })
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+  }
 
-  // }
+  /**
+   * when new input exists in the dataList, go cache tag combinations..
+   * and emit event to update partner combobox...
+   * @param val {string} tag value inputted in combobox
+   */
+  comboValChanged(val: string): void {
+    let partnerKey: string;
+    let valKey: string;
+    if (/primary/.test(this._formControlName)) {
+      partnerKey = 'primaryKey';
+      valKey = 'primaryVal'
+    } else {
+      partnerKey = 'fieldsKey';
+      valKey = 'fieldsVal'
+    }
 
-  writeValue(value: any) {}
-  onChange(newVal: any) {}
-  onTouched(_?: any) {}
-  registerOnTouched(fn: any): void {  this.onTouched = fn; }
+    let key = this._formControl.parent.get(valKey).value;
+    this.tagInfoService.keyCombinations(key, val).subscribe(
+      (next) => {
+        this.fieldConfig.emitter.emit({
+          name: this.getPartnerEvent(partnerKey, true),
+          data: next
+        });
+      },
+      (error) => {
+        console.log(error);
+      }
+    )
+  }
+
+  /**
+   * uses combo index & formName to determine appropriate resource to populate combobox options with...
+   */
+  getResourceObservable(): Observable<any> {
+    let resourceObservable: Observable<any>;
+    switch (this._formControlName) {
+      case 'keyCondition': {
+        resourceObservable = of(FieldConfigService.KEY_CONDITIONS)
+        break;
+      }
+      case 'valCondition': {
+        resourceObservable = of(FieldConfigService.VAL_CONDITIONS)
+        break;
+      }
+      default: {
+        let [formArrayIndex, formGroupIndex] = this._comboIndex.split(':').map(function (pIndex) { return Number(pIndex); });
+        let isPopular = formGroupIndex === 0;
+
+        let formGroupName: string;
+        let formArray: FormArray;
+        let controlKey: string;
+        let controlVal: string;
+
+        if (/primary/.test(this._formControlName)) {
+          formArray = this.editMapRules.presets.at(formArrayIndex).get('primary') as FormArray;
+          controlKey = 'primaryKey'
+          controlVal = 'primaryVal'
+        } else if (/fields/.test(this._formControlName)) {
+          formArray = this.editMapRules.presets.at(formArrayIndex).get('fields') as FormArray;
+          controlKey = 'fieldKey'
+          controlVal = 'fieldVal'
+        } else {
+          formArray = this.editMapRules.disabledFeatures.at(formGroupIndex) as FormArray;
+          controlKey = 'disabledKey'
+          controlVal = 'disabledVal'
+        }
+
+        if (!isPopular) { // if index is not 0, a popular tags request is still appropriate if neither of the partner key/values are set...
+          let partnerGroup = formArray.at(formGroupIndex - 1) as FormGroup;
+          if (partnerGroup.get(controlKey).value.length && partnerGroup.get(controlVal).value.length) {
+            if (this._formControlName.endsWith('Val')) {
+              resourceObservable = of([]);
+            } else {
+              let key: string = partnerGroup.get(controlKey).value;
+              let val: string = partnerGroup.get(controlVal).value;
+              resourceObservable = this.tagInfoService.keyCombinations(key, val);
+            }
+          } else {
+            resourceObservable = this.tagInfoService.popularKeys();
+          }
+        } else {
+          if (this._formControlName.endsWith('Val')) {
+            let key: string = this._formControl.parent.get(controlKey).value;
+            resourceObservable = this.tagInfoService.tagValues(key);
+          } else {
+            resourceObservable = this.tagInfoService.popularKeys();
+          }
+        }
+        break;
+      }
+    }
+
+    return resourceObservable;
+  }
+
+  writeValue(value: any) { }
+  onChange(newVal: any) { }
+  onTouched(_?: any) { }
+  registerOnTouched(fn: any): void { this.onTouched = fn; }
   registerOnChange(fn: any): void { this.onChange = fn; }
 
   constructor(
@@ -239,5 +350,5 @@ export class ComboboxComponent implements OnInit, AfterViewInit, ControlValueAcc
     private fieldConfig: FieldConfigService,
     private editMapRules: EditMapRuleComponent,
     private injector: Injector
-  ) {}
+  ) { }
 }

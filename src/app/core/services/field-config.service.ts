@@ -10,6 +10,28 @@ declare var $: any;
 
 
 export class FieldConfigService {
+  static KEY_CONDITIONS: String[] = [
+    'must have',
+    'may have',
+    'should not have'
+  ];
+
+  static VAL_CONDITIONS: String[] = [
+    'must be',
+    'may be',
+    'must not be',
+    '<', '<=',
+    '>', '>='
+  ]
+
+  static keyCondition(condition: number) {
+    return this.KEY_CONDITIONS[condition];
+  }
+
+  static valCondition(condition: number) {
+    return this.KEY_CONDITIONS[condition];
+  }
+
 
   config: FieldConfig[] = [
     {
@@ -39,35 +61,12 @@ export class FieldConfigService {
   disabledFeatureConfig: FieldConfig[][] = [];
 
   emitter: EventEmitter<any> = new EventEmitter();
-
-  keyConditions: String[] = [
-    'must have',
-    'may have',
-    'should not have'
-  ];
-
-  valConditions: String[] = [
-    'must be',
-    'may be',
-    'must not be',
-    '<', '<=',
-    '>', '>='
-  ]
-
   geom: String[] = [ 'Point', 'Line', 'Area' ]
 
   constructor() {}
 
   get geometry() {
     return this.geom;
-  }
-
-  keyCondition(condition: number) {
-    return this.keyConditions[condition];
-  }
-
-  valCondition(condition: number) {
-    return this.valCondition[condition];
   }
 
   getFieldConfig(name: string) {
@@ -145,27 +144,27 @@ export class FieldConfigService {
                           }
                          ];
   }
-  getPrimaryKeyConfigSettings(keyOptions: SelectizeOption[]){ 
-    return {  type: 'primary', 
-            name: 'key', 
-            validation: [Validators.required], 
-            selectizeConfig: { 
-                              create: true, 
-                              persist: true, 
-                              items: [""], 
-                              maxItems: 1, 
-                              options: keyOptions, 
-                              plugins: ['dropdown_direction'], 
-                              dropdownDirection: 'down'        
+  getPrimaryKeyConfigSettings(keyOptions: SelectizeOption[]){
+    return {  type: 'primary',
+            name: 'key',
+            validation: [Validators.required],
+            selectizeConfig: {
+                              create: true,
+                              persist: true,
+                              items: [""],
+                              maxItems: 1,
+                              options: keyOptions,
+                              plugins: ['dropdown_direction'],
+                              dropdownDirection: 'down'
             }
     };
   }
  getPrimaryValueConfigSettings(valueOptions: SelectizeOption[]){
-  var valConfig = { 
-              type: 'primary', 
-              name: 'val', 
-              value: "", 
-              selectizeConfig: { 
+  var valConfig = {
+              type: 'primary',
+              name: 'val',
+              value: "",
+              selectizeConfig: {
                                   create: true,
                                   persist: true,
                                   maxItems: 1,
@@ -173,9 +172,9 @@ export class FieldConfigService {
                                   options: valueOptions,
                                   allowEmptyOption: true,
                                   plugins: ['dropdown_direction'],
-                                  dropdownDirection: 'down' 
-                                } 
-    }; 
+                                  dropdownDirection: 'down'
+                                }
+    };
     return valConfig;
   }
 
@@ -220,9 +219,9 @@ export class FieldConfigService {
                               }
              };
   }
-  
+
   getDisabledValueConfig(valueOptions: SelectizeOption[]){
-    return {  
+    return {
       type: 'selectize',
       name: 'val',
       value: "",
@@ -233,11 +232,11 @@ export class FieldConfigService {
                           options: valueOptions,
                           allowEmptyOption: false,
                           plugins: ['dropdown_direction', 'remove_button'],
-                          dropdownDirection: 'down'      
+                          dropdownDirection: 'down'
                         }
     };
   }
-  
+
   refreshSelectizeOptions(id: string, valueOptions: SelectizeOption[]){
     var $select = $(document.getElementById(id));
     if($select[0]){
