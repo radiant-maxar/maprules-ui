@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError, retry } from 'rxjs/operators';
+import { catchError, retry, tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment'
 import { Router } from '@angular/router';
 
@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
 
 
 export class MapRulesService {
- 
+  currentMapRule: string;
   mapRulesUrl: string;
   comboMap: {};
 
@@ -48,7 +48,7 @@ export class MapRulesService {
   }
 
   saveForm(value: {[name: string]: any}){
-    const scrubbedForm = this.removeEmpty(value);
+    const scrubbedForm = this.serialize(value);
     return this.saveNewConfig(scrubbedForm);
   }
 
@@ -61,33 +61,39 @@ export class MapRulesService {
   isEmpty(empty: any) {
       return empty === '';
   }
-
-  removeEmpty(config: {[name: string]: any}){
-    var next = {}
-    var $scope = this;
-    Object.keys(config).forEach((key) => {
-      if (Array.isArray(config[key])) {
-        var nextArray = [];
-        config[key].forEach(subVal => {
-          if (subVal instanceof Object) {
-            const flush = $scope.removeEmpty(subVal);
-            if (Object.keys(flush).length > 0) {
-              nextArray.push(flush);
+  serialize(config: any): any {
+    return {
+      name: config.mapruleName,
+      presets: config.presets.map(function (preset) {
+        return {
+          name: preset.presetName,
+          geometry: preset.geometry,
+          primary: preset.primary.map(function (primary) {
+            return {
+              key: primary.primaryKey,
+              val: primary.primaryVal
             }
-          } else {
-            if (!$scope.isEmpty(nextArray)) {
-              nextArray.push(subVal);
+          }),
+          fields: preset.fields.map(function (field) {
+            return {
+              key: field.fieldKey,
+              keyCondition: field.fieldKeyCondition,
+              values: !field.fieldVal.length ? [] : [{
+                valCondition: field.fieldValCondition,
+                values: [field.fieldVal.split(',')]
+              }]
             }
-          }
-        })
-        next[key] = nextArray;
-      } else if (!$scope.isEmpty(config[key])) {
-          next[key] = config[key]
-      }
-    })
-    return next;
+          }),
+        }
+      }),
+      disabledFeatures: config.disabledFeatures.map(function (disabledFeature) {
+        return {
+          key: disabledFeature.disabledKey,
+          val: disabledFeature.disabledVal.length ? disabledFeature.disabledVal.split(',') : []
+        }
+      })
+    }
   }
-
 
   getMapRule(configId: string){
     return this.http.get(this.mapRulesUrl + "/" + configId).pipe(

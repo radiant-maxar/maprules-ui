@@ -1,5 +1,15 @@
+.attribution-container {
+    display: flex;
+    justify-content: center
+}
+
+.attribution-form {
+    max-width: 1000px;
+    margin: 50px;
+}
+
 .feature-label h5 {
-    font-size: 25px;
+    font-size: 20px;
 }
 
 .feature-header {
@@ -19,16 +29,15 @@
 .feature-table-th {
     border: none;
     border-bottom: 1px solid rgba(0,0,0,.125);
-    font-size: 20px;
+    font-size: 15px;
 }
 
 .feature-table-td {
     border: none;
     border-spacing: 5px;
-    padding: .75rem .5rem;
-    line-height: 0;
     vertical-align: middle;
 }
+
 
 .feature-table-main {
     width: 49%;
@@ -40,7 +49,19 @@
 }
 
 .feature-table-delete-button {
-    margin-top: -7px;
+    margin-top: 4px;
+}
+
+.feature-table-th {
+    padding: .4rem
+}
+
+.feature-table-td {
+    padding: 0 .2rem;
+}
+
+.primary-td {
+    margin: initial;
 }
 
 .feature-geometry {
@@ -49,6 +70,7 @@
 
 .feature-button {
     border: 1px solid rgba(0,0,0,.125);
+    font-size: 15px;
 }
 
 .feature-button-round {

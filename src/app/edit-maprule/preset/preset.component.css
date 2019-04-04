@@ -43,6 +43,10 @@
   font-size: 20px;
 }
 
+.preset-card-panel {
+  max-height: 0;
+}
+
 .features-button {
   font-size: 20px;
 }
