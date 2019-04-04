@@ -11,10 +11,18 @@
           <ng-container *ngFor="let disabledFeature of disabledFeaturesFormArray().controls; let disabledFeatureIndex=index">
             <tr class="feature-table-body-row" [formGroupName]="disabledFeatureIndex">
               <td class="feature-table-main feature-table-td">
-                <input class="form-input" formControlName="disabledKey" />
+                <!-- <input class="form-input" formControlName="disabledKey" /> -->
+                <app-combobox
+                  [comboIndex]="'disabledFeatureIndex'"
+                  formControlName="disabledKey">
+                </app-combobox>
               </td>
               <td class="feature-table-main feature-table-td">
-                <input class="form-input" formControlName="disabledVal" />
+                <!-- <input class="form-input" formControlName="disabledVal" /> -->
+                <app-combobox
+                  [comboIndex]="'disabledFeatureIndex'"
+                  formControlName="disabledVal">
+                </app-combobox>
               </td>
               <td class="feature-table-delete feature-table-td">
                 <button class="btn btn-sm btn-light feature-button feature-button-delete"

@@ -289,7 +289,7 @@ export class ComboboxComponent implements OnInit, AfterViewInit, ControlValueAcc
   getResourceObservable(): Observable<any> {
     let resourceObservable: Observable<any>;
     switch (this._formControlName) {
-      case 'fieldKeyCondition': {
+      case 'fieldKeyCondition': { // combobox of key conditions...
         resourceObservable = of(FieldConfigService.KEY_CONDITIONS.map(function(condition, index) {
           return {
             name: condition,
@@ -298,7 +298,7 @@ export class ComboboxComponent implements OnInit, AfterViewInit, ControlValueAcc
         }))
         break;
       }
-      case 'fieldValCondition': {
+      case 'fieldValCondition': { // combobox of val
         resourceObservable = of(FieldConfigService.VAL_CONDITIONS.map(function (condition, index) {
           return {
             name: condition,
@@ -307,47 +307,48 @@ export class ComboboxComponent implements OnInit, AfterViewInit, ControlValueAcc
         }))
         break;
       }
+      case 'disabledKey': { // disabled keys can always start with popular keys...
+        resourceObservable = this.tagInfoService.popularKeys();
+        break;
+      }
+      case 'disabledVal': { // disabled vals should start with values when key exists, otherwise, blank list...
+        let key: string = this._formControl.parent.get('disabledKey').value;
+        resourceObservable = key.length ? this.tagInfoService.tagValues(key) : of([]);
+        break;
+      }
       default: {
         let [formArrayIndex, formGroupIndex] = this._comboIndex.split(':').map(function (pIndex) { return Number(pIndex); });
         let isPopular = formGroupIndex === 0;
-
-        let formGroupName: string;
         let formArray: FormArray;
         let controlKey: string;
         let controlVal: string;
 
-        if (/primary/.test(this._formControlName)) {
+        if (/primary/.test(this._formControlName)) { // get proper FormArray && controlKeys and values
           formArray = this.editMapRules.presets.at(formArrayIndex).get('primary') as FormArray;
           controlKey = 'primaryKey'
           controlVal = 'primaryVal'
-        } else if (/field/.test(this._formControlName)) {
+        } else {
           formArray = this.editMapRules.presets.at(formArrayIndex).get('fields') as FormArray;
           controlKey = 'fieldKey'
           controlVal = 'fieldVal'
-        } else {
-          formArray = this.editMapRules.disabledFeatures.at(formGroupIndex) as FormArray;
-          controlKey = 'disabledKey'
-          controlVal = 'disabledVal'
         }
 
-        if (!isPopular) { // if index is not 0, a popular tags request is still appropriate if neither of the partner key/values are set...
+        if (!isPopular) {
           let partnerGroup = formArray.at(formGroupIndex - 1) as FormGroup;
-          if (partnerGroup.get(controlKey).value.length && partnerGroup.get(controlVal).value.length) {
-            if (this._formControlName.endsWith('Val')) {
-              resourceObservable = of([]);
-            } else {
-              let key: string = partnerGroup.get(controlKey).value;
-              let val: string = partnerGroup.get(controlVal).value;
-              resourceObservable = this.tagInfoService.keyCombinations(key, val);
-            }
-          } else {
+          if (this._formControlName.endsWith('Val')) { // if value control, then init with empty data list...
+            resourceObservable = of([])
+          } else if (partnerGroup.get(controlKey).value.length && partnerGroup.get(controlVal).value.length) { // if partners have values, get tag combination...
+            let key: string = partnerGroup.get(controlKey).value;
+            let val: string = partnerGroup.get(controlVal).value;
+            resourceObservable = this.tagInfoService.keyCombinations(key, val);
+          } else { // otherwise, init with popular keys...
             resourceObservable = this.tagInfoService.popularKeys();
           }
         } else {
-          if (this._formControlName.endsWith('Val')) {
+          if (this._formControlName.endsWith('Val')) { // if a value control and partner key has a value, get tagValues, otherwise empty data list...
             let key: string = this._formControl.parent.get(controlKey).value;
-            resourceObservable = this.tagInfoService.tagValues(key);
-          } else {
+            resourceObservable = key.length ? this.tagInfoService.tagValues(key) : of([]);
+          } else { // if popular first off, get popular keys....
             resourceObservable = this.tagInfoService.popularKeys();
           }
         }

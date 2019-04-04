@@ -40,8 +40,42 @@ export class MapRulesService {
   }
 
   saveForm(value: {[name: string]: any}){
-    const scrubbedForm = this.removeEmpty(value);
+    const scrubbedForm = this.serialize(value);
     return this.saveNewConfig(scrubbedForm);
+  }
+
+  serialize(config: any): any {
+    return {
+      name: config.mapruleName,
+      presets: config.presets.map(function (preset) {
+        return {
+          name: preset.presetName,
+          geometry: preset.geometry,
+          primary: preset.primary.map(function (primary) {
+            return {
+              key: primary.primaryKey,
+              val: primary.primaryVal
+            }
+          }),
+          fields: preset.fields.map(function (field) {
+            return {
+              key: field.fieldKey,
+              keyCondition: field.fieldKeyCondition,
+              values: !field.fieldVal.length ? [] : [{
+                valCondition: field.fieldValCondition,
+                values: [field.fieldVal.split(',')]
+              }]
+            }
+          }),
+        }
+      }),
+      disabledFeatures: config.disabledFeatures.map(function (disabledFeature) {
+        return {
+          key: disabledFeature.disabledKey,
+          val: disabledFeature.disabledVal.length ? disabledFeature.disabledVal.split(',') : []
+        }
+      })
+    }
   }
 
   saveNewConfig(scrubbedForm: {[name: string]: any}){
