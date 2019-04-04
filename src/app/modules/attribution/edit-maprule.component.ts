@@ -61,12 +61,13 @@ export class EditMapRuleComponent implements AfterViewInit {
     var app = this;
     window.addEventListener('message', function(event) { 
       //TODO check if OAuth authorized app
-      var message = event.data.split(":");
-      if(message[0] == "save"){
-          app.save();
-      }
+      if (typeof event.data === 'string') {
+        var message = event.data.split(":");
+        if(message[0] == "save"){
+            app.save();
+        }
+      } 
     });
-
   }
   
   save(){
