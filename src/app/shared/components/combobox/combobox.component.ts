@@ -178,7 +178,7 @@ export class ComboboxComponent implements OnInit, AfterViewInit, ControlValueAcc
         that.comboKeyChanged(val)
       } else if (/(fields|primary)Val/.test(this._formControlName)) {
         that.comboValChanged(val);
-      } else if (/(key|val)Condition/.test(this._formControlName) && this.dataList.findIndex(val) === 3) { // 3rd element in these lists === must/should not be...
+      } else if (/keyCondition/.test(this._formControlName)) { // 3rd element in these lists === must/should not be...
         that.conditionChanged(val);
       } else if (/disabledFeatureKey/.test(this._formControlName)) {
         that.disabledKeyChanged(val);
@@ -215,11 +215,21 @@ export class ComboboxComponent implements OnInit, AfterViewInit, ControlValueAcc
   }
 
   conditionChanged(key: string): void {
-    let partnerKey: string = /key/i.test(key) ? 'fieldsKey' : 'fieldsVal';
-    this.fieldConfig.emitter.emit({
-      name: this.getPartnerEvent(partnerKey, false),
-      type: 'condition'
-    })
+    let partnerKey: string = /key/i.test(this._formControlName) ? 'fieldsKey' : 'fieldsVal';
+
+    if (this._formControl.value === 2) { // must not and should both have an index === 3
+      this.fieldConfig.emitter.emit({
+        name: this.getPartnerEvent(partnerKey, false),
+        type: 'condition'
+      })
+    }
+    // else {
+    //   this.tagInfoService.tagValues(key).subscribe(
+    //     (next) => {
+    //       this.fieldConfig.emitter.emit
+    //     }
+    //   )
+    // }
   }
 
   /**
@@ -279,12 +289,22 @@ export class ComboboxComponent implements OnInit, AfterViewInit, ControlValueAcc
   getResourceObservable(): Observable<any> {
     let resourceObservable: Observable<any>;
     switch (this._formControlName) {
-      case 'keyCondition': {
-        resourceObservable = of(FieldConfigService.KEY_CONDITIONS)
+      case 'fieldKeyCondition': {
+        resourceObservable = of(FieldConfigService.KEY_CONDITIONS.map(function(condition, index) {
+          return {
+            name: condition,
+            value: index
+          }
+        }))
         break;
       }
-      case 'valCondition': {
-        resourceObservable = of(FieldConfigService.VAL_CONDITIONS)
+      case 'fieldValCondition': {
+        resourceObservable = of(FieldConfigService.VAL_CONDITIONS.map(function (condition, index) {
+          return {
+            name: condition,
+            value: index
+          }
+        }))
         break;
       }
       default: {
@@ -300,7 +320,7 @@ export class ComboboxComponent implements OnInit, AfterViewInit, ControlValueAcc
           formArray = this.editMapRules.presets.at(formArrayIndex).get('primary') as FormArray;
           controlKey = 'primaryKey'
           controlVal = 'primaryVal'
-        } else if (/fields/.test(this._formControlName)) {
+        } else if (/field/.test(this._formControlName)) {
           formArray = this.editMapRules.presets.at(formArrayIndex).get('fields') as FormArray;
           controlKey = 'fieldKey'
           controlVal = 'fieldVal'

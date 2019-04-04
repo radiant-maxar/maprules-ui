@@ -97,16 +97,32 @@
                   <ng-container *ngFor="let fields of fieldsFormArray(presetIndex).controls; let fieldIndex=index">
                     <tr class="feature-table-body-row" [formGroupName]="fieldIndex">
                       <td class="feature-table-main feature-table-td">
-                        <input class="form-control" formControlName="fieldKeyCondition">
+                        <!-- <input class="form-control" formControlName="fieldKeyCondition"> -->
+                        <app-combobox
+                          [comboIndex]="presetIndex + ':' + fieldIndex"
+                          formControlName="fieldKeyCondition">
+                        </app-combobox>
                       </td>
                       <td class="feature-table-main feature-table-td">
-                        <input class="form-control" formControlName="fieldKey">
+                        <!-- <input class="form-control" formControlName="fieldKey"> -->
+                        <app-combobox
+                          [comboIndex]="presetIndex + ':' + fieldIndex"
+                          formControlName="fieldKey">
+                        </app-combobox>
                       </td>
                       <td class="feature-table-main feature-table-td">
-                        <input class="form-control" formControlName="fieldValCondition">
+                        <!-- <input class="form-control" formControlName="fieldValCondition"> -->
+                        <app-combobox
+                          [comboIndex]="presetIndex + ':' + fieldIndex"
+                          formControlName="fieldValCondition">
+                        </app-combobox>
                       </td>
                       <td class="feature-table-main feature-table-td">
-                        <input class="form-control" formControlName="fieldVal">
+                        <!-- <input class="form-control" formControlName="fieldVal"> -->
+                        <app-combobox
+                          [comboIndex]="presetIndex + ':' + fieldIndex"
+                          formControlName="fieldVal">
+                        </app-combobox>
                       </td>
                       <td class="feature-table-delete feature-table-td">
                         <button class="bt-btn-sm btn-light feature-button feature-table-delete-button"
