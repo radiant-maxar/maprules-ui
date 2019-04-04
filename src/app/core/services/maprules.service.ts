@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { HttpHeaders, HttpErrorResponse } from '@angular/common/http';
-import { Observable, throwError, Subject } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { Observable, throwError } from 'rxjs';
+import { catchError, retry } from 'rxjs/operators';
 import { environment } from '../../../environments/environment'
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -11,8 +12,8 @@ import { environment } from '../../../environments/environment'
 
 
 export class MapRulesService {
+ 
   mapRulesUrl: string;
-  currentMapRule: any;
   comboMap: {};
 
   httpOptions = {
@@ -21,7 +22,7 @@ export class MapRulesService {
     })
   };
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private router: Router) {
     this.setMapRulesUrl();
   }
 
@@ -31,51 +32,24 @@ export class MapRulesService {
 
   save(configId: string, value: {[name: string]: any}){
     const scrubbedForm = this.removeEmpty(value);
-    if(configId){
+    // if on new route, post for new uuid
+    if (/new/.test(this.router.url)) {
+      return this.http.post(this.mapRulesUrl, scrubbedForm, this.httpOptions).pipe(
+        catchError(this.handleError)
+      )
+    } else {
+      // otherwise (working on existing), do put method on existing route...
+      const uuid: RegExp = /[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}/g;
+      const configId: string = this.router.url.match(uuid)[0]
       return this.http.put(this.mapRulesUrl + "/" + configId, scrubbedForm, this.httpOptions).pipe(
         catchError(this.handleError)
       );
     }
-    return this.saveNewConfig(scrubbedForm);
   }
 
   saveForm(value: {[name: string]: any}){
-    const scrubbedForm = this.serialize(value);
+    const scrubbedForm = this.removeEmpty(value);
     return this.saveNewConfig(scrubbedForm);
-  }
-
-  serialize(config: any): any {
-    return {
-      name: config.mapruleName,
-      presets: config.presets.map(function (preset) {
-        return {
-          name: preset.presetName,
-          geometry: preset.geometry,
-          primary: preset.primary.map(function (primary) {
-            return {
-              key: primary.primaryKey,
-              val: primary.primaryVal
-            }
-          }),
-          fields: preset.fields.map(function (field) {
-            return {
-              key: field.fieldKey,
-              keyCondition: field.fieldKeyCondition,
-              values: !field.fieldVal.length ? [] : [{
-                valCondition: field.fieldValCondition,
-                values: [field.fieldVal.split(',')]
-              }]
-            }
-          }),
-        }
-      }),
-      disabledFeatures: config.disabledFeatures.map(function (disabledFeature) {
-        return {
-          key: disabledFeature.disabledKey,
-          val: disabledFeature.disabledVal.length ? disabledFeature.disabledVal.split(',') : []
-        }
-      })
-    }
   }
 
   saveNewConfig(scrubbedForm: {[name: string]: any}){
