@@ -108,7 +108,7 @@ export class EditMapRuleComponent implements OnInit {
         fieldKeyCondition: fb.control(keyCondition, Validators.required),
         fieldKey: fb.control(field.key, Validators.required),
         fieldValCondition: fb.control(valCondition),
-        fieldVal: fb.control('')
+        fieldVal: fb.control(field.values.length ? field.values[0].values.join(',') : '')
       }))
     })
 

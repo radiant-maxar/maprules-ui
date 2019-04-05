@@ -22,7 +22,7 @@
               </label>
             </div>
             <div class="content-body feature-body">
-              <table class="table table-bordered feature-table" *ngIf="primaryFormArray(presetIndex).length > 0">
+              <table class="feature-table" *ngIf="primaryFormArray(presetIndex).length > 0">
                 <thead class="feature-table-thead">
                   <tr class="feature-table-head-row">
                     <th class="feature-table-main feature-table-th" scope="col">key</th>
@@ -36,12 +36,14 @@
                     <tr class="feature-table-body-row" [formGroupName]="primaryIndex">
                       <td class="feature-table-main feature-table-td">
                         <app-combobox
+                          [maxElements]="1"
                           [comboIndex]="presetIndex + ':' + primaryIndex"
                           formControlName="primaryKey">
                         </app-combobox>
                       </td>
                       <td class="feature-table-main feature-table-td">
                         <app-combobox
+                          [maxElements]="1"
                           [comboIndex]="presetIndex + ':' + primaryIndex"
                           formControlName="primaryVal">
                         </app-combobox>
@@ -82,57 +84,62 @@
                 <h5>Fields</h5>
               </label>
             </div>
-            <div class="content-body feature-body">
-              <table class="table table-bordered feature-table" *ngIf="fieldsFormArray(presetIndex).length > 0">
-                <thead class="feature-table-thead">
-                  <tr>
-                    <th class="feature-table-main feature-table-th field-table-main" scope="col">Key Condition</th>
-                    <th class="feature-table-main feature-table-th field-table-main" scope="col">Key</th>
-                    <th class="feature-table-main feature-table-th field-table-main" scope="col">Value Condition</th>
-                    <th class="feature-table-main feature-txable-th field-table-main" scope="col">Value(s)</th>
-                    <th class="feature-table-delete feature-table-th" scope="col"></th>
-                  </tr>
-                </thead>
-                <tbody formArrayName="fields">
-                  <ng-container *ngFor="let fields of fieldsFormArray(presetIndex).controls; let fieldIndex=index">
-                    <tr class="feature-table-body-row" [formGroupName]="fieldIndex">
-                      <td class="feature-table-main feature-table-td">
-                        <!-- <input class="form-control" formControlName="fieldKeyCondition"> -->
+            <div class="container-fluid"
+              formArrayName="fields"
+              *ngIf="fieldsFormArray(presetIndex).length > 0">
+              <div class="table-row header">
+                <div class="wrapper text-4">
+                  <div class="wrapper text-2">
+                    <div class="text">Key Condition</div>
+                    <div class="text">Key</div>
+                  </div>
+                </div>
+                <div class="wrapper text-4">
+                  <div class="wrapper text-2">
+                    <div class="text">Value Condition</div>
+                    <div class="text">Value(s)</div>
+                  </div>
+                </div>
+              </div>
+              <!-- <ng-container *ngFor="let fields of fieldsFormArray(presetIndex).controls; let fieldIndex=index"> -->
+                <div class="table-row content"
+                  *ngFor="let fields of fieldsFormArray(presetIndex).controls; let fieldIndex=index"
+                  [formGroupName]="fieldIndex">
+                  <div class="wrapper text-4">
+                    <div class="wrapper text-2">
+                      <div class="text">
                         <app-combobox
+                          [maxElements]="1"
                           [comboIndex]="presetIndex + ':' + fieldIndex"
                           formControlName="fieldKeyCondition">
                         </app-combobox>
-                      </td>
-                      <td class="feature-table-main feature-table-td">
-                        <!-- <input class="form-control" formControlName="fieldKey"> -->
+                      </div>
+                      <div class="text">
                         <app-combobox
+                          [maxElements]="1"
                           [comboIndex]="presetIndex + ':' + fieldIndex"
                           formControlName="fieldKey">
                         </app-combobox>
-                      </td>
-                      <td class="feature-table-main feature-table-td">
-                        <!-- <input class="form-control" formControlName="fieldValCondition"> -->
-                        <app-combobox
-                          [comboIndex]="presetIndex + ':' + fieldIndex"
-                          formControlName="fieldValCondition">
-                        </app-combobox>
-                      </td>
-                      <td class="feature-table-main feature-table-td">
-                        <!-- <input class="form-control" formControlName="fieldVal"> -->
-                        <app-combobox
-                          [comboIndex]="presetIndex + ':' + fieldIndex"
-                          formControlName="fieldVal">
-                        </app-combobox>
-                      </td>
-                      <td class="feature-table-delete feature-table-td">
-                        <button class="bt-btn-sm btn-light feature-button feature-table-delete-button"
-                          type="button" (click)="removeField(presetIndex, fieldIndex)">
-                          <i class="fa fa-times"></i>
-                        </button>
-                      </td>
-                  </ng-container>
-                </tbody>
-              </table>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="wrapper text-2">
+                    <div class="text">
+                      <app-combobox
+                        [maxElements]="1"
+                        [comboIndex]="presetIndex + ':' + fieldIndex"
+                        formControlName="fieldValCondition">
+                      </app-combobox>
+                    </div>
+                    <div class="text">
+                      <app-combobox
+                        [comboIndex]="presetIndex + ':' + fieldIndex"
+                        formControlName="fieldVal">
+                      </app-combobox>
+                    </div>
+                  </div>
+                </div>
+              <!-- </ng-con  tainer> -->
               <button class="btn btn-lg btn-light feature-button feature-button-round"
                 type="button" (click)="addField(presetIndex)">
                 <i class="fa fa-plus"></i> Add Field

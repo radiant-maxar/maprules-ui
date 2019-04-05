@@ -1,15 +1,37 @@
-.combo-input-container {
+.combo-content-container {
   display: flex;
   border: 1px solid rgba(0,0,0,.25);
   border-radius: 10px;
   overflow: hidden;
+  height: 45px;
+}
+
+.combo-container {
+  display: flex;
+}
+
+.combo-cards-container,
+.combo-input-container   {
+  width: 100%;
+  display: flex;
+}
+
+.combo-content-container,
+.combo-card,
+.combo-input-container {
+  margin: 8px;
+  padding: 2px 5px;
+  border-radius: 5px;
+  font-size: 12px;
+}
+
+.combo-card {
+  border: 1px rgb(193,201,218) solid;
+  background: rgba(193, 201, 218, .2);
 }
 
 .combo-input {
   border: none;
-  width: 100%;
-  padding: 5px 15px;
-  font-size: 14px;
 }
 
 .combo-input,
@@ -24,4 +46,8 @@
 }
 .combo-drop-down-button:hover {
   background: rgba(0,0,0,.05);
+}
+
+.hidden {
+  display: none;
 }

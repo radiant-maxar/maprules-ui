@@ -20,7 +20,7 @@
     border-top: none;
 }
 
-.feature-table {
+/* .feature-table {
     border-collapse: inherit;
     border-spacing: 10px;
     border-radius: 10px
@@ -58,7 +58,7 @@
 
 .feature-table-td {
     padding: 0 .2rem;
-}
+} */
 
 .primary-td {
     margin: initial;

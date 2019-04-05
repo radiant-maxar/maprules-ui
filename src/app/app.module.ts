@@ -21,6 +21,7 @@ import { ValTooltipComponent } from './shared/components/val-tooltip/val-tooltip
 import { DecodeConditionPipe } from './decode-condition.pipe';
 import { EncodeClassPipe } from './encode-class.pipe';
 import { ComboboxModule } from './modules/combobox.module';
+import { FormTableComponent } from './form-table/form-table.component';
 
 const appRoutes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -46,7 +47,8 @@ const appRoutes: Routes = [
     TagsComponent,
     ValTooltipComponent,
     DecodeConditionPipe,
-    EncodeClassPipe
+    EncodeClassPipe,
+    FormTableComponent
   ],
   imports: [
     BrowserModule,

@@ -5,6 +5,7 @@ import { Observable, throwError } from 'rxjs';
 import { catchError, retry, tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment'
 import { Router } from '@angular/router';
+import { FieldConfigService } from './field-config.service';
 
 @Injectable({
   providedIn: 'root',
@@ -31,7 +32,7 @@ export class MapRulesService {
   }
 
   save(configId: string, value: {[name: string]: any}){
-    const scrubbedForm = this.removeEmpty(value);
+    const scrubbedForm = this.serialize(value);
     // if on new route, post for new uuid
     if (/new/.test(this.router.url)) {
       return this.http.post(this.mapRulesUrl, scrubbedForm, this.httpOptions).pipe(
@@ -58,9 +59,6 @@ export class MapRulesService {
     );
   }
 
-  isEmpty(empty: any) {
-      return empty === '';
-  }
   serialize(config: any): any {
     return {
       name: config.mapruleName,
@@ -77,10 +75,10 @@ export class MapRulesService {
           fields: preset.fields.map(function (field) {
             return {
               key: field.fieldKey,
-              keyCondition: field.fieldKeyCondition,
+              keyCondition: FieldConfigService.KEY_CONDITIONS.indexOf(field.fieldKeyCondition),
               values: !field.fieldVal.length ? [] : [{
-                valCondition: field.fieldValCondition,
-                values: [field.fieldVal.split(',')]
+                valCondition: FieldConfigService.VAL_CONDITIONS.indexOf(field.fieldValCondition),
+                values: field.fieldVal.length ? field.fieldVal.split(',') : []
               }]
             }
           }),

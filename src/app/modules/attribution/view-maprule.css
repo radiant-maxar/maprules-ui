@@ -127,7 +127,7 @@
     .badge-condition {
         font-size: 14px;
     }
-} 
+}
 @media (max-width: 420px) {
     .view-panel-pill {
         font-size: 12px;
@@ -135,4 +135,4 @@
     .badge-condition {
         font-size: 12px;
     }
-} 
+}
