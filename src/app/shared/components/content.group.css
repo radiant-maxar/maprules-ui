@@ -1,14 +1,30 @@
+.content {
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    margin: auto;
+}
+
+.content-row {
+    margin: auto;
+    align-items: start;
+    flex-grow: 1;
+    max-width: 800px;
+    /* width: 200px; */
+    /* min-width: 0; */
+    /* overflow: hidden; */
+}
+
 .content-group-container {
-    margin: 30px 100px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    /* max-width: 800px; */
 }
 
-.content-group-container div {
-    max-width: 900px;
+.content-body {
+    width: 100%;
 }
 
 .content-group {

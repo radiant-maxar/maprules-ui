@@ -14,6 +14,7 @@ import { EditMapRuleComponent } from '../edit-maprule.component';
   selector: 'app-preset',
   styleUrls: [
     './preset.component.css',
+    '../form-table.css',
     '../../shared/components/content.group.css'
   ],
   templateUrl: './preset.html',
@@ -45,16 +46,15 @@ export class PresetComponent {
 
   ngOnInit() {}
 
-  ngOnChanges(changes: SimpleChanges) {
-    console.log(changes);
-  }
-
   ngAfterViewInit() {
     this.presets.changes.subscribe((presets: QueryList<any>) => {
       if (!this.editMapRule.presets.value[presets.length - 1].presetName.length) {
         presets.last.nativeElement.classList.remove('preset-card-panel-hidden')
+        presets.last.nativeElement.classList.remove('preset-card-panel-hidden')
         presets.last.nativeElement.parentElement.querySelector('#show-preset-button i')
           .classList.replace('fa-plus-square-o', 'fa-minus-square-o')
+        presets.last.nativeElement.parentElement.querySelector('.preset-card-header')
+          .classList.remove('preset-card-panel-header-hidden')
       }
     })
   }
@@ -66,10 +66,14 @@ export class PresetComponent {
       preset.nativeElement.classList.remove('preset-card-panel-hidden')
       preset.nativeElement.parentElement.querySelector('#show-preset-button i')
         .classList.replace('fa-plus-square-o', 'fa-minus-square-o')
+      this.presets.last.nativeElement.parentElement.querySelector('.preset-card-header')
+        .classList.remove('preset-card-panel-header-hidden')
     } else {
       preset.nativeElement.classList.add('preset-card-panel-hidden')
       preset.nativeElement.parentElement.querySelector('#show-preset-button i')
         .classList.replace('fa-minus-square-o', 'fa-plus-square-o')
+      this.presets.last.nativeElement.parentElement.querySelector('.preset-card-header')
+        .classList.add('preset-card-panel-header-hidden')
     }
   }
 

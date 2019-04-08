@@ -1,4 +1,4 @@
-.presets-container {
+.preset-container {
   display: flex;
   flex-direction: column;
 }
@@ -11,6 +11,7 @@
 .preset-card-panel-hidden {
   visibility: hidden;
   height: 0;
+  overflow: hidden;
 }
 
 .preset-card:last-child {
@@ -21,11 +22,15 @@
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
   overflow: hidden;
-  background-color: #f8f9fa;
+  background: rgba(193, 201, 218, .1);
   border-bottom: 1px solid rgba(0,0,0,.125);
   display: flex;
   justify-content: space-between;
   padding: 10px 20px;
+}
+
+.preset-card-panel-header-hidden {
+  border-bottom: none;
 }
 
 .preset-features-header {
@@ -44,65 +49,16 @@
   overflow: hidden;
 }
 
-.table-row,
-.wrapper {
-  display: flex;
-  flex-direction: row;
-}
-
-.table-container {
-  border: 1px solid rgba(0,0,0,.125);
-  border-radius: 10px;
-  border-bottom-right-radius: initial;
-  overflow: hidden;
-}
-
-.table-row {
-  flex-wrap: nowrap;
-  width: 100%;
-  padding: 15px;
-  /* padding-right: 15px; */
-  border-collapse: collapse;
-}
-
-.table-row.header {
-  padding-top: 3px;
-  padding-bottom: 3px;
-  border-bottom: 1px solid rgba(0,0,0,.125);
-  background: rgba(193, 201, 218, .2);
-}
-
-.wrapper {
-  flex-grow: 0;
-}
-
-.text-4, .text-2, .text {
-  flex-grow: 1;
-}
-
-.text {
-  text-align: center;
-  width: 180px;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  padding-right: 20px;
-}
-
-.text-button {
-  width: initial;
-  flex-grow: 0;
-  display: flex;
-  align-items: center;
-  padding: initial;
-}
-
 .preset-button {
   height: 40px;
   width: 40px;
   background: rgba(193, 201, 218, .2);
   border: 1px rgb(0,0,0,.125) solid;
   border-radius: 5px;
+}
+
+.preset-button:focus {
+  outline: none;
 }
 
 .preset-button:hover {
@@ -124,41 +80,14 @@
   font-size: 12px;
 }
 
-#add-preset-button {
-  margin-left: auto;
-  margin-right: 15px;
-  height: 40px;
-  font-size: 14px;
+
+.empty-form-array {
+  border-radius: 5px;
+  border: 1px rgb(0,0,0,.125) solid;
 }
 
-@media all and (max-width: 1025px) {
-  .table-row {
-    flex-direction: column;
-  }
-  .table-row div {
-    flex-grow: 0;
-    width: 100%;
-	/* flex: 0 50%; */
-  }
-  .text-4 {
-    width: 180px;
-    flex-direction: column;
-  }
-
-  .text-4 div {
-    flex-grow: 0;
-  }
-
-  .text-2 .text {
-    flex: 0 100%;
-  }
-
-  .text-2 .text-last {
-    flex: 0 85%;
-  }
-
-  .text-2 .text-button {
-    width: initial;
-    flex: 0 15%;
-  }
+#add-preset-button {
+  margin-left: auto;
+  height: 40px;
+  font-size: 14px;
 }

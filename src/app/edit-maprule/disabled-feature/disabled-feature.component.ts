@@ -8,7 +8,12 @@ declare var $: any;
 @Component({
   exportAs: 'disabled-feature',
   selector: 'app-disabled-feature',
-  styleUrls: [ './disabled-feature.component.css' ],
+  styleUrls: [
+    './disabled-feature.component.css',
+    '../form-table.css',
+    '../preset/preset.component.css',
+    '../../shared/components/content.group.css'
+  ],
   templateUrl: './disabled-feature.html'
 })
 export class DisabledFeatureComponent {

@@ -1,9 +1,12 @@
-<div class="row preset-container" [formGroup]="editMapRule.form">
-  <div class="col-md-12" formArrayName="presets">
+<div class="preset-container" [formGroup]="editMapRule.form">
+  <div formArrayName="presets">
     <ng-container *ngFor="let preset of editMapRule.form.controls.presets.controls; let presetIndex=index">
       <div class="preset-card" [formGroupName]="presetIndex">
-        <div class="preset-card-header">
-          <input class="form-input" formControlName="presetName" />
+        <div class="preset-card-header preset-card-panel-header-hidden">
+          <input
+            placeholder="{{ 'Preset ' + (presetIndex + 1) }}"
+            class="form-input"
+            formControlName="presetName" />
           <div>
             <button class="preset-button" id="show-preset-button" (click)="showPresetPanel(presetIndex)">
               <i class="fa fa-plus-square-o"></i>
@@ -52,7 +55,7 @@
                       </app-combobox>
                     </div>
                     <div class="text text-button">
-                      <button class="btn btn-sm btn-light feature-button feature-button-delete"
+                      <button class="preset-button"
                         type="button" (click)="removePrimaryGroup(presetIndex, primaryIndex)">
                         <i class="fa fa-times"></i>
                       </button>
@@ -60,7 +63,8 @@
                   </div>
                 </div>
               </div>
-              <button class="preset-button add-button"
+              <button
+                class="preset-button add-button"
                 (click)="addPrimaryGroup(presetIndex)">
                 <i class="fa fa-plus"></i> Add Identifying Tag
               </button>
@@ -153,6 +157,7 @@
                 </div>
               </div>
               <button type="button" class="preset-button add-button"
+                [ngClass]="{ 'empty-form-array': fieldsFormArray(presetIndex).controls.length === 0 }"
                 type="button" (click)="addField(presetIndex)">
                 <i class="fa fa-plus"></i> Add Field
               </button>

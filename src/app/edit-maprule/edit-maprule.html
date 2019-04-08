@@ -2,44 +2,29 @@
   (keydown.enter)="$event.preventDefault()"
   [formGroup]="form"
   (submit)="handleSubmit($event)">
-  <div class="row">
-    <div class="config-name col-md-12">
+  <div class="content">
+    <div class="content-row">
       <div class='content-group-container maprule-name-container'>
-        <div class='content-header'>
-          <label class="content-label">
-            <h5>MapRule Name</h5>
-          </label>
-        </div>
         <div class="content-body">
           <input class="form-input" formControlName="mapruleName"/>
         </div>
       </div>
     </div>
-    <div class="col-md-12">
+    <div class="content-row">
       <div class="content-group-container">
-        <div class="content-header">
-          <label class="content-label">
-            Presets
-          </label>
-        </div>
         <div class="content-body">
           <app-preset></app-preset>
         </div>
       </div>
     </div>
-    <div class="col-md-12">
+    <div class="content-row">
       <div class="content-group-container">
-        <div class="content-header">
-          <label class="content-label">
-            Disabled Features
-          </label>
-        </div>
         <div class="content-body">
           <app-disabled-feature></app-disabled-feature>
         </div>
       </div>
     </div>
-    <div class="col-md-12">
+    <div class="content-row">
       <div class="content-group-container">
         <div class="d-flex flex-row-reverse submit-group">
           <ng-container *ngIf="nav.visible">
