@@ -1,18 +1,20 @@
 <div class="combo-container">
-  <div class="combo-content-container">
+  <div
+    [ngClass]="{ 'combo-open': showDropDown }"
+    class="combo-content-container">
     <div class="combo-cards-container">
       <ng-container *ngIf="comboValues.length > 0">
         <div
           *ngFor="let comboValue of comboValues; let valueIndex=index;"
           class="combo-card" >
-          {{ comboValues[valueIndex] }}
+          <span>{{ comboValues[valueIndex] }}</span>
           <i class="fa fa-times" (click)="removeComboVal(valueIndex)"></i>
         </div>
       </ng-container>
-      <div class="combo-input-container">
+      <div class="combo-input-container"
+        [ngClass]="{ 'hidden': comboValues.length === _maxElements }">
         <input
           #comboInput
-          [ngClass]="{ 'hidden': comboValues.length === _maxElements }"
           type="text"
           class="combo-input"
           placeholder="Add..."
@@ -26,9 +28,9 @@
       <i class="fa fa-angle-down"></i>
     </button>
   </div>
-  <div class="data-container" *ngIf="showDropDown">
+  <div class="combo-data-container" *ngIf="showDropDown">
     <p *ngFor="let data of dummyDataList; let i=index;" class="data-list" (click)="selectDropdown($event)"
-      [ngClass]="{highlight:checkHighlight(i)}">
+      [ngClass]="{ highlight: checkHighlight(i) }">
       {{data.name}}
     </p>
   </div>

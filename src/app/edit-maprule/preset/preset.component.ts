@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, ViewEncapsulation } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, ViewEncapsulation, AfterViewInit, ViewChildren, QueryList, SimpleChange, SimpleChanges } from '@angular/core';
 import { Validators, FormGroup, FormControl, FormBuilder, FormArray, Form } from '@angular/forms';
 
 import { Field } from '../../shared/interfaces/field.interface';
@@ -20,11 +20,10 @@ import { EditMapRuleComponent } from '../edit-maprule.component';
   encapsulation: ViewEncapsulation.None
 })
 export class PresetComponent {
-  // @Input()
-  // config: FieldConfig[] = [];
 
-  geometries: String[]
+  @ViewChildren("preset") presets: QueryList<any>
 
+  // geometries: String[]
   constructor(
     private fb: FormBuilder,
     private editMapRule: EditMapRuleComponent,
@@ -46,6 +45,34 @@ export class PresetComponent {
 
   ngOnInit() {}
 
+  ngOnChanges(changes: SimpleChanges) {
+    console.log(changes);
+  }
+
+  ngAfterViewInit() {
+    this.presets.changes.subscribe((presets: QueryList<any>) => {
+      if (!this.editMapRule.presets.value[presets.length - 1].presetName.length) {
+        presets.last.nativeElement.classList.remove('preset-card-panel-hidden')
+        presets.last.nativeElement.parentElement.querySelector('#show-preset-button i')
+          .classList.replace('fa-plus-square-o', 'fa-minus-square-o')
+      }
+    })
+  }
+
+  private showPresetPanel(presetIndex: number): void {
+    let preset = this.presets.toArray()[presetIndex];
+    let hidden = preset.nativeElement.classList.contains('preset-card-panel-hidden');
+    if (hidden) {
+      preset.nativeElement.classList.remove('preset-card-panel-hidden')
+      preset.nativeElement.parentElement.querySelector('#show-preset-button i')
+        .classList.replace('fa-plus-square-o', 'fa-minus-square-o')
+    } else {
+      preset.nativeElement.classList.add('preset-card-panel-hidden')
+      preset.nativeElement.parentElement.querySelector('#show-preset-button i')
+        .classList.replace('fa-minus-square-o', 'fa-plus-square-o')
+    }
+  }
+
   private addPreset(): void {
     this.editMapRule.createPresetFormGroup({
       primary: [ { key: '', val: '' } ],
@@ -62,7 +89,7 @@ export class PresetComponent {
       primaryVal: this.fb.control('', Validators.required)
     }))
   }
-  
+
   private addField(presetIndex: number): void {
     let fields = this.editMapRule.presets.at(presetIndex).get('fields') as FormArray;
     fields.push(this.fb.group({

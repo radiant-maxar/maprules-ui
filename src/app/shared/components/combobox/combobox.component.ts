@@ -29,7 +29,7 @@ export enum KEY_CODE {
     }
   ]
 })
-export class ComboboxComponent implements OnInit, AfterViewInit, ControlValueAccessor, OnChanges {
+export class ComboboxComponent implements OnInit, AfterViewInit, ControlValueAccessor {
   private _formControl: FormControl;
   private _formControlName: string;
 
@@ -94,10 +94,6 @@ export class ComboboxComponent implements OnInit, AfterViewInit, ControlValueAcc
     this._formControl.setValue(event.target['value']);
   }
 
-  onInputUpdate(event: any): void {
-    console.log('asdfd');
-  }
-
   checkHighlight(currentItem): boolean {
     return this.counter === currentItem;
   }
@@ -119,13 +115,10 @@ export class ComboboxComponent implements OnInit, AfterViewInit, ControlValueAcc
   }
 
   selectDropdown(event: any): void {
-    this.sortText = event.target.innerText;
-    this._formControl.setValue(event.target.innerText)
+    this.comboValues.push(event.target.innerText)
+    this._formControl.setValue(this.comboValues.join(','))
+    this.sortText = ''
     this.showDropDown = false;
-  }
-
-  ngOnChanges(changes: SimpleChanges) {
-    console.log(changes);
   }
 
   ngOnInit() { }
@@ -143,10 +136,17 @@ export class ComboboxComponent implements OnInit, AfterViewInit, ControlValueAcc
     }
 
     // make sure to initialize the input value!
-    this.sortText = this._formControl && this._formControl.value ? this._formControl.value : '';
+    if (this._formControl && this._formControl.value) {
+      let comboValues = this._formControl.value.split(',');
+      if (comboValues.length > 1) {
+        this.sortText = '';
+      } else {
+        this.sortText = comboValues[0];
+      }
 
-    if (this.sortText.length) {
-      this.comboValues.push(this.sortText);
+      this.comboValues = this.comboValues.concat(comboValues);
+    } else {
+      this.sortText = '';
     }
 
     this.getResourceObservable().subscribe(

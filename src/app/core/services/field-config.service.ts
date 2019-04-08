@@ -29,7 +29,7 @@ export class FieldConfigService {
   }
 
   static valCondition(condition: number) {
-    return this.KEY_CONDITIONS[condition];
+    return this.VAL_CONDITIONS[condition];
   }
 
 

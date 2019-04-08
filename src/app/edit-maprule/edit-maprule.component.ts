@@ -50,6 +50,7 @@ export class EditMapRuleComponent implements OnInit {
               this.form.get('mapruleName').setValue(data.name);
               data.presets.forEach(this.createPresetFormGroup.bind(this));
               data.disabledFeatures.forEach(this.createDisabledFormGroup.bind(this));
+              this.fieldConfig.emitter.emit({ type: 'maprule-init' })
             },
             (error) => {
               console.error(error);
@@ -97,12 +98,12 @@ export class EditMapRuleComponent implements OnInit {
       }))
     })
 
-    if (primaries.length === 0) primaries.push(fb.group({  }))
+    if (primaries.length === 0) primaries.push(fb.group({ }))
 
     let fields: FormArray = this.fb.array([]);
     preset.fields.forEach(function(field) {
       let keyCondition: String = FieldConfigService.keyCondition(field.keyCondition);
-      let valCondition: String = FieldConfigService.valCondition(field.valCondition)
+      let valCondition: String = FieldConfigService.valCondition(field.values[0].valCondition)
 
       fields.push(fb.group({
         fieldKeyCondition: fb.control(keyCondition, Validators.required),
@@ -142,34 +143,9 @@ export class EditMapRuleComponent implements OnInit {
     });
   }
 
-  createControl(config: FieldConfig) {
-    const { disabled, validation, value } = config;
-    return this.fb.control({ disabled, value }, validation);
-  }
-
   handleSubmit(event: Event) {
     event.preventDefault();
     event.stopPropagation();
-   // this.submit.emit(this.value);
-  }
-
-  // setDisabled(name: string, disable: boolean) {
-  //   if (this.form.get(name)) {
-  //     const method = disable ? 'disable' : 'enable';
-  //     this.form.get(name)[method]();
-  //     return;
-  //   }
-
-  //   this.config = this.config.map((item) => {
-  //     if (item.name === name) {
-  //       item.disabled = disable;
-  //     }
-  //     return item;
-  //   });
-  // }
-
-  setValue(name: string, value: any): void {
-    this.form.get("name").setValue(value, {emitEvent: true});
   }
 
   saveForm(): void {

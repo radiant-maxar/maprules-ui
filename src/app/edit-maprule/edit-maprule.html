@@ -1,7 +1,10 @@
-<form [formGroup]="form" (submit)="handleSubmit($event)">
+<form
+  (keydown.enter)="$event.preventDefault()"
+  [formGroup]="form"
+  (submit)="handleSubmit($event)">
   <div class="row">
     <div class="config-name col-md-12">
-      <div class='content-group-container'>
+      <div class='content-group-container maprule-name-container'>
         <div class='content-header'>
           <label class="content-label">
             <h5>MapRule Name</h5>
