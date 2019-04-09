@@ -44,6 +44,10 @@ export class PresetComponent {
     return this.editMapRule.presets.at(presetIndex).get('fields') as FormArray;
   }
 
+  defaultGeoms(): Array<string> {
+    return this.fieldConfig.geom;
+  }
+
   ngOnInit() {}
 
   ngAfterViewInit() {
@@ -121,5 +125,22 @@ export class PresetComponent {
   private removeField(presetIndex: number, fieldIndex: number): void {
     this.fieldsFormArray(presetIndex).removeAt(fieldIndex);
   }
+
+  private selectGeom(event: any, presetIndex: number) {
+    let geometryArray: FormArray = this.geometryArray(presetIndex) as FormArray;
+    let geometry: string = event.target.labels[0].innerText.trim();
+    if (event.target.checked) {
+      geometryArray.push(this.fb.control(geometry))
+    } else {
+      let fb: FormBuilder = this.fb;
+      geometryArray = this.fb.array([]);
+      geometryArray.controls.forEach(function(geom: FormControl) {
+        if (geom.value !== geometry) {
+          geometryArray.push(fb.control(geom.value));
+        }
+      })
+    }
+  }
+
 }
 

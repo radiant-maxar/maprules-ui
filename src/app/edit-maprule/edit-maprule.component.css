@@ -14,3 +14,7 @@
 .features-button:hover {
     background: rgba(79, 173, 87, 0.733);
 }
+
+#maprule-name-input {
+    min-width: 250px;
+}

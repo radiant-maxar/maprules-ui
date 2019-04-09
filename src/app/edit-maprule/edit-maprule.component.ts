@@ -63,30 +63,12 @@ export class EditMapRuleComponent implements OnInit {
     )
   }
 
-  // ngOnChanges() {
-  //   if (this.form) {
-  //     const controls = Object.keys(this.form.controls);
-  //     const configControls = this.controls.map((item) => item.name);
-
-  //     controls
-  //       .filter((control) => !configControls.includes(control))
-  //       .forEach((control) => this.form.removeControl(control));
-
-  //     configControls
-  //       .filter((control) => !controls.includes(control))
-  //       .forEach((name) => {
-  //         const config = this.config.find((control) => control.name === name);
-  //         this.form.addControl(name, this.createControl(config));
-  //       });
-  //   }
-  // }
-
   /**
    * Creates Form Group for preset.
    * @param preset {any} Preset in maprules config presets array
    */
   createPresetFormGroup(preset: any) {
-    let fb: FormBuilder = this.fb, fieldConfig = this.fieldConfig;
+    let fb: FormBuilder = this.fb;
     let presets: FormArray = this.form.get('presets') as FormArray;
 
     // primary key controls
@@ -114,8 +96,8 @@ export class EditMapRuleComponent implements OnInit {
     })
 
     let geometries = fb.array([]);
-    preset.geometry.forEach(function(geometry) {
-      geometries.push(fb.control(geometry))
+    preset.geometry.forEach(function(geometry: string) {
+      geometries.push(fb.control(geometry[0].toUpperCase() + geometry.slice(1))) // force title case
     })
 
     presets.push(fb.group({
