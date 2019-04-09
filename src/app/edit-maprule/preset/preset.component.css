@@ -1,11 +1,13 @@
 .preset-container {
   display: flex;
   flex-direction: column;
+  margin-bottom: 20px;
 }
+
 .preset-card {
+  margin-bottom: 20px;
   border: 1px solid rgba(0,0,0,.125);
   border-radius: 10px;
-  margin-top: 20px;
 }
 
 .preset-card-panel-hidden {
@@ -14,7 +16,7 @@
   overflow: hidden;
 }
 
-.preset-card:last-child {
+.preset-card:last-of-type {
   border-bottom-right-radius: initial;
 }
 
@@ -87,7 +89,8 @@
 }
 
 #add-preset-button {
+  margin-top: -20px;
   margin-left: auto;
-  height: 40px;
+  height: 30px;
   font-size: 14px;
 }

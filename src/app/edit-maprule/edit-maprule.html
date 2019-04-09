@@ -5,6 +5,11 @@
   <div class="content">
     <div class="content-row">
       <div class='content-group-container maprule-name-container'>
+        <div class="content-header">
+          <label class="content-label feature-label">
+              <h5>MapRule Name</h5>
+          </label>
+        </div>
         <div class="content-body">
           <input class="form-input" formControlName="mapruleName"/>
         </div>
@@ -12,6 +17,11 @@
     </div>
     <div class="content-row">
       <div class="content-group-container">
+        <div class="content-header">
+          <label class="content-label feature-label">
+              <h5>Presets</h5>
+          </label>
+        </div>
         <div class="content-body">
           <app-preset></app-preset>
         </div>
@@ -19,19 +29,22 @@
     </div>
     <div class="content-row">
       <div class="content-group-container">
+        <div class="content-header">
+          <label class="content-label feature-label">
+            <h5>Disabled Features</h5>
+          </label>
+        </div>
         <div class="content-body">
           <app-disabled-feature></app-disabled-feature>
         </div>
       </div>
     </div>
-    <div class="content-row">
-      <div class="content-group-container">
-        <div class="d-flex flex-row-reverse submit-group">
-          <ng-container *ngIf="nav.visible">
-            <button type="submit" class="btn feature-button features-button feature-button-round features-button"
-            (click)="saveForm()">Submit</button>
-          </ng-container>
-        </div>
+    <div class="content-row submit-row">
+      <div class="content-group-container submit-container">
+        <ng-container *ngIf="nav.visible">
+          <button type="submit" class="btn feature-button features-button feature-button-round features-button"
+          (click)="saveForm()">Submit</button>
+        </ng-container>
       </div>
     </div>
   </div>

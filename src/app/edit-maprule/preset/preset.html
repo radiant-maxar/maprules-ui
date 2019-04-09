@@ -5,7 +5,7 @@
         <div class="preset-card-header preset-card-panel-header-hidden">
           <input
             placeholder="{{ 'Preset ' + (presetIndex + 1) }}"
-            class="form-input"
+            class="form-input form-input-preset"
             formControlName="presetName" />
           <div>
             <button class="preset-button" id="show-preset-button" (click)="showPresetPanel(presetIndex)">
@@ -32,11 +32,10 @@
                   <div class="wrapper text-2">
                     <div class="text">Key</div>
                     <div class="text">Value</div>
-                    <div class="text text-button"></div>
                   </div>
                 </div>
               </div>
-                <div class="table-row content"
+                <div class="table-row"
                   *ngFor="let primary of primaryFormArray(presetIndex).controls; let primaryIndex=index"
                   [formGroupName]="primaryIndex">
                   <div class="wrapper text-2">
@@ -47,15 +46,14 @@
                         formControlName="primaryKey">
                       </app-combobox>
                     </div>
-                    <div class="text">
+                    <div class="text value-row">
                       <app-combobox
+                        class="text-value"
                         [maxElements]="1"
                         [comboIndex]="presetIndex + ':' + primaryIndex"
                         formControlName="primaryVal">
                       </app-combobox>
-                    </div>
-                    <div class="text text-button">
-                      <button class="preset-button"
+                      <button class="preset-button text-button"
                         type="button" (click)="removePrimaryGroup(presetIndex, primaryIndex)">
                         <i class="fa fa-times"></i>
                       </button>
@@ -105,11 +103,10 @@
                   <div class="wrapper text-2">
                     <div class="text">Value Condition</div>
                     <div class="text">Value(s)</div>
-                    <div class="text text-button"></div>
                   </div>
                 </div>
               </div>
-                <div class="table-row content"
+                <div class="table-row"
                   *ngFor="let fields of fieldsFormArray(presetIndex).controls; let fieldIndex=index"
                   [formGroupName]="fieldIndex">
                   <div class="wrapper text-4">
@@ -138,15 +135,14 @@
                         formControlName="fieldValCondition">
                       </app-combobox>
                     </div>
-                    <div class="text text-last">
+                    <div class="text value-row">
                       <app-combobox
+                        class="text-value"
                         [comboIndex]="presetIndex + ':' + fieldIndex"
                         formControlName="fieldVal">
                       </app-combobox>
-                    </div>
-                    <div class="text text-button">
                       <button
-                        class="preset-button"
+                        class="preset-button text-button"
                         type="button" (click)="removeField(presetIndex, fieldIndex)">
                         <i class="fa fa-times"></i>
                       </button>

@@ -1,5 +1,7 @@
 .content {
     width: 100vw;
+    height: 94vh;
+    padding-top: 20px;
     display: flex;
     flex-direction: column;
     flex: 1;
@@ -7,13 +9,21 @@
 }
 
 .content-row {
+    /* margin-top: 20px; */
+    /* min-height: 10%; */
+    flex-basis: 115px;
+    flex-shrink: 1;
+    display: flex;
     margin: auto;
-    align-items: start;
-    flex-grow: 1;
-    max-width: 800px;
-    /* width: 200px; */
-    /* min-width: 0; */
-    /* overflow: hidden; */
+    align-items: center;
+    width: 80%;
+}
+
+.submit-row {
+    flex-basis: 40%;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    /* height: 40%; */
 }
 
 .content-group-container {
@@ -21,6 +31,16 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    width: 100%;
+}
+
+.submit-container,
+.submit-container button {
+    align-self: flex-end
+}
+
+.maprule-name-container {
+    width: 30%;
 }
 
 .content-body {
@@ -32,13 +52,9 @@
 }
 
 .content-header {
-    margin: 10px;
-    display: flex;
-}
-
-.content-header,
-.maprule-name-container div {
     align-self: start;
+    margin-top: 30px;
+    display: flex;
 }
 
 .content-header * {
@@ -69,6 +85,11 @@
 
 .form-input-full {
     width: 100%;
+}
+
+.form-input-preset {
+    border: none;
+    background: none;
 }
 
 /* #14676C sea green */

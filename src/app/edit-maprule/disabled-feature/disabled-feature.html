@@ -1,44 +1,55 @@
-<div [formGroup]="editMapRule.form"
-  class="table-container"
-  formArrayName="disabledFeatures"
-  *ngIf="disabledFeaturesFormArray().length > 0">
-  <div class="table-row header">
-    <div class="wrapper text-4">
-      <div class="wrapper text-2">
-        <div class="text">Key</div>
-        <div class="text">Value(s)</div>
-        <div class="text text-button"></div>
+<div #disabledFeature class="preset-container">
+  <div class="disabled-feature-card">
+    <div class="disabled-feature-header">
+      <div>
+        <button class="preset-button" id="show-preset-button" (click)="showDisabledFeaturePanel()">
+          <i class="fa fa-plus-square-o"></i>
+        </button>
       </div>
     </div>
+    <div class="preset-card-panel">
+      <div [formGroup]="editMapRule.form" class="content-group disabled-feature-panel">
+          <div class="table-container"
+            formArrayName="disabledFeatures"
+            *ngIf="disabledFeaturesFormArray().length > 0">
+          <div class="table-row header">
+            <div class="wrapper text-4">
+              <div class="wrapper text-2 columns-container">
+                <div class="text">Key</div>
+                <div class="text">Value(s)</div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="table-row"
+            *ngFor="let disabledFeature of disabledFeaturesFormArray().controls; let disabledFeatureIndex=index"
+            [formGroupName]="disabledFeatureIndex">
+            <div class="text">
+              <app-combobox
+                [maxElements]="1"
+                [comboIndex]="'disabledFeatureIndex'"
+                formControlName="disabledKey">
+              </app-combobox>
+            </div>
+            <div class="text value-row">
+              <app-combobox
+                class="text-value"
+                [comboIndex]="'disabledFeatureIndex'"
+                formControlName="disabledVal">
+              </app-combobox>
+              <button class="preset-button text-button"
+                type="button" (click)="removePrimaryGroup(presetIndex, primaryIndex)">
+                <i class="fa fa-times"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        <button
+          class="preset-button add-button"
+          type="button" (click)="addDisabledFeature()">
+          <i class="fa fa-plus"></i> Add Disabled Feature
+        </button>
+      </div>
+   </div>
   </div>
-  <div
-    class="table-row content"
-    *ngFor="let disabledFeature of disabledFeaturesFormArray().controls; let disabledFeatureIndex=index"
-    [formGroupName]="disabledFeatureIndex">
-    <div class="text">
-      <app-combobox
-        [maxElements]="1"
-        [comboIndex]="'disabledFeatureIndex'"
-        formControlName="disabledKey">
-      </app-combobox>
-    </div>
-    <div class="text">
-      <app-combobox
-        [comboIndex]="'disabledFeatureIndex'"
-        formControlName="disabledVal">
-      </app-combobox>
-    </div>
-    <div class="text text-button">
-      <button class="preset-button"
-        type="button" (click)="removePrimaryGroup(presetIndex, primaryIndex)">
-        <i class="fa fa-times"></i>
-      </button>
-    </div>
-  </div>
-  <button
-    class="preset-button add-button"
-    id="add-preset-button"
-    type="button" (click)="addDisabledFeature()">
-    <i class="fa fa-plus"></i> Add Disabled Feature
-  </button>
 </div>

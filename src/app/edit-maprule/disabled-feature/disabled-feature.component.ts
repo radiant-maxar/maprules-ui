@@ -1,9 +1,6 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, ViewChild, ElementRef } from '@angular/core';
 import { Validators, FormGroup, FormBuilder, FormArray } from '@angular/forms';
 import { EditMapRuleComponent } from '../edit-maprule.component';
-
-
-declare var $: any;
 
 @Component({
   exportAs: 'disabled-feature',
@@ -23,6 +20,9 @@ export class DisabledFeatureComponent {
     private editMapRule: EditMapRuleComponent
   ) {}
 
+  @ViewChild("disabledFeature") disabledFeature: ElementRef;
+  _showComponent: boolean = true;
+
   ngOnInit() {}
 
   disabledFeaturesFormArray(): FormArray {
@@ -38,6 +38,26 @@ export class DisabledFeatureComponent {
       disabledKey: this.fb.control(''),
       disabledVal: this.fb.control('')
     }))
+  }
+
+  showDisabledFeaturePanel(): void {
+    let open = this.disabledFeature.nativeElement.querySelector('.preset-card-panel')
+      .classList.contains('preset-card-panel-hidden');
+    if (open) {
+      this.disabledFeature.nativeElement.querySelector('.disabled-feature-header')
+        .classList.remove('preset-card-panel-header-hidden')
+      this.disabledFeature.nativeElement.querySelector('.preset-card-panel')
+        .classList.remove('preset-card-panel-hidden')
+      this.disabledFeature.nativeElement.querySelector('#show-preset-button i')
+        .classList.replace('fa-minus-square-o', 'fa-plus-square-o');
+    } else {
+      this.disabledFeature.nativeElement.querySelector('.preset-card-panel')
+        .classList.add('preset-card-panel-hidden')
+      this.disabledFeature.nativeElement.querySelector('.disabled-feature-header')
+        .classList.add('preset-card-panel-header-hidden')
+      this.disabledFeature.nativeElement.querySelector('#show-preset-button i')
+        .classList.replace('fa-plus-square-o', 'fa-minus-square-o')
+    }
   }
 
 }

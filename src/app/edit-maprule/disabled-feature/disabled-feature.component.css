@@ -1,3 +1,29 @@
-.disabled-features-body {
-  margin: 10px;
+
+.disabled-feature-panel {
+  display: flex;
+  flex-direction: column;
+}
+
+.disabled-feature-header {
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  overflow: hidden;
+  background: rgba(193, 201, 218, .1);
+  border-bottom: 1px solid rgba(0,0,0,.125);
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px 20px;
+}
+
+.disabled-feature-header label {
+  margin-top: auto;
+  margin-bottom: auto;
+  padding-left: 15px;
+  font-size: 14px;
+}
+
+.disabled-feature-card {
+  border: 1px solid rgba(0,0,0,.125);
+  border-radius: 10px;
+  margin-top: 20px;
 }
