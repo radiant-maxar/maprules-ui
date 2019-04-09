@@ -115,9 +115,12 @@ export class ComboboxComponent implements OnInit, AfterViewInit, ControlValueAcc
   }
 
   selectDropdown(event: any): void {
-    this.comboValues.push(event.target.innerText)
-    this._formControl.setValue(this.comboValues.join(','))
+    let val = event.target.innerText;
+    this.doChange(val);
     this.sortText = ''
+    this.comboInput.nativeElement.value = this.sortText;
+    this.comboValues.push(val)
+    this._formControl.setValue(this.comboValues.join(','))
     this.showDropDown = false;
   }
 
@@ -188,18 +191,7 @@ export class ComboboxComponent implements OnInit, AfterViewInit, ControlValueAcc
 
               this.textChange(val)
               this.comboValues.push(val);
-
-              if (/(fields|primary)Key/.test(this._formControlName)) {
-                this.comboKeyChanged(val)
-              } else if (/(fields|primary)Val/.test(this._formControlName)) {
-                this.comboValChanged(val);
-              } else if (/keyCondition/.test(this._formControlName)) { // 3rd element in these lists === must/should not be...
-                this.conditionChanged();
-              } else if (/disabledFeatureKey/.test(this._formControlName)) {
-                this.disabledKeyChanged(val);
-              } else {
-                // just remove from show list...
-              }
+              this.doChange(val)
             }
             default: {
               break;
@@ -213,10 +205,23 @@ export class ComboboxComponent implements OnInit, AfterViewInit, ControlValueAcc
     )
 
     this._formControl.valueChanges.subscribe(val => {
-      // console.log(val);
+      if (val.length) this.textChange(val)
       this.comboInput.nativeElement.focus();
     })
   }
+
+  doChange(val: string) {
+    if (/(field|primary)Key/.test(this._formControlName)) {
+      this.comboKeyChanged(val)
+    } else if (/(field|primary)Val/.test(this._formControlName)) {
+      this.comboValChanged(val);
+    } else if (/keyCondition/.test(this._formControlName)) { // 3rd element in these lists === must/should not be...
+      this.conditionChanged();
+    } else if (/disabledKey/.test(this._formControlName)) {
+      this.disabledKeyChanged(val);
+    } else {}
+  }
+
 
   getPartnerEvent(partnerKey: string, nextIndex: boolean): string {
     let partnerIndex: string;
@@ -245,7 +250,7 @@ export class ComboboxComponent implements OnInit, AfterViewInit, ControlValueAcc
   }
 
   conditionChanged(): void {
-    let partnerKey: string = /key/i.test(this._formControlName) ? 'fieldsKey' : 'fieldsVal';
+    let partnerKey: string = /key/i.test(this._formControlName) ? 'fieldKey' : 'fieldVal';
 
     if (this._formControl.value === 2) { // must not and should both have an index === 3
       this.fieldConfig.emitter.emit({
@@ -268,7 +273,7 @@ export class ComboboxComponent implements OnInit, AfterViewInit, ControlValueAcc
    * @param key {string} tag key inputted in combobox
    */
   comboKeyChanged(key: string): void {
-    let partnerKey: string = /primary/.test(this._formControlName) ? 'primaryVal' : 'fieldsVal'
+    let partnerKey: string = /primary/.test(this._formControlName) ? 'primaryVal' : 'fieldVal'
     this.tagInfoService.tagValues(key).subscribe(
       (next) => {
         this.fieldConfig.emitter.emit({
@@ -295,8 +300,8 @@ export class ComboboxComponent implements OnInit, AfterViewInit, ControlValueAcc
       partnerKey = 'primaryKey';
       valKey = 'primaryVal'
     } else {
-      partnerKey = 'fieldsKey';
-      valKey = 'fieldsVal'
+      partnerKey = 'fieldKey';
+      valKey = 'fieldVal'
     }
 
     let key = this._formControl.parent.get(valKey).value;
