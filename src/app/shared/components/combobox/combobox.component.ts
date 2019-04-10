@@ -110,12 +110,7 @@ export class ComboboxComponent implements OnInit, AfterViewInit, ControlValueAcc
         break;
       }
       case KEY_CODE.ENTER: {
-        if (0 <= this.counter) {
-          this.selectDropdown(event, this.getCounter());
-        } else {
-          this.selectText(value);
-        }
-        value = '';
+        value = 0 <= this.counter ? this.selectDropdown(event, this.getCounter()) : this.selectText(value);
         break;
       }
       case KEY_CODE.TAB_KEY: {
@@ -123,12 +118,7 @@ export class ComboboxComponent implements OnInit, AfterViewInit, ControlValueAcc
           this.showDropDown = false;
           return;
         }
-        if (this.counter <= 0) {
-          this.selectDropdown(event, this.getCounter());
-        } else {
-          this.selectText(value);
-        }
-        value = '';
+        value = 0 <= this.counter ? this.selectDropdown(event, this.getCounter()) : this.selectText(value);
         break;
       }
     }
@@ -160,28 +150,28 @@ export class ComboboxComponent implements OnInit, AfterViewInit, ControlValueAcc
     this.showDropDown = 0 < this.dummyDataList.length
   }
 
-  doUpdate(value: string) {
+  doUpdate(value: string): string {
     this.doChange(value);
     this.sortText = ''
     this.comboInput.nativeElement.value = this.sortText;
     this.comboValues.push(value)
-    this._formControl.setValue(this.comboValues.join(','))
     this.showDropDown = false;
     this.dummyDataList = this.filteredList();
     if (this.dummyDataList.length - 1 < this.counter) {
       this.counter = -1;
     }
+    return this.comboValues.join();
   }
 
-  selectDropdown(event: any, counter: number = this.counter): void {
+  selectDropdown(event: any, counter: number = this.counter): string {
     let value = event.keyCode ? this.dummyDataList[counter].name : event.target.innerText;
     if (!value.length) return;
-    this.doUpdate(value)
+    return this.doUpdate(value)
   }
 
-  selectText(value: string): void {
+  selectText(value: string): string {
     if (!value.length) return;
-    this.doUpdate(value);
+    return this.doUpdate(value);
   }
 
   filteredList(): any[] {
