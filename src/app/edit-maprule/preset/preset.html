@@ -75,17 +75,10 @@
               </label>
             </div>
             <div class="content-body feature-body geometry-body">
-              <label formArrayName='geometry'
-                *ngFor="let geometry of defaultGeoms(); let geometryIndex=index">
-                <input
-                  *ngIf="geometryIndex < geometryArray(presetIndex).length; else defaultGeom"
-                  type="checkbox"
-                  [formControlName]='geometryIndex'
-                  (click)="selectGeom($event, presetIndex, geometryIndex)">
-                <ng-template #defaultGeom>
-                  <input type="checkbox" (click)="selectGeom($event, presetIndex)">
-                </ng-template>
-                {{geometry}}
+              <label
+                *ngFor="let geometry of geometries(presetIndex);">
+                <input type="checkbox" (click)="updatePresetGeometries($event, presetIndex)" [checked]="geometry.checked">
+                {{geometry.name}}
               </label>
             </div>
           </div>

@@ -48,8 +48,8 @@ export class MapRulesService {
     }
   }
 
-  saveForm(value: {[name: string]: any}){
-    const scrubbedForm = this.serialize(value);
+  saveForm(value: {[name: string]: any}, presetGeometries: any[]){
+    const scrubbedForm = this.serialize(value, presetGeometries);
     return this.saveNewConfig(scrubbedForm);
   }
 
@@ -59,13 +59,13 @@ export class MapRulesService {
     );
   }
 
-  serialize(config: any): any {
+  serialize(config: any, presetGeometries: any[]): any {
     return {
       name: config.mapruleName,
-      presets: config.presets.map(function (preset) {
+      presets: config.presets.map(function (preset, index) {
         return {
           name: preset.presetName,
-          geometry: preset.geometry,
+          geometry: presetGeometries[index],
           primary: preset.primary.map(function (primary) {
             return {
               key: primary.primaryKey,

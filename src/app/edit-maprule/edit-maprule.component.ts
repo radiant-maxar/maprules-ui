@@ -25,6 +25,8 @@ export class EditMapRuleComponent implements OnInit {
   submit: EventEmitter<any> = new EventEmitter<any>();
   form: FormGroup;
 
+  presetGeometries = [];
+
   get presets() { return this.form.get('presets') as FormArray; }
   get disabledFeatures() {
     return this.form.get('disabledFeatures') as FormArray;
@@ -103,15 +105,11 @@ export class EditMapRuleComponent implements OnInit {
       }))
     })
 
-    let geometries = fb.array([]);
-    preset.geometry.forEach(function(geometry: string) {
-      geometries.push(fb.control(geometry[0].toUpperCase() + geometry.slice(1))) // force title case
-    })
+    this.presetGeometries.push(preset.geometry)
 
     presets.push(fb.group({
       primary: primaries,
       presetName: fb.control(preset.name),
-      geometry: geometries,
       fields: fields
     }));
   }
@@ -139,7 +137,7 @@ export class EditMapRuleComponent implements OnInit {
   }
 
   saveForm(): void {
-    this.maprules.saveForm(this.form.value)
+    this.maprules.saveForm(this.form.value, this.presetGeometries)
       .subscribe(data => {
         this.router.navigateByUrl(`/${data['id']}/start`);
       });

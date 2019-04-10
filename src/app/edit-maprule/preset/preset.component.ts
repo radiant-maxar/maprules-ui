@@ -44,8 +44,28 @@ export class PresetComponent {
     return this.editMapRule.presets.at(presetIndex).get('fields') as FormArray;
   }
 
-  defaultGeoms(): Array<string> {
-    return this.fieldConfig.geom;
+  geometries(presetIndex: number): Array<any> {
+    let geometries = this.editMapRule.presetGeometries[presetIndex];
+    return this.fieldConfig.geom.map(function (g) {
+      return {
+        name: g,
+        checked: geometries.includes(g)
+      }
+    })
+  }
+
+  updatePresetGeometries(event: any, presetIndex: number) {
+    // if ()
+    let presetGeoms = this.editMapRule.presetGeometries[presetIndex];
+    let geometry = event.currentTarget.labels[0].innerText.trim();
+    if (event.currentTarget.checked) {
+      this.editMapRule.presetGeometries[presetIndex] = presetGeoms
+        .concat(geometry).sort()
+    } else {
+      this.editMapRule.presetGeometries[presetIndex] = presetGeoms
+        .filter(function (g) { return g !== geometry; })
+        .sort();
+    }
   }
 
   ngOnInit() {}
@@ -109,6 +129,7 @@ export class PresetComponent {
 
   private removePreset(presetIndex: number): void {
     this.editMapRule.presets.removeAt(presetIndex);
+    this.editMapRule.presetGeometries.splice(presetIndex, 1);
   }
 
   private removePrimaryGroup(presetIndex: number, primaryIndex: number): void {
@@ -142,7 +163,7 @@ export class PresetComponent {
         geometryArray.removeAt(i);
       }
 
-      filteredGeometryArray.forEach(function (geom) {
+      filteredGeometryArray.sort().forEach(function (geom) {
         geometryArray.push(fb.control(geom))
       })
     }

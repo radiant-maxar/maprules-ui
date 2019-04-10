@@ -61,7 +61,7 @@ export class FieldConfigService {
   disabledFeatureConfig: FieldConfig[][] = [];
 
   emitter: EventEmitter<any> = new EventEmitter();
-  geom: Array<string> = [ 'Point', 'Line', 'Area' ]
+  geom: Array<string> = [ 'Area', 'Line', 'Point' ]
 
   constructor() {}
 
