@@ -54,7 +54,6 @@ export class PresetComponent {
     this.presets.changes.subscribe((presets: QueryList<any>) => {
       if (!this.editMapRule.presets.value[presets.length - 1].presetName.length) {
         presets.last.nativeElement.classList.remove('preset-card-panel-hidden')
-        presets.last.nativeElement.classList.remove('preset-card-panel-hidden')
         presets.last.nativeElement.parentElement.querySelector('#show-preset-button i')
           .classList.replace('fa-plus-square-o', 'fa-minus-square-o')
         presets.last.nativeElement.parentElement.querySelector('.preset-card-header')
@@ -133,11 +132,18 @@ export class PresetComponent {
       geometryArray.push(this.fb.control(geometry))
     } else {
       let fb: FormBuilder = this.fb;
-      geometryArray = this.fb.array([]);
-      geometryArray.controls.forEach(function(geom: FormControl) {
-        if (geom.value !== geometry) {
-          geometryArray.push(fb.control(geom.value));
+      let filteredGeometryArray = [];
+
+      for (let i = geometryArray.controls.length - 1; i > -1; i--) {
+        let formGeometry = geometryArray.at(i).value;
+        if (formGeometry!== geometry) {
+          filteredGeometryArray.push(formGeometry)
         }
+        geometryArray.removeAt(i);
+      }
+
+      filteredGeometryArray.forEach(function (geom) {
+        geometryArray.push(fb.control(geom))
       })
     }
   }

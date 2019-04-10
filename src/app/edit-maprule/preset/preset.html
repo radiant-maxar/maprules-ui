@@ -74,7 +74,7 @@
                 <h5>Geometry</h5>
               </label>
             </div>
-            <div class="content-body feature-body">
+            <div class="content-body feature-body geometry-body">
               <label formArrayName='geometry'
                 *ngFor="let geometry of defaultGeoms(); let geometryIndex=index">
                 <input
@@ -170,7 +170,7 @@
       </div>
     </ng-container>
   </div>
-  <button type="button" class="preset-button add-button" id="add-preset-button"
+  <button type="button" class="preset-button add-button add-preset-button"
     (click)="addPreset();" data-toggle="tooltip" data-placement="bottom" title="sdf">
     <i class="fa fa-plus"> </i> Add Preset
   </button>

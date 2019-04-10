@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, forwardRef, Injector, Input, OnInit, ViewChild, ViewChildren, QueryList, Directive, ElementRef, ViewRef, SimpleChanges, OnChanges } from '@angular/core';
+import { AfterViewInit, Component, forwardRef, Injector, Input, OnInit, ViewChild, ViewChildren, QueryList, Directive, ElementRef, ViewRef, SimpleChanges, OnChanges, EventEmitter } from '@angular/core';
 import { ControlValueAccessor, FormControl, NgControl, NG_VALUE_ACCESSOR, FormArray, FormGroup } from '@angular/forms';
 import { of, Observable } from 'rxjs';
 import { FieldConfigService } from 'src/app/core/services/field-config.service';
@@ -12,7 +12,6 @@ export enum KEY_CODE {
   DOWN_ARROW = 40,
   TAB_KEY = 9,
   BACKSPACE = 8
-
 }
 
 // source and much thanks -> https://medium.com/@madhavmahesh/angular-6-component-creation-for-combo-box-6b2eec03bece
@@ -68,30 +67,48 @@ export class ComboboxComponent implements OnInit, AfterViewInit, ControlValueAcc
       this.showDropDown = false;
       return;
     }
+    let value = event.currentTarget['value'];
     this.showDropDown = true;
-    if (event.keyCode === KEY_CODE.UP_ARROW) {
-      this.counter = (this.counter === 0)
-        ? this.counter
-        : --this.counter;
+    switch (event.keyCode) {
+      case KEY_CODE.UP_ARROW: {
+        if (this.counter !== 0) {
+          --this.counter;
+        }
+        break;
+      }
+      case KEY_CODE.DOWN_ARROW: {
+        if (!this.dummyDataList.length) {
+          this.dummyDataList = this.filteredList();
+        }
 
-      if (this.counter === -1) return;
+        if (this.counter < this.dummyDataList.length - 1) {
+          this.counter++
+        }
 
-      this.checkHighlight(this.counter);
-      this.sortText = this.dataList[this.counter]['name'];
-    } else if (event.keyCode === KEY_CODE.DOWN_ARROW) {
-      this.counter = (this.counter === this.dataList.length - 1)
-        ? this.counter
-        : this.counter++;
+        if (this.counter === -1) return;
 
-      if (this.counter === -1) return;
-
-      this.checkHighlight(this.counter);
-      this.sortText = this.dataList[this.counter]['name'];
-    } else if (event.keyCode === KEY_CODE.TAB_KEY) {
-
+        this.checkHighlight(this.counter);
+        break;
+      }
+      case KEY_CODE.ENTER: {
+        this.selectDropdown(event, this.getCounter());
+        value = '';
+        break;
+      }
+      case KEY_CODE.TAB_KEY: {
+        if (!this.dummyDataList.length) {
+          this.showDropDown = false;
+          return;
+        }
+        this.selectDropdown(event, this.getCounter());
+        value = '';
+      }
     }
+    this._formControl.setValue(value);
+  }
 
-    this._formControl.setValue(event.target['value']);
+  getCounter(): number {
+    return (0 <= this.counter && this.counter <= this.dummyDataList.length - 1) ? this.counter : 0;
   }
 
   checkHighlight(currentItem): boolean {
@@ -108,20 +125,32 @@ export class ComboboxComponent implements OnInit, AfterViewInit, ControlValueAcc
   }
 
   textChange(value: string): void {
-    this.dummyDataList = this.comboboxPipe.transform(this.dataList, value);
-    if (this.dummyDataList.length) {
-      this.showDropDown = true;
-    }
+    this.dummyDataList = this.comboboxPipe.transform(this.dataList, value, this.comboValues);
+    this.showDropDown = 0 < this.dummyDataList.length
   }
 
-  selectDropdown(event: any): void {
-    let val = event.target.innerText;
+  selectDropdown(event: any, counter: number = this.counter): void {
+    let val = event.keyCode ? this.dummyDataList[counter].name : event.target.innerText;
+
+    if (!val) return;
+
     this.doChange(val);
     this.sortText = ''
     this.comboInput.nativeElement.value = this.sortText;
     this.comboValues.push(val)
     this._formControl.setValue(this.comboValues.join(','))
     this.showDropDown = false;
+    this.dummyDataList = this.filteredList();
+    if (this.dummyDataList.length - 1 < this.counter) {
+      this.counter = -1;
+    }
+  }
+
+  filteredList(): any[] {
+    let comboValues = this.comboValues;
+    return this.dataList.filter(function (d) {
+      return !comboValues.includes(d.name);
+    })
   }
 
   ngOnInit() { }

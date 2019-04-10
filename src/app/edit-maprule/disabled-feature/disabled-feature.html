@@ -1,13 +1,13 @@
-<div #disabledFeature class="preset-container">
+<div #disabledFeature class="disabled-feature-container">
   <div class="disabled-feature-card">
-    <div class="disabled-feature-header">
+    <div class="disabled-feature-header disabled-feature-card-panel-header-hidden">
       <div>
         <button class="preset-button" id="show-preset-button" (click)="showDisabledFeaturePanel()">
           <i class="fa fa-plus-square-o"></i>
         </button>
       </div>
     </div>
-    <div class="preset-card-panel">
+    <div class="preset-card-panel preset-card-panel-hidden">
       <div [formGroup]="editMapRule.form" class="content-group disabled-feature-panel">
           <div class="table-container"
             formArrayName="disabledFeatures"
@@ -44,12 +44,12 @@
             </div>
           </div>
         </div>
-        <button
-          class="preset-button add-button"
-          type="button" (click)="addDisabledFeature()">
-          <i class="fa fa-plus"></i> Add Disabled Feature
-        </button>
       </div>
    </div>
   </div>
+<button
+  class="preset-button add-button add-disabled-feature-button"
+  type="button" (click)="addDisabledFeature()">
+  <i class="fa fa-plus"></i> Add Disabled Feature
+</button>
 </div>

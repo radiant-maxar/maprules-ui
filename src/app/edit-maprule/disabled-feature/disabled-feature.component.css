@@ -1,3 +1,7 @@
+.disabled-feature-container {
+  display: flex;
+  flex-direction: column;
+}
 
 .disabled-feature-panel {
   display: flex;
@@ -26,4 +30,14 @@
   border: 1px solid rgba(0,0,0,.125);
   border-radius: 10px;
   margin-top: 20px;
+  border-bottom-right-radius: initial;
+}
+
+.add-disabled-feature-button {
+  margin-left: auto;
+  height: 30px;
+  font-size: 14px;
+}
+.disabled-feature-card-panel-header-hidden {
+  border-bottom: none;
 }

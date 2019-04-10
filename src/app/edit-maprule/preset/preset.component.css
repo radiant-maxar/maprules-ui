@@ -88,9 +88,17 @@
   border: 1px rgb(0,0,0,.125) solid;
 }
 
-#add-preset-button {
+.add-preset-button {
   margin-top: -20px;
   margin-left: auto;
   height: 30px;
   font-size: 14px;
+}
+
+.geometry-body {
+  flex-direction: row;
+}
+
+.geometry-body label {
+  padding: 5px;
 }

@@ -1,5 +1,6 @@
 <form
   (keydown.enter)="$event.preventDefault()"
+  (keydown.tab)="$event.preventDefault()"
   [formGroup]="form"
   (submit)="handleSubmit($event)">
   <div class="content">

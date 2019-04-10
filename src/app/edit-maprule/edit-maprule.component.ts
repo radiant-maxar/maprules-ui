@@ -9,6 +9,7 @@ import { NavigationService } from '../core/services/navigation.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FieldConfigService } from 'src/app/core/services/field-config.service';
 import { TagInfoService } from '../core/services/tag-info.service';
+import { fbind } from 'q';
 
 @Component({
   exportAs: 'edit-maprule',
@@ -50,7 +51,7 @@ export class EditMapRuleComponent implements OnInit {
               this.form.get('mapruleName').setValue(data.name);
               data.presets.forEach(this.createPresetFormGroup.bind(this));
               data.disabledFeatures.forEach(this.createDisabledFormGroup.bind(this));
-              this.fieldConfig.emitter.emit({ type: 'maprule-init' })
+              this.fieldConfig.emitter.emit({ type: 'maprule-init' });
             },
             (error) => {
               console.error(error);
@@ -58,6 +59,13 @@ export class EditMapRuleComponent implements OnInit {
           );
         } else {
           this.form.get('mapruleName').setValue('');
+          this.createPresetFormGroup({
+            primary: [{ key: '', val: '' }],
+            name: '',
+            geometry: this.fieldConfig.geometry,
+            fields: []
+          });
+          this.fieldConfig.emitter.emit({ type: 'maprule-init' });
         }
       }
     )
