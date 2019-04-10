@@ -52,6 +52,12 @@ export class DisabledFeatureComponent {
       disabledKey: this.fb.control(''),
       disabledVal: this.fb.control('')
     }))
+    if (
+      this.disabledFeature.nativeElement.querySelector('.preset-card-panel')
+      .classList.contains('preset-card-panel-hidden')
+    ) {
+      this.showDisabledFeaturePanel();
+    }
   }
 
   showDisabledFeaturePanel(): void {

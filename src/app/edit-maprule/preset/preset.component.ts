@@ -14,8 +14,8 @@ import { EditMapRuleComponent } from '../edit-maprule.component';
   selector: 'app-preset',
   styleUrls: [
     './preset.component.css',
-    '../form-table.css',
-    '../../shared/components/content.group.css'
+    '../../shared/components/content.group.css',
+    '../form-table.css'
   ],
   templateUrl: './preset.html',
   encapsulation: ViewEncapsulation.None

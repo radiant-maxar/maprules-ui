@@ -41,3 +41,7 @@
 .disabled-feature-card-panel-header-hidden {
   border-bottom: none;
 }
+
+.disabled-feature-table-container {
+  border-bottom-right-radius: 10px;
+}

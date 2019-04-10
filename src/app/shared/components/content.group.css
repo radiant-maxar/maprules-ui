@@ -9,14 +9,13 @@
 }
 
 .content-row {
-    /* margin-top: 20px; */
-    /* min-height: 10%; */
     flex-basis: 115px;
     flex-shrink: 1;
     display: flex;
     margin: auto;
     align-items: center;
     width: 80%;
+    max-width: 1000px;
 }
 
 .submit-row {

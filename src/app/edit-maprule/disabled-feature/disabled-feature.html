@@ -9,7 +9,7 @@
     </div>
     <div class="preset-card-panel preset-card-panel-hidden">
       <div [formGroup]="editMapRule.form" class="content-group disabled-feature-panel">
-          <div class="table-container"
+          <div class="table-container disabled-feature-table-container"
             formArrayName="disabledFeatures"
             *ngIf="disabledFeaturesFormArray().length > 0">
           <div class="table-row header">
@@ -37,7 +37,7 @@
                 [comboIndex]="'disabledFeatureIndex'"
                 formControlName="disabledVal">
               </app-combobox>
-              <button class="preset-button text-button"
+              <button class="text-button"
                 type="button" (click)="removeDisabledFeature(disabledFeatureIndex)">
                 <i class="fa fa-times"></i>
               </button>

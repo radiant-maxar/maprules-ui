@@ -53,6 +53,13 @@ export class ComboboxComponent implements OnInit, AfterViewInit, ControlValueAcc
 
   @ViewChild("comboInput") comboInput: ElementRef;
 
+  onClickEventAction(event: any): void {
+    // make it easier to click on the input...
+    if (['combo-cards-container', 'combo-input'].includes(event.target.className)) {
+      this.comboInput.nativeElement.focus();
+    }
+  }
+
   onFocusEventAction(): void {
     this.counter = -1;
   }
@@ -103,7 +110,11 @@ export class ComboboxComponent implements OnInit, AfterViewInit, ControlValueAcc
         break;
       }
       case KEY_CODE.ENTER: {
-        this.selectDropdown(event, this.getCounter());
+        if (0 <= this.counter) {
+          this.selectDropdown(event, this.getCounter());
+        } else {
+          this.selectText(value);
+        }
         value = '';
         break;
       }
@@ -112,8 +123,13 @@ export class ComboboxComponent implements OnInit, AfterViewInit, ControlValueAcc
           this.showDropDown = false;
           return;
         }
-        this.selectDropdown(event, this.getCounter());
+        if (this.counter <= 0) {
+          this.selectDropdown(event, this.getCounter());
+        } else {
+          this.selectText(value);
+        }
         value = '';
+        break;
       }
     }
     this._formControl.setValue(value);
@@ -133,6 +149,9 @@ export class ComboboxComponent implements OnInit, AfterViewInit, ControlValueAcc
   }
 
   toggleDropDown(): void {
+    if (!this.dummyDataList.length) {
+      this.dummyDataList = this.filteredList();
+    }
     this.showDropDown = !this.showDropDown;
   }
 
@@ -141,21 +160,28 @@ export class ComboboxComponent implements OnInit, AfterViewInit, ControlValueAcc
     this.showDropDown = 0 < this.dummyDataList.length
   }
 
-  selectDropdown(event: any, counter: number = this.counter): void {
-    let val = event.keyCode ? this.dummyDataList[counter].name : event.target.innerText;
-
-    if (!val) return;
-
-    this.doChange(val);
+  doUpdate(value: string) {
+    this.doChange(value);
     this.sortText = ''
     this.comboInput.nativeElement.value = this.sortText;
-    this.comboValues.push(val)
+    this.comboValues.push(value)
     this._formControl.setValue(this.comboValues.join(','))
     this.showDropDown = false;
     this.dummyDataList = this.filteredList();
     if (this.dummyDataList.length - 1 < this.counter) {
       this.counter = -1;
     }
+  }
+
+  selectDropdown(event: any, counter: number = this.counter): void {
+    let value = event.keyCode ? this.dummyDataList[counter].name : event.target.innerText;
+    if (!value.length) return;
+    this.doUpdate(value)
+  }
+
+  selectText(value: string): void {
+    if (!value.length) return;
+    this.doUpdate(value);
   }
 
   filteredList(): any[] {
