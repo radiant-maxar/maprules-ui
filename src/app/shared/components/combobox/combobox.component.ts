@@ -82,7 +82,7 @@ export class ComboboxComponent implements OnInit, AfterViewInit, ControlValueAcc
 
   onKeyUpAction(event: KeyboardEvent): void {
     if (!event.currentTarget['value'].length && event.keyCode === KEY_CODE.BACKSPACE) {
-      this.dummyDataList = this.dataList;
+      this.dummyDataList = this.filteredList();
       this.showDropDown = false;
       return;
     }
@@ -146,7 +146,7 @@ export class ComboboxComponent implements OnInit, AfterViewInit, ControlValueAcc
   }
 
   textChange(value: string): void {
-    this.dummyDataList = this.comboboxPipe.transform(this.dataList, value, this.comboValues);
+    this.dummyDataList = this.comboboxPipe.transform(this.filteredList(), value, this.comboValues);
     this.showDropDown = 0 < this.dummyDataList.length
   }
 
@@ -163,10 +163,16 @@ export class ComboboxComponent implements OnInit, AfterViewInit, ControlValueAcc
     return this.comboValues.join();
   }
 
-  selectDropdown(event: any, counter: number = this.counter): string {
+  selectDropdown(event: any, counter: number = this.counter, updateForm: boolean = true): string {
     let value = event.keyCode ? this.dummyDataList[counter].name : event.target.innerText;
     if (!value.length) return;
-    return this.doUpdate(value)
+    value = this.doUpdate(value)
+
+    if (updateForm) {
+      this._formControl.setValue(value);
+    }
+
+    return value;
   }
 
   selectText(value: string): string {
@@ -175,10 +181,20 @@ export class ComboboxComponent implements OnInit, AfterViewInit, ControlValueAcc
   }
 
   filteredList(): any[] {
-    let comboValues = this.comboValues;
+    let comboValues = this.comboValues.slice(); // new copy of array...
+    let formControlName = this._formControlName;
+    if (/key/i.test(formControlName)) { // if key, filter out any partner tag keys...
+      let parentArray = this._formControl.parent.parent as FormArray;
+      parentArray.controls.forEach(function (control: FormGroup) {
+        let partnerKey = control.controls[formControlName].value;
+        if (partnerKey.length) {
+          comboValues.push(partnerKey)
+        }
+      })
+    }
     return this.dataList.filter(function (d) {
       return !comboValues.includes(d.name);
-    })
+    }).sort(function (a, b) { return a.name - b.name });
   }
 
   ngOnInit() { }
@@ -233,24 +249,8 @@ export class ComboboxComponent implements OnInit, AfterViewInit, ControlValueAcc
               break;
             }
             case 'condition': {
-              // handle condition change
+              // handle 'should not be' condition change...
               break;
-            }
-            case 'selected': {
-              let val = next.val
-              // update this combobox dropdown...
-              this.sortText = val;
-              if (!val.length) {
-                this.reset();
-                return;
-              }
-              if (!this.dataList.find(function (d) { return d.name === val })) {
-                return;
-              }
-
-              this.textChange(val)
-              this.comboValues.push(val);
-              this.doChange(val)
             }
             default: {
               break;

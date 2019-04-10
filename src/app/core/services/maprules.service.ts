@@ -32,7 +32,7 @@ export class MapRulesService {
   }
 
   save(configId: string, value: {[name: string]: any}){
-    const scrubbedForm = this.serialize(value);
+    const scrubbedForm = this.serialize(value, []);
     // if on new route, post for new uuid
     if (/new/.test(this.router.url)) {
       return this.http.post(this.mapRulesUrl, scrubbedForm, this.httpOptions).pipe(
