@@ -62,6 +62,18 @@ export class ComboboxComponent implements OnInit, AfterViewInit, ControlValueAcc
   }
 
   onKeyDownAction(event: KeyboardEvent): void {
+    switch (event.keyCode) {
+      case KEY_CODE.BACKSPACE: {
+        if (!event.currentTarget['value'].length) {
+          this.comboValues.pop();
+          this._formControl.setValue(this.comboValues.join(','));
+        }
+        break;
+      }
+    }
+  }
+
+  onKeyUpAction(event: KeyboardEvent): void {
     if (!event.currentTarget['value'].length && event.keyCode === KEY_CODE.BACKSPACE) {
       this.dummyDataList = this.dataList;
       this.showDropDown = false;

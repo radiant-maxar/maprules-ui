@@ -19,7 +19,8 @@
           class="combo-input"
           placeholder="Add..."
           [value]="sortText"
-          (keyup)="onKeyDownAction($event)"
+          (keydown)="onKeyDownAction($event)"
+          (keyup)="onKeyUpAction($event)"
           (focus)="onFocusEventAction($event)"
           (blur)="onBlurEventAction($event)" />
       </div>
