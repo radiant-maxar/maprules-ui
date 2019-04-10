@@ -208,10 +208,10 @@ export class ComboboxComponent implements OnInit, AfterViewInit, ControlValueAcc
     // make sure to initialize the input value!
     if (this._formControl && this._formControl.value) {
       let comboValues = this._formControl.value.split(',');
-      if (comboValues.length > 1) {
-        this.sortText = '';
-      } else {
+      if (comboValues.length === 1 && this._maxElements === 1) {
         this.sortText = comboValues[0];
+      } else {
+        this.sortText = ''
       }
 
       this.comboValues = this.comboValues.concat(comboValues);

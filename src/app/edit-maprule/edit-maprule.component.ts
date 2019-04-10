@@ -121,7 +121,7 @@ export class EditMapRuleComponent implements OnInit {
 
     disabledFeatures.push(this.fb.group({
       disabledKey: this.fb.control(disabledFeature.key),
-      disabledVal: this.fb.control('')
+      disabledVal: this.fb.control(disabledFeature.val.join(','))
     }));
   }
 
