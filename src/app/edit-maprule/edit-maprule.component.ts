@@ -67,6 +67,13 @@ export class EditMapRuleComponent implements OnInit {
             geometry: this.fieldConfig.geometry,
             fields: []
           });
+          let presets = this.form.get('presets') as FormArray;
+          (presets.at(0).get('fields') as FormArray).push(this.fb.group({
+            fieldKeyCondition: this.fb.control('', Validators.required),
+            fieldKey: this.fb.control('', Validators.required),
+            fieldValCondition: this.fb.control(''),
+            fieldVal: this.fb.control('')
+          }))
           this.fieldConfig.emitter.emit({ type: 'maprule-init' });
         }
       }
