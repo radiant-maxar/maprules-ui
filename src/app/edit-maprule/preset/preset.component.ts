@@ -146,28 +146,5 @@ export class PresetComponent {
     this.fieldsFormArray(presetIndex).removeAt(fieldIndex);
   }
 
-  private selectGeom(event: any, presetIndex: number) {
-    let geometryArray: FormArray = this.geometryArray(presetIndex) as FormArray;
-    let geometry: string = event.target.labels[0].innerText.trim();
-    if (event.target.checked) {
-      geometryArray.push(this.fb.control(geometry))
-    } else {
-      let fb: FormBuilder = this.fb;
-      let filteredGeometryArray = [];
-
-      for (let i = geometryArray.controls.length - 1; i > -1; i--) {
-        let formGeometry = geometryArray.at(i).value;
-        if (formGeometry!== geometry) {
-          filteredGeometryArray.push(formGeometry)
-        }
-        geometryArray.removeAt(i);
-      }
-
-      filteredGeometryArray.sort().forEach(function (geom) {
-        geometryArray.push(fb.control(geom))
-      })
-    }
-  }
-
 }
 
