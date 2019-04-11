@@ -1,10 +1,11 @@
-import { AfterViewInit, Component, forwardRef, Injector, Input, OnInit, ViewChild, ViewChildren, QueryList, Directive, ElementRef, ViewRef, SimpleChanges, OnChanges, EventEmitter } from '@angular/core';
+import { AfterViewInit, Component, forwardRef, Injector, Input, OnInit, ViewChild, ViewChildren, QueryList, Directive, ElementRef, ViewRef, SimpleChanges, OnChanges, EventEmitter, HostListener } from '@angular/core';
 import { ControlValueAccessor, FormControl, NgControl, NG_VALUE_ACCESSOR, FormArray, FormGroup } from '@angular/forms';
-import { of, Observable } from 'rxjs';
+import { of, Observable, Subject, BehaviorSubject } from 'rxjs';
 import { FieldConfigService } from 'src/app/core/services/field-config.service';
 import { EditMapRuleComponent } from 'src/app/edit-maprule/edit-maprule.component';
 import { TagInfoService } from '../../../core/services/tag-info.service';
 import { ComboboxPipe } from './combobox.pipe';
+import { debounce, debounceTime, distinctUntilChanged, distinct, first, filter, skipWhile } from 'rxjs/operators';
 
 export enum KEY_CODE {
   ENTER = 13,
@@ -38,20 +39,20 @@ export class ComboboxComponent implements OnInit, AfterViewInit, ControlValueAcc
   }
 
   private comboValues: string[] = [];
+  private _maxElements: number = Infinity;
 
-  _maxElements: number = Infinity;
   @Input() set maxElements(maxElements: number) {
     this._maxElements = !maxElements ? Infinity: maxElements;
   }
 
-  dataList: any[] = [];
-  dummyDataList: any[] = [];
-  showDropDown: boolean;
-  counter: number;
-  sortText: string = '';
-  _value: string = '';
+  private dataList: any[] = [];
+  private dummyDataList: any[] = [];
+  private showDropDown: boolean = false;
+  private counter: number;
+  private sortText: string = '';
 
   @ViewChild("comboInput") comboInput: ElementRef;
+  @ViewChild("comboDataContainer") comboDataContainer: ElementRef;
 
   onClickEventAction(event: any): void {
     // make it easier to click on the input...
@@ -60,12 +61,14 @@ export class ComboboxComponent implements OnInit, AfterViewInit, ControlValueAcc
     }
   }
 
-  onFocusEventAction(): void {
+  onFocusEventAction(event: any): void {
     this.counter = -1;
   }
 
+
+
   onBlurEventAction(event: any): void {
-    // this.showDropDown = false;
+    this.showDropDown = false;
   }
 
   onKeyDownAction(event: KeyboardEvent): void {
@@ -139,6 +142,9 @@ export class ComboboxComponent implements OnInit, AfterViewInit, ControlValueAcc
   }
 
   toggleDropDown(): void {
+    if (this._maxElements <= this.comboValues.length) {
+      return
+    }
     if (!this.dummyDataList.length) {
       this.dummyDataList = this.filteredList();
     }
@@ -267,6 +273,7 @@ export class ComboboxComponent implements OnInit, AfterViewInit, ControlValueAcc
       if (val.length) this.textChange(val)
       this.comboInput.nativeElement.focus();
     })
+
   }
 
   doChange(val: string) {
