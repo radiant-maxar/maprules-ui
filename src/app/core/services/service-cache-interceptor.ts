@@ -67,6 +67,7 @@ export class ServiceCacheInterceptor implements HttpInterceptor {
     TagInfoService.POPULAR_TAGS_URL,
     `${environment.taginfo}key/values?key=`,
     `${environment.taginfo}tag/combinations?`,
+    `${environment.taginfo}key/combinations?`,
     `${environment.maprulesConfig}`
   ]
 
