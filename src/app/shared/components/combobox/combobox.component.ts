@@ -50,6 +50,7 @@ export class ComboboxComponent implements OnInit, AfterViewInit, ControlValueAcc
   private showDropDown: boolean = false;
   private counter: number;
   private sortText: string = '';
+  private _disabled: boolean = false;
 
   @ViewChild("comboInput") comboInput: ElementRef;
   @ViewChild("comboDataContainer") comboDataContainer: ElementRef;
@@ -69,18 +70,6 @@ export class ComboboxComponent implements OnInit, AfterViewInit, ControlValueAcc
 
   onBlurEventAction(event: any): void {
     this.showDropDown = false;
-  }
-
-  onKeyDownAction(event: KeyboardEvent): void {
-    switch (event.keyCode) {
-      case KEY_CODE.BACKSPACE: {
-        if (!event.currentTarget['value'].length) {
-          this.comboValues.pop();
-          this._formControl.setValue(this.comboValues.join(','));
-        }
-        break;
-      }
-    }
   }
 
   onKeyUpAction(event: KeyboardEvent): void {
@@ -255,7 +244,7 @@ export class ComboboxComponent implements OnInit, AfterViewInit, ControlValueAcc
               break;
             }
             case 'condition': {
-              // handle 'should not be' condition change...
+              this._disabled = next.disable;
               break;
             }
             default: {
@@ -277,15 +266,15 @@ export class ComboboxComponent implements OnInit, AfterViewInit, ControlValueAcc
   }
 
   doChange(val: string) {
-    if (/(field|primary)Key/.test(this._formControlName)) {
+    if (/^(field|primary)Key$/.test(this._formControlName)) {
       this.comboKeyChanged(val)
     } else if (/(field|primary)Val/.test(this._formControlName)) {
       this.comboValChanged(val);
-    } else if (/keyCondition/.test(this._formControlName)) { // 3rd element in these lists === must/should not be...
-      this.conditionChanged();
+    } else if (/fieldKeyCondition/.test(this._formControlName)) {
+      this.conditionChanged(val);
     } else if (/disabledKey/.test(this._formControlName)) {
       this.disabledKeyChanged(val);
-    } else {}
+    }
   }
 
 
@@ -315,22 +304,18 @@ export class ComboboxComponent implements OnInit, AfterViewInit, ControlValueAcc
     )
   }
 
-  conditionChanged(): void {
-    let partnerKey: string = /key/i.test(this._formControlName) ? 'fieldKey' : 'fieldVal';
-
-    if (this._formControl.value === 2) { // must not and should both have an index === 3
-      this.fieldConfig.emitter.emit({
-        name: this.getPartnerEvent(partnerKey, false),
-        type: 'condition'
-      })
-    }
-    // else {
-    //   this.tagInfoService.tagValues(key).subscribe(
-    //     (next) => {
-    //       this.fieldConfig.emitter.emit
-    //     }
-    //   )
-    // }
+  conditionChanged(val): void {
+    let shouldDisable = FieldConfigService.KEY_CONDITIONS.indexOf(val) === 2;
+    this.fieldConfig.emitter.emit({
+      name: this.getPartnerEvent('fieldVal', false),
+      type: 'condition',
+      disable: shouldDisable
+    })
+    this.fieldConfig.emitter.emit({
+      name: this.getPartnerEvent('fieldValCondition', false),
+      type: 'condition',
+      disable: shouldDisable
+    })
   }
 
   /**
@@ -461,6 +446,9 @@ export class ComboboxComponent implements OnInit, AfterViewInit, ControlValueAcc
   }
 
   removeComboVal(comboIndex: number) {
+    if (FieldConfigService.KEY_CONDITIONS.indexOf(this.comboValues[comboIndex]) === 2) {
+      this.conditionChanged('') // enables partner combos...
+    }
     this.comboValues.splice(comboIndex, 1);
     this._formControl.setValue(this.comboValues.join(','))
     this.sortText = ''

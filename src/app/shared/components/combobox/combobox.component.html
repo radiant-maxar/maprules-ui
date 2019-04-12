@@ -1,4 +1,4 @@
-<div class="combo-container">
+<div [ngClass]="{ disabled: _disabled }" class="combo-container">
   <div
     (click)="onClickEventAction($event)"
     [ngClass]="{ 'combo-open': showDropDown }"
@@ -19,14 +19,14 @@
           type="text"
           class="combo-input"
           placeholder="Add..."
+          [disabled]="_disabled"
           [value]="sortText"
-          (keydown)="onKeyDownAction($event)"
           (keyup)="onKeyUpAction($event)"
           (focus)="onFocusEventAction($event)"
           />
       </div>
     </div>
-    <button class="combo-drop-down-button" (click)="toggleDropDown()">
+    <button [disabled]="_disabled" class="combo-drop-down-button" (click)="toggleDropDown()">
       <i class="fa fa-angle-down"></i>
     </button>
   </div>

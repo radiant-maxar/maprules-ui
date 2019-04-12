@@ -133,6 +133,14 @@
   border-bottom: none;
 }
 
+.disabled .combo-cards-container,
+.disabled .combo-drop-down-button {
+  background-color: rgba(0,0,0,.05)
+}
+
+.disabled input {
+  background-color: initial;
+}
 
 @media all and (max-width: 735px) {
   .combo-input-container {
