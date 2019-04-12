@@ -61,6 +61,10 @@ export class DisabledFeatureComponent {
   }
 
   showDisabledFeaturePanel(): void {
+    if (!this.disabledFeaturesFormArray().length) {
+      return;
+    }
+
     let hidden = this.disabledFeature.nativeElement.querySelector('.preset-card-panel')
       .classList.contains('preset-card-panel-hidden');
     if (hidden) {
