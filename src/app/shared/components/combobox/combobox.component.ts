@@ -5,7 +5,7 @@ import { FieldConfigService } from 'src/app/core/services/field-config.service';
 import { EditMapRuleComponent } from 'src/app/edit-maprule/edit-maprule.component';
 import { TagInfoService } from '../../../core/services/tag-info.service';
 import { ComboboxPipe } from './combobox.pipe';
-import { debounce, debounceTime, distinctUntilChanged, distinct, first, filter, skipWhile } from 'rxjs/operators';
+import { debounce, debounceTime, distinctUntilChanged, distinct, first, filter, skipWhile, throttle, throttleTime, distinctUntilKeyChanged, take } from 'rxjs/operators';
 
 export enum KEY_CODE {
   ENTER = 13,
@@ -62,7 +62,7 @@ export class ComboboxComponent implements OnInit, AfterViewInit, ControlValueAcc
     }
   }
 
-  onFocusEventAction(event: any): void {
+  onFocusEventAction(): void {
     this.counter = -1;
   }
 
@@ -236,6 +236,9 @@ export class ComboboxComponent implements OnInit, AfterViewInit, ControlValueAcc
 
     this.fieldConfig.emitter.subscribe(
       (next) => {
+        if (next.type === 'clicked' && this.showDropDown) {
+          this.showDropDown = false;
+        }
         // if emitted change val is for this combo, update dataList...
         if (next.name === `${this._comboIndex}:${this._formControlName}`) {
           switch (next.type) {
@@ -262,7 +265,6 @@ export class ComboboxComponent implements OnInit, AfterViewInit, ControlValueAcc
       if (val.length) this.textChange(val)
       this.comboInput.nativeElement.focus();
     })
-
   }
 
   doChange(val: string) {
@@ -276,7 +278,6 @@ export class ComboboxComponent implements OnInit, AfterViewInit, ControlValueAcc
       this.disabledKeyChanged(val);
     }
   }
-
 
   getPartnerEvent(partnerKey: string, nextIndex: boolean): string {
     let partnerIndex: string;

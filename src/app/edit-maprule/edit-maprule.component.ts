@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, HostListener } from '@angular/core';
 import { Validators, FormGroup, FormBuilder, FormArray, FormControl } from '@angular/forms';
 
 import { FieldConfig } from '../shared/interfaces/field-config.interface';
@@ -10,6 +10,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FieldConfigService } from 'src/app/core/services/field-config.service';
 import { TagInfoService } from '../core/services/tag-info.service';
 import { fbind } from 'q';
+import { Subject } from 'rxjs';
+import { debounce, debounceTime, filter } from 'rxjs/operators';
 
 @Component({
   exportAs: 'edit-maprule',
@@ -21,6 +23,8 @@ import { fbind } from 'q';
   templateUrl: './edit-maprule.html'
 })
 export class EditMapRuleComponent implements OnInit {
+  private clicks: Subject<any> = new Subject();
+
   @Output()
   submit: EventEmitter<any> = new EventEmitter<any>();
   form: FormGroup;
@@ -78,6 +82,7 @@ export class EditMapRuleComponent implements OnInit {
         }
       }
     )
+    this.clickHandler();
   }
 
   /**
@@ -148,6 +153,26 @@ export class EditMapRuleComponent implements OnInit {
       .subscribe(data => {
         this.router.navigateByUrl(`/${data['id']}/start`);
       });
+  }
+
+  /**
+   * When documnet clicked, send to click handler...
+   */
+  @HostListener('document:click', ['$event.target.className'])
+  public onClick(targetElement) {
+    this.clicks.next(targetElement)
+  }
+
+  /**
+   * used to close dropdowns when clicks happen outside combobox of combobox drop downs.
+   */
+  clickHandler() {
+    this.clicks
+      .pipe(
+        debounceTime(100),
+        filter(className => ! /combo/.test(className)), // ignore clicks to combobox elements!
+      )
+      .subscribe(() => this.fieldConfig.emitter.emit({ type: 'clicked' }))
   }
 
 }

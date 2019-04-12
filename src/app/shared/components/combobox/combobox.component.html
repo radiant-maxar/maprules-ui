@@ -27,19 +27,15 @@
       </div>
     </div>
     <button [disabled]="_disabled" class="combo-drop-down-button" (click)="toggleDropDown()">
-      <i class="fa fa-angle-down"></i>
+      <i class="combo-icon fa fa-angle-down"></i>
     </button>
   </div>
-    <div #comboDataContainer
-      tabindex="-1"
-      (blur)="onBlurEventAction($event)"
-      (focus)="selectDropDown === true" class="combo-data-container"
-      *ngIf="comboValues.length < _maxElements && showDropDown">
-      <p *ngFor="let data of dummyDataList; let i=index;"
-        class="data-list"
-        (click)="selectDropdown($event)"
-        [ngClass]="{ highlight: checkHighlight(i) }">
-        {{data.name}}
-      </p>
-    </div>
+  <div class="combo-data-container" *ngIf="comboValues.length < _maxElements && showDropDown">
+    <p *ngFor="let data of dummyDataList; let i=index;"
+      class="data-list"
+      (click)="selectDropdown($event)"
+      [ngClass]="{ highlight: checkHighlight(i) }">
+      {{data.name}}
+    </p>
+  </div>
 </div>
