@@ -1,0 +1,21 @@
+.preset-button {
+	width: initial;
+}
+
+.button-row {
+	justify-content: space-between;
+	flex-grow: 1;
+	align-items: flex-end;
+	padding-bottom: 30px;
+}
+
+@media all and (max-width: 750px) {
+	.preset-button {
+		font-size: 12px;
+	}
+}
+@media all and (max-width: 500px) {
+	.preset-button {
+		height: initial;
+	}
+}

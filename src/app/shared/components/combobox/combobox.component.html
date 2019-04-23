@@ -8,7 +8,7 @@
         <div
           *ngFor="let comboValue of comboValues; let valueIndex=index;"
           class="combo-card" >
-          <span class="combo-card-label">{{ comboValues[valueIndex] }}</span>
+          <div class="combo-card-label wrap-text">{{ comboValues[valueIndex] }}</div>
           <i class="fa fa-times combo-card-remove" (click)="removeComboVal(valueIndex)"></i>
         </div>
       </ng-container>
@@ -31,11 +31,12 @@
     </button>
   </div>
   <div class="combo-data-container" *ngIf="comboValues.length < _maxElements && showDropDown">
-    <p *ngFor="let data of dummyDataList; let i=index;"
-      class="data-list"
+    <div *ngFor="let data of dummyDataList; let i=index;"
+      class="data-list wrap-text"
       (click)="selectDropdown($event)"
+      [attr.title]="data.title ? data.title: null"
       [ngClass]="{ highlight: checkHighlight(i) }">
       {{data.name}}
-    </p>
+    </div>
   </div>
 </div>

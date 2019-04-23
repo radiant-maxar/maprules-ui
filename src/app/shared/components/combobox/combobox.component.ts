@@ -78,7 +78,7 @@ export class ComboboxComponent implements OnInit, AfterViewInit, ControlValueAcc
       this.showDropDown = false;
       return;
     }
-    let value = event.currentTarget['value'];
+    let value = event.currentTarget['value'].trim();
     this.showDropDown = true;
     switch (event.keyCode) {
       case KEY_CODE.UP_ARROW: {
@@ -141,7 +141,7 @@ export class ComboboxComponent implements OnInit, AfterViewInit, ControlValueAcc
   }
 
   textChange(value: string): void {
-    this.dummyDataList = this.comboboxPipe.transform(this.filteredList(), value, this.comboValues);
+    this.dummyDataList = this.comboboxPipe.transform(this.filteredList(), value);
     this.showDropDown = 0 < this.dummyDataList.length
   }
 
@@ -159,7 +159,7 @@ export class ComboboxComponent implements OnInit, AfterViewInit, ControlValueAcc
   }
 
   selectDropdown(event: any, counter: number = this.counter, updateForm: boolean = true): string {
-    let value = event.keyCode ? this.dummyDataList[counter].name : event.target.innerText;
+    let value = (event.keyCode ? this.dummyDataList[counter].name : event.target.innerText).trim();
     if (!value.length) return;
     value = this.doUpdate(value)
 
@@ -172,7 +172,7 @@ export class ComboboxComponent implements OnInit, AfterViewInit, ControlValueAcc
 
   selectText(value: string): string {
     if (!value.length) return;
-    return this.doUpdate(value);
+    return this.doUpdate(value.trim());
   }
 
   filteredList(): any[] {
@@ -187,9 +187,9 @@ export class ComboboxComponent implements OnInit, AfterViewInit, ControlValueAcc
         }
       })
     }
-    return this.dataList.filter(function (d) {
-      return !comboValues.includes(d.name);
-    }).sort(function (a, b) { return a.name - b.name });
+    return this.dataList
+      .filter(function (d) { return !comboValues.includes(d.name); })
+      .sort(function (a, b) { return a.name - b.name });
   }
 
   ngOnInit() { }

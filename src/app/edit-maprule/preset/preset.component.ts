@@ -55,7 +55,6 @@ export class PresetComponent {
   }
 
   updatePresetGeometries(event: any, presetIndex: number) {
-    // if ()
     let presetGeoms = this.editMapRule.presetGeometries[presetIndex];
     let geometry = event.currentTarget.labels[0].innerText.trim();
     if (event.currentTarget.checked) {

@@ -70,6 +70,10 @@
   flex-basis: 90%;
 }
 
+.field-val {
+  width: 80%;
+}
+
 @media all and (max-width: 1200px) {
   .table-row {
     flex-direction: column;

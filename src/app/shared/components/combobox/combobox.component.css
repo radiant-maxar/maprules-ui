@@ -20,6 +20,7 @@
   padding: 1px 0;
   border-bottom: 1px solid rgba(0,0,0,.25);
   background: white;
+  text-align: center;
 }
 
 .highlight,
@@ -78,6 +79,7 @@
 
 .combo-card {
   display: flex;
+  max-width: 150px;
   align-items: baseline;
   justify-content: space-evenly;
   border: 1px rgb(193,201,218) solid;
@@ -86,6 +88,11 @@
 
 .combo-card i {
   width: 18px;
+  align-self: center;
+}
+
+.combo-card div {
+  width: max-content;
 }
 
 .combo-input {
@@ -118,6 +125,24 @@
 }
 .combo-drop-down-button:hover {
   background:rgba(193, 201, 218, .2)
+}
+
+.combo-data-container {
+  display: flex;
+  flex-wrap: nowrap;
+}
+
+.data-list {
+  width: 100%;
+  padding: 1px;
+}
+
+.wrap-text {
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -pre-wrap;
+  white-space: -o-pre-wrap;
+  word-wrap: break-word;
 }
 
 .hidden {
