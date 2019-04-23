@@ -31,8 +31,8 @@ export class MapRulesService {
     this.mapRulesUrl = environment.maprulesConfig;
   }
 
-  save(configId: string, value: {[name: string]: any}){
-    const scrubbedForm = this.serialize(value, []);
+  save(value: {[name: string]: any}, presetGeometries: any[]){
+    const scrubbedForm = this.serialize(value, presetGeometries);
     // if on new route, post for new uuid
     if (/new/.test(this.router.url)) {
       return this.http.post(this.mapRulesUrl, scrubbedForm, this.httpOptions).pipe(
@@ -41,7 +41,7 @@ export class MapRulesService {
     } else {
       // otherwise (working on existing), do put method on existing route...
       const uuid: RegExp = /[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}/g;
-      const configId: string = this.router.url.match(uuid)[0]
+      const configId: string = this.router.url.match(uuid)[0];
       return this.http.put(this.mapRulesUrl + "/" + configId, scrubbedForm, this.httpOptions).pipe(
         catchError(this.handleError)
       );

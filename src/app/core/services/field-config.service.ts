@@ -1,6 +1,5 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { FieldConfig } from '../../shared/interfaces/field-config.interface';
-import { SelectizeOption } from '../../shared/interfaces/selectize-option.interface';
 import { Validators} from '@angular/forms';
 declare var $: any;
 
@@ -82,7 +81,7 @@ export class FieldConfigService {
    return this.primaryGroupConfig.get(i);
   }
 
-  getGuidelineFieldConfig(i: number, guidelineGroupIndex: number, keyOptions: SelectizeOption[]) {
+  getGuidelineFieldConfig(i: number, guidelineGroupIndex: number, keyOptions: any[]) {
     let keyConditionMap: Map<string, number> = new Map<string, number>()
       .set('must have', 1)
       .set('may have', 2)
@@ -144,7 +143,7 @@ export class FieldConfigService {
                           }
                          ];
   }
-  getPrimaryKeyConfigSettings(keyOptions: SelectizeOption[]){
+  getPrimaryKeyConfigSettings(keyOptions: any[]){
     return {  type: 'primary',
             name: 'key',
             validation: [Validators.required],
@@ -159,7 +158,7 @@ export class FieldConfigService {
             }
     };
   }
- getPrimaryValueConfigSettings(valueOptions: SelectizeOption[]){
+ getPrimaryValueConfigSettings(valueOptions: any[]){
   var valConfig = {
               type: 'primary',
               name: 'val',
@@ -206,7 +205,7 @@ export class FieldConfigService {
     return this.disabledFeatureConfig[i].find((control) => control.name === name);
   }
 
-  getDisabledKeyConfig(keyOptions: SelectizeOption[]){
+  getDisabledKeyConfig(keyOptions: any[]){
     return { type: 'selectize',
              name: 'key',
              selectizeConfig: {
@@ -220,7 +219,7 @@ export class FieldConfigService {
              };
   }
 
-  getDisabledValueConfig(valueOptions: SelectizeOption[]){
+  getDisabledValueConfig(valueOptions: any[]){
     return {
       type: 'selectize',
       name: 'val',
@@ -237,7 +236,7 @@ export class FieldConfigService {
     };
   }
 
-  refreshSelectizeOptions(id: string, valueOptions: SelectizeOption[]){
+  refreshSelectizeOptions(id: string, valueOptions: any[]){
     var $select = $(document.getElementById(id));
     if($select[0]){
       var selectize = $select[0].selectize;

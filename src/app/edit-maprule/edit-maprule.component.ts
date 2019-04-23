@@ -150,9 +150,10 @@ export class EditMapRuleComponent implements OnInit {
   }
 
   saveForm(): void {
-    this.maprules.saveForm(this.form.value, this.presetGeometries)
-      .subscribe(data => {
-        this.router.navigateByUrl(`/${data['id']}/start`);
+    this.maprules.save(this.form.value, this.presetGeometries)
+      .subscribe((data: any) => {
+        let configId = data.id || this.route.snapshot.params.id; // data.id when from new, params.id when fromm existing...
+        this.router.navigateByUrl(`/${configId}/start`);
       });
   }
 

@@ -22,7 +22,7 @@ export class StartMapRuleComponent implements OnInit {
       let base = `${environment.maprules}/config/${maprule}`;
       let presets = `${base}/presets/iD`;
       let validations = `${base}/rules/iD`
-      return `${environment.id}&presets=${presets}&validations=${validations}`
+      return `${environment.id}&presets=${presets}&maprules=${validations}`
     },
     JOSM: function (maprule: string) {
       return `${environment.josm}/load_maprules?id=${maprule}`;

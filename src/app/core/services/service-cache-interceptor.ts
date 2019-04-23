@@ -11,7 +11,6 @@ import { Observable, of } from 'rxjs';
 import { OperatorFunction } from 'rxjs';
 
 import { TagInfoService } from './tag-info.service';
-import { SelectizeOption } from '../../shared/interfaces/selectize-option.interface';
 import { environment } from 'src/environments/environment';
 
 // Influenced by the following!
