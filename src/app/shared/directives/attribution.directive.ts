@@ -1,72 +1,72 @@
-import { ComponentFactoryResolver, ComponentRef, Directive, Input, OnChanges, OnInit, Type, ViewContainerRef } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+// import { ComponentFactoryResolver, ComponentRef, Directive, Input, OnChanges, OnInit, Type, ViewContainerRef } from '@angular/core';
+// import { FormGroup } from '@angular/forms';
 
-import { PrimaryGroupSelectizeComponent } from '../components/primary-group-selectize.component';
-import { EntitiesComponent } from '../components/entities.component';
-import { DiscouragedEntitiesComponent } from '../components/discouraged-entities.component';
-import { FormInputComponent } from '../components/form-input.component';
-import { FormButtonComponent } from '../components/form-button.component';
+// import { PrimaryGroupSelectizeComponent } from '../components/primary-group-selectize.component';
+// import { EntitiesComponent } from '../components/entities.component';
+// import { DiscouragedEntitiesComponent } from '../components/discouraged-entities.component';
+// import { FormInputComponent } from '../components/form-input.component';
+// import { FormButtonComponent } from '../components/form-button.component';
 
-import { Field } from '../interfaces/field.interface';
-import { FieldConfig } from '../interfaces/field-config.interface';
-import { FieldConfigService } from '../../core/services/field-config.service'
+// import { Field } from '../interfaces/field.interface';
+// import { FieldConfig } from '../interfaces/field-config.interface';
+// import { FieldConfigService } from '../../core/services/field-config.service'
 
-const components: {[type: string]: Type<Field>} = {
-  primary: PrimaryGroupSelectizeComponent,
-  entities: EntitiesComponent,
-  discouraged: DiscouragedEntitiesComponent,
-  input: FormInputComponent,
-  button: FormButtonComponent
-};
+// const components: {[type: string]: Type<Field>} = {
+//   primary: PrimaryGroupSelectizeComponent,
+//   entities: EntitiesComponent,
+//   discouraged: DiscouragedEntitiesComponent,
+//   input: FormInputComponent,
+//   button: FormButtonComponent
+// };
 
-@Directive({
-  selector: '[attribution]'
-})
-export class AttributionDirective implements Field, OnChanges, OnInit {
-  @Input()
-  field: string;
+// @Directive({
+//   selector: '[attribution]'
+// })
+// export class AttributionDirective implements Field, OnChanges, OnInit {
+//   @Input()
+//   field: string;
 
-  @Input()
-  group: FormGroup;
+//   @Input()
+//   group: FormGroup;
 
-  @Input()
-  nestedGroupIndex: number;
+//   @Input()
+//   nestedGroupIndex: number;
 
-  @Input()
-  nestedArrayIndex: number;
+//   @Input()
+//   nestedArrayIndex: number;
 
-  component: ComponentRef<Field>;
-  config: FieldConfig;
+//   component: ComponentRef<Field>;
+//   config: FieldConfig;
 
-  constructor(
-    private resolver: ComponentFactoryResolver,
-    private container: ViewContainerRef,
-    private fieldConfig: FieldConfigService
-  ) {}
+//   constructor(
+//     private resolver: ComponentFactoryResolver,
+//     private container: ViewContainerRef,
+//     private fieldConfig: FieldConfigService
+//   ) {}
 
-  ngOnChanges() {
-    if (this.component) {
-      this.component.instance.config = this.config;
-      this.component.instance.group = this.group;
-    }
-  }
+//   ngOnChanges() {
+//     if (this.component) {
+//       this.component.instance.config = this.config;
+//       this.component.instance.group = this.group;
+//     }
+//   }
 
-  ngOnInit() {
-    setTimeout(() => {
-      this.config = this.fieldConfig.getFieldConfig(this.field);
-      if (!components[this.config.type]) {
-        const supportedTypes = Object.keys(components).join(', ');
-        throw new Error(
-          `Trying to use an unsupported type (${this.config.type}).
-          Supported types: ${supportedTypes}`
-        );
-      }
-      const component = this.resolver.resolveComponentFactory<Field>(components[this.config.type]);
-      this.component = this.container.createComponent(component);
-      this.component.instance.config = this.config;
-      this.component.instance.group = this.group;
-      this.component.instance.nestedGroupIndex = this.nestedGroupIndex;
-      this.component.instance.nestedArrayIndex = this.nestedArrayIndex;
-    });
-  }
-}
+//   ngOnInit() {
+//     setTimeout(() => {
+//       this.config = this.fieldConfig.getFieldConfig(this.field);
+//       if (!components[this.config.type]) {
+//         const supportedTypes = Object.keys(components).join(', ');
+//         throw new Error(
+//           `Trying to use an unsupported type (${this.config.type}).
+//           Supported types: ${supportedTypes}`
+//         );
+//       }
+//       const component = this.resolver.resolveComponentFactory<Field>(components[this.config.type]);
+//       this.component = this.container.createComponent(component);
+//       this.component.instance.config = this.config;
+//       this.component.instance.group = this.group;
+//       this.component.instance.nestedGroupIndex = this.nestedGroupIndex;
+//       this.component.instance.nestedArrayIndex = this.nestedArrayIndex;
+//     });
+//   }
+// }

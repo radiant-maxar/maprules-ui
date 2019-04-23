@@ -5,18 +5,16 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { EditMapRuleModule } from './modules/edit-maprule.module';
-import { NavigationBarComponent } from './shared/components/navigation-bar.component';
+import { NavigationBarComponent } from './shared/components/navigation-bar/navigation-bar.component';
 import { EditMapRuleComponent } from './edit-maprule/edit-maprule.component';
 import { ViewMapRuleComponent } from './view-maprule/view-maprule.component';
-import { MainComponent } from './modules/main/main.component';
+import { MainComponent } from './main/main.component';
 import { NgSelectizeModule } from 'ng-selectize';
 import { AppComponent } from './app.component';
 import { NodeComponent } from './icons/node/node.component';
 import { WayComponent } from './icons/way/way.component';
 import { AreaComponent } from './icons/area/area.component';
 import { LinkComponent } from './shared/components/link/link.component';
-import { TagsComponent } from './shared/components/tags/tags.component';
-import { ValTooltipComponent } from './shared/components/val-tooltip/val-tooltip.component';
 import { DecodeConditionPipe } from './decode-condition.pipe';
 import { EncodeClassPipe } from './encode-class.pipe';
 import { ComboboxModule } from './modules/combobox.module';
@@ -46,8 +44,6 @@ const appRoutes: Routes = [
     WayComponent,
     AreaComponent,
     LinkComponent,
-    TagsComponent,
-    ValTooltipComponent,
     DecodeConditionPipe,
     EncodeClassPipe,
     ViewDisabledFeatureComponent,
