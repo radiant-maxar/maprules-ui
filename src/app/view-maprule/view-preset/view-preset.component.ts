@@ -32,7 +32,9 @@ export class ViewPresetComponent implements OnInit {
   }
 
   tagValuesCondition(tagValues: any[], condition: number) {
-    return tagValues.length ? tagValues[0].valCondition === condition : condition === 1; // if no values specified, render as 'may be'
+    return tagValues.length
+      ? FieldConfigService.KEY_CONDITIONS.indexOf(tagValues[0].valCondition) === condition
+      : condition === 2; // if no values specified, render as 'may be'
   }
 
   private keyCondition(condition: number): String {
@@ -40,14 +42,7 @@ export class ViewPresetComponent implements OnInit {
   }
 
   private valCondition(values: any): String {
-    let condition;
-    if (values.length) {
-      condition = values.length ? values[0].valCondition : 0
-    } else {
-      condition = 1;
-    }
-
-    return FieldConfigService.VAL_CONDITIONS[condition];
+    return values.length ? values[0].valCondition : 'may be';
   }
 
   private tagValues(tagValues: any[]) {

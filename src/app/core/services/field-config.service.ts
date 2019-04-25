@@ -10,15 +10,15 @@ declare var $: any;
 
 export class FieldConfigService {
   static KEY_CONDITIONS: String[] = [
+    'must not have',
     'must have',
-    'may have',
-    'should not have'
+    'may have'
   ];
 
   static VAL_CONDITIONS: String[] = [
+    'must not be',
     'must be',
     'may be',
-    'must not be',
     '<', '<=',
     '>', '>='
   ]

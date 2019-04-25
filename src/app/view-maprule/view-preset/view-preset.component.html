@@ -53,12 +53,12 @@
             <div class="wrapper text-2">
               <div class="text view-text-row">
                 <div class="combo-card">
-                  {{ primary.key.split(' - ')[0] }}
+                  {{ primary.key }}
                 </div>
               </div>
               <div class="text view-text-row">
                 <div class="combo-card">
-                  {{ primary.val.split('-')[0] }}
+                  {{ primary.val }}
                 </div>
               </div>
             </div>
@@ -66,7 +66,7 @@
         </div>
       </div>
     </div>
-    <div class="content-group" *ngIf="tagCondition(preset.fields, 0).length">
+    <div class="content-group" *ngIf="tagCondition(preset.fields, 1).length">
         <div class="feature-header">
           <label class="content-label">
             <h5>Required Tags</h5>
@@ -88,7 +88,7 @@
                 </div>
               </div>
             </div>
-            <div class="table-row" *ngFor="let requiredTag of tagCondition(preset.fields, 0)">
+            <div class="table-row" *ngFor="let requiredTag of tagCondition(preset.fields, 1)">
               <div class="wrapper text-4 view-4">
                 <div class="wrapper text-2">
                   <div class="text view-text-row">
@@ -98,7 +98,7 @@
                   </div>
                   <div class="text view-text-row">
                     <div class="combo-card">
-                      {{ requiredTag.key.split(' - ')[0] }}
+                      {{ requiredTag.key }}
                     </div>
                   </div>
                 </div>
@@ -107,9 +107,9 @@
                 <div class="wrapper text-2">
                   <div class="text view-text-row">
                     <div class="combo-card"[ngClass]="{
-                        'view-must': tagValuesCondition(requiredTag.values, 0),
-                        'view-may': tagValuesCondition(requiredTag.values, 1),
-                        'view-must-not': tagValuesCondition(requiredTag.values, 2)
+                        'view-must-not': tagValuesCondition(requiredTag.values, 0),
+                        'view-must': tagValuesCondition(requiredTag.values, 1),
+                        'view-may': tagValuesCondition(requiredTag.values, 2)
                       }">
                       {{ valCondition(requiredTag.values) }}
                     </div>
@@ -129,7 +129,7 @@
           </div>
         </div>
     </div>
-    <div class="content-group" *ngIf="tagCondition(preset.fields, 1).length">
+    <div class="content-group" *ngIf="tagCondition(preset.fields, 2).length">
       <div class="feature-header">
         <label class="content-label">
           <h5>Suggested Tags</h5>
@@ -151,7 +151,7 @@
               </div>
             </div>
           </div>
-          <div class="table-row" *ngFor="let suggestedTag of tagCondition(preset.fields, 1)">
+          <div class="table-row" *ngFor="let suggestedTag of tagCondition(preset.fields, 2)">
             <div class="wrapper text-4 view-4">
               <div class="wrapper text-2">
                 <div class="text view-text-row">
@@ -161,7 +161,7 @@
                 </div>
                 <div class="text view-text-row">
                   <div class="combo-card">
-                    {{ suggestedTag.key.split(' - ')[0] }}
+                    {{ suggestedTag.key }}
                   </div>
                 </div>
               </div>
@@ -170,9 +170,9 @@
               <div class="wrapper text-2">
                 <div class="text view-text-row">
                   <div class="combo-card"[ngClass]="{
-                      'view-must': tagValuesCondition(suggestedTag.values, 0),
-                      'view-may': tagValuesCondition(suggestedTag.values, 1),
-                      'view-must-not': tagValuesCondition(suggestedTag.values, 2)
+                      'view-must-not': tagValuesCondition(suggestedTag.values, 0),
+                      'view-must': tagValuesCondition(suggestedTag.values, 1),
+                      'view-may': tagValuesCondition(suggestedTag.values, 2)
                     }">
                     {{ valCondition(suggestedTag.values) }}
                   </div>
@@ -182,7 +182,7 @@
                     <div
                       *ngFor="let value of tagValues(suggestedTag.values)"
                       class="combo-card">
-                      <div class="combo-card-label wrap-text">{{ value.split(' - ')[0] }}</div>
+                      <div class="combo-card-label wrap-text">{{ value }}</div>
                     </div>
                   </div>
                 </div>
@@ -192,7 +192,7 @@
         </div>
       </div>
     </div>
-    <div class="content-group" *ngIf="tagCondition(preset.fields, 2).length">
+    <div class="content-group" *ngIf="tagCondition(preset.fields, 0).length">
       <div class="feature-header">
         <label class="content-label">
           <h5>Disallowed Tags</h5>
@@ -213,13 +213,13 @@
               <div class="wrapper text-2">
                 <div class="text view-text-row">
                   <div class="combo-card view-must-not">
-                    should not have
+                    must not have
                   </div>
                 </div>
                 <div class="text view-text-row">
                   <div class="combo-cards-container view-cards-container">
-                    <div class="combo-card" *ngFor="let disallowedTag of tagCondition(preset.fields, 2)">
-                      {{ disallowedTag.key.split(' - ')[0] }}
+                    <div class="combo-card" *ngFor="let disallowedTag of tagCondition(preset.fields, 0)">
+                      {{ disallowedTag.key }}
                     </div>
                   </div>
                 </div>

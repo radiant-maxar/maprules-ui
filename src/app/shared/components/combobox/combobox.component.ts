@@ -306,7 +306,7 @@ export class ComboboxComponent implements OnInit, AfterViewInit, ControlValueAcc
   }
 
   conditionChanged(val): void {
-    let shouldDisable = FieldConfigService.KEY_CONDITIONS.indexOf(val) === 2;
+    let shouldDisable = FieldConfigService.KEY_CONDITIONS.indexOf(val) === 0;
     this.fieldConfig.emitter.emit({
       name: this.getPartnerEvent('fieldVal', false),
       type: 'condition',
