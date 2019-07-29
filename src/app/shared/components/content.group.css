@@ -2,9 +2,6 @@
     width: 100vw;
     height: 94vh;
     padding-top: 20px;
-    display: flex;
-    flex-direction: column;
-    flex: 1;
     margin: auto;
 }
 
