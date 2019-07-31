@@ -46,7 +46,7 @@ const appRoutes: Routes = [
     LinkComponent,
     DecodeConditionPipe,
     EncodeClassPipe,
-    ViewDisabledFeatureComponent,
+    ViewDisabledFeatureComponent
   ],
   imports: [
     BrowserModule,
