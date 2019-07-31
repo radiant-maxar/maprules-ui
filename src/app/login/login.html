@@ -9,61 +9,16 @@
   <link rel="icon" type="image/x-icon" href="favicon.png">
 </head>
 <body>
+<script src="auth.js"></script>
 <script>
-
+    let auth = new Auth();
     //first time we go hear, we will not have these in our location object
     //so, it will see if the user is authorized (has a session jwt) in the else block.
-    if (Auth.haveParameters('oauth_verifier', 'oauth_token')) {
-        Auth.verify()
-            .then(function(user) {
-                if (window.opener) {
-                    window.onbeforeunload = function () {
-                        window.opener.osmCallback(null, user)
-                    }
-                    let pathname = window.opener.location.pathname;
-                    window.location.replace(pathname.substr(0, pathname.lastIndexOf('/') + 1));
-                    window.close();
-                } else {
-                    localStorage.setItem('user', JSON.stringify(user));
-                    let pathname = window.location.pathname;
-                    window.location.replace(pathname.substr(0, pathname.lastIndexOf('/') + 1));
-                }
-            })
-            .catch(function(err) {
-                if (window.opener) {
-                    window.onbeforeunload = function () {
-                        window.opener.osmCallback(err, null)
-                    };
-                    window.close();
-                } else {
-                    window.alert('Failed to complete oauth handshake!')
-                    window.history.pushState({}, document.title, window.location.pathname);
-                }
-            })
+    if (auth.haveParameters('oauth_verifier', 'oauth_token')) {
+        console.log('GOING TO VERIFY')
+        auth.verify()
     } else {
-        Auth.authorized()
-            .then(function() { // received 401, need to login
-                return auth.login()
-            })
-            .then(function(loginPage) { // login page to login into maprules.
-                window.open(loginPage, 'osmLogin',
-                    'width=500,height=800,toolbar=no,status=no,menubar=no');
-
-                window.osmCallback = function(error, user) {
-                    if (error) {
-                        window.console.warn( 'Failed to verify oauth tokens w/ provider:' );
-                        window.console.warn( 'XMLHttpRequest.status', error.status || null );
-                        window.console.warn( 'XMLHttpRequest.responseText ', error.responseText || null );
-
-                        window.alert( 'Failed to complete oauth handshake. Check console for details & retry.' );
-                        window.history.pushState( {}, document.title, window.location.pathname );
-                    } else {
-                        if (localStorage) {
-                            localStorage.setItem('user', JSON.stringify(user))
-                        }
-                    }
-                }
-            })
+        auth.authorized()
     }
 </script>
 </body>

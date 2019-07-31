@@ -1,24 +1,24 @@
-import { environment } from '../../environments/environment';
-// import { fromFetch } from 'rxjs/fetch';
-// import { tap, switchMap } from 'rxjs/operators';
-
-export default class Auth {
+var environment = {
+    maprules: 'http://localhost:3001'
+}
+class Auth {
     constructor() {}
 
-    static authorized() {
-        return fetch(`${environment.maprules}/auth/session`, { credentials: 'include' })
-            .then((response) => {
-                if (response.status === 200) {
+    authorized() {
+        // var options = /
+        return fetch(`${environment.maprules}/auth/session`)
+            .then((resp) => {
+                if (resp.status === 200) {
                     location.replace('/')
-                } else if (response.status == 401) {
-                    return;
+                } else if (resp.status === 401) {
+                    return this.login();
                 } else {
-                    throw new Error()
+                    throw Error();
                 }
             })
     }
 
-    static login() {
+    login() {
         return fetch(`${environment.maprules}/auth/login`)
             .then(function(response) {
                 if (response.status === 200) {
@@ -27,16 +27,35 @@ export default class Auth {
                     throw Error({ status: response.status })
                 }
             })
+            .then(function(loginPage) { // login page to login into maprules.
+                window.open(loginPage, 'osmLogin',
+                    'width=500,height=800,toolbar=no,status=no,menubar=no');
+
+                window.osmCallback = function(error, user) {
+                    if (error) {
+                        window.console.warn( 'Failed to verify oauth tokens w/ provider:' );
+                        window.console.warn( 'XMLHttpRequest.status', error.status || null );
+                        window.console.warn( 'XMLHttpRequest.responseText ', error.responseText || null );
+
+                        window.alert( 'Failed to complete oauth handshake. Check console for details & retry.' );
+                        window.history.pushState( {}, document.title, window.location.pathname );
+                    } else {
+                        if (localStorage) {
+                            localStorage.setItem('user', JSON.stringify(user))
+                        }
+                    }
+                }
+            })
             .catch(function (error) {
                 throw error;
             })
     }
 
-    static haveParameter(...params) {
-        return Auth.getParameters(...params).length === params.length;
+    haveParameters(...params) {
+        return this.getParameters(...params).length === params.length;
     }
 
-    static getParameters(...params) {
+    getParameters(...params) {
         var results = [], tmp = [];
         params.forEach(function(parameterName) {
             location.search.substr(1).split('&').forEach(function (item) {
@@ -49,16 +68,58 @@ export default class Auth {
         return results;
     }
 
-    static verify() {
+    verify() {
         const [
             oauth_token,
             oauth_verifier
-        ] = Auth.getParameters('oauth_token', 'oauth_verifier');
+        ] = this.getParameters('oauth_token', 'oauth_verifier');
 
-        return fetch(`${environment.maprules}/auth/verify?oauth_token=${oauth_token}&oauth_verifier=${oauth_verifier}`)
+        const options = {
+            credentials: 'include',
+            mode: 'cors',
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        };
+        return fetch(`${environment.maprules}/auth/verify?oauth_token=${oauth_token}&oauth_verifier=${oauth_verifier}`, options)
             .then(function (resp) {
                 if (resp.status !== 200) throw new Error();
                 return resp.json()
             })
+            .then( function(resp) {
+                if ( opener ) {
+                    window.onbeforeunload = function() {
+                        opener.osmCallback( null, resp );
+                    };
+
+                    let pathname = opener.location.pathname;
+
+                    // redirect parent
+                    opener.location.replace( pathname.substr( 0, pathname.lastIndexOf( '/' ) + 1 ) );
+
+                    // close self
+                    window.close();
+                } else {
+                    localStorage.setItem( 'user', JSON.stringify( resp ) );
+
+                    let pathname = window.location.pathname;
+
+                    window.location.replace( pathname.substr( 0, pathname.lastIndexOf( '/' ) + 1 ) );
+                }
+            } )
+            .catch( function(err) {
+                if ( opener ) {
+                    window.onbeforeunload = function() {
+                        opener.osmCallback( err, null );
+                    };
+
+                    self.close();
+                } else {
+                    window.alert( 'Failed to complete oauth handshake. Check console for details & retry.' );
+                    // clear oauth params.
+                    window.history.pushState( {}, document.title, window.location.pathname );
+                }
+            } );
     }
 }
