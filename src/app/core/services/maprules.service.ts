@@ -57,15 +57,29 @@ export class MapRulesService {
   }
 
   saveNewConfig(scrubbedForm: {[name: string]: any}) {
-    return this.http
-      .post(this.mapRulesUrl, scrubbedForm, this.sessionOptions(true))
-      .pipe(catchError(this.handleError))
+    let options: RequestInit = {
+        credentials: 'include',
+        mode: 'cors',
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(scrubbedForm)
+     }
+
+      return from(fetch(this.mapRulesUrl, options))
+        .pipe(catchError(this.handleError))
   }
 
   updateConfig(scrubbedForm: {[name: string]: any}, configId: any) {
-    return this.http
-      .put(this.mapRulesUrl + '/' + configId, scrubbedForm, this.sessionOptions(true))
-      .pipe(catchError(this.handleError))
+      let options: RequestInit = {
+          credentials: 'include',
+          mode: 'cors',
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(scrubbedForm)
+       }
+
+       return from(fetch(this.mapRulesUrl + '/' + configId, options))
+          .pipe(catchError(this.handleError))
   }
 
   serialize(config: any, presetGeometries: any[]): any {
@@ -115,18 +129,11 @@ export class MapRulesService {
       const options: RequestInit = {
           credentials: 'include',
           mode: 'cors',
-          method: 'GET'
+          method: 'POST'
 
       }
-      let logoutPromise = fetch(this.maprules + '/auth/logout', options)
-      return from(logoutPromise).subscribe(
-          (resp: any) => {
-              if (resp.status === 200) this.clearUser()
-          },
-          (err: any) => {
-              console.log(err);
-          }
-      )
+
+      return from(fetch(this.maprules + '/auth/logout', options))
   }
 
   private handleError(error: HttpErrorResponse) {

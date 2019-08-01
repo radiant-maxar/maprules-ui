@@ -28,6 +28,10 @@ export class AppComponent implements OnInit {
     fetch(`${environment.maprules}/auth/session`, options) // see if valid session.
         .then(resp => {
             if (resp.status === 200) {
+                this.nav.emitter.emit({
+                    type: 'authenticated',
+                    value: true
+                })
                 return localStorage.getItem('user'); // if so, try to get user
             } else if (resp.status === 401) {
                 window.location.replace('/login.html'); // otherwise (if unauthorized) login again
@@ -39,7 +43,10 @@ export class AppComponent implements OnInit {
         .then(user => {
             if (user) { // if we have the user, set the user and be done
                 this.maprules.setUser(JSON.parse(user));
-                this.nav.setUserDetails(this.maprules.getUser());
+                this.nav.emitter.emit({
+                    type: 'userDetails',
+                    value: this.maprules.getUser()
+                });
             } else { // or, ask for session's user details.
                 const options: RequestInit = {
                     credentials: 'include',
@@ -62,7 +69,10 @@ export class AppComponent implements OnInit {
                     .then(user => {
                         if (user) {
                             this.maprules.setUser(user); // set the user if we have it.
-                            this.nav.setUserDetails(this.maprules.getUser());
+                            this.nav.emitter.emit({
+                                type: 'userDetails',
+                                value: this.maprules.getUser()
+                            });
                         } else {
                             throw Error('unable to talk to MapRules service'); // otherwise, for now, just say can't reach service
                         }
