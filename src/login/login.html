@@ -15,7 +15,6 @@
     //first time we go hear, we will not have these in our location object
     //so, it will see if the user is authorized (has a session jwt) in the else block.
     if (auth.haveParameters('oauth_verifier', 'oauth_token')) {
-        console.log('GOING TO VERIFY')
         auth.verify()
     } else {
         auth.authorized()

@@ -24,7 +24,7 @@ class Auth {
                 if (response.status === 200) {
                     return response.text();
                 } else {
-                    throw Error({ status: response.status })
+                    throw new Error('Unable to login to MapRules');
                 }
             })
             .then(function(loginPage) { // login page to login into maprules.

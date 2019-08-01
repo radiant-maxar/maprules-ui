@@ -1,6 +1,6 @@
-<div class="preset-container" [formGroup]="editMapRule.form">
+<div class="preset-container" [formGroup]="getForm()">
   <div formArrayName="presets">
-    <ng-container *ngFor="let preset of editMapRule.form.controls.presets.controls; let presetIndex=index">
+    <ng-container *ngFor="let preset of getPresets(); let presetIndex=index">
       <div class="preset-card" [formGroupName]="presetIndex">
         <div class="preset-card-header preset-card-panel-header-hidden">
           <input

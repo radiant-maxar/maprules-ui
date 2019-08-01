@@ -13,7 +13,8 @@ import { Component, OnInit, Input, ElementRef, ViewChild } from '@angular/core';
 export class ViewDisabledFeatureComponent implements OnInit {
   @ViewChild('viewDisabledFeature') viewDisabledFeature: ElementRef;
 
-  private _disabledFeatures: any[];
+  _disabledFeatures: any[];
+
   @Input() set disabledFeatures(disabledFeatures: any[]) {
     this._disabledFeatures = disabledFeatures;
   }
@@ -22,7 +23,7 @@ export class ViewDisabledFeatureComponent implements OnInit {
 
   ngOnInit() { }
 
-  private showDisabledFeaturePanel() {
+  showDisabledFeaturePanel() {
     let viewDisabledFeatureHeader = this.viewDisabledFeature.nativeElement.querySelector('.preset-card-header');
     let viewDisabledFeatureIcon = viewDisabledFeatureHeader.querySelector('#show-preset-button i');
     let viewDisabledFeaturePanel = this.viewDisabledFeature.nativeElement.querySelector('.preset-card-panel');

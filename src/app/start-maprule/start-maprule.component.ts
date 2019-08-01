@@ -15,7 +15,7 @@ import { environment } from 'src/environments/environment';
   ]
 })
 export class StartMapRuleComponent implements OnInit {
-  private maprule: any;
+  maprule: any;
 
   private urlMaker: any = {
     iD: function (maprule: string) {

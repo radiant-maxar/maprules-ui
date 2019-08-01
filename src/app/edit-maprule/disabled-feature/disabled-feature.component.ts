@@ -39,6 +39,10 @@ export class DisabledFeatureComponent {
     )
   }
 
+  getForm(): FormGroup {
+      return this.editMapRule.form;
+  }
+
   disabledFeaturesFormArray(): FormArray {
     return this.editMapRule.disabledFeatures as FormArray;
   }

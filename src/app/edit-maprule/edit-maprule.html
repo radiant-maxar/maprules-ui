@@ -42,7 +42,7 @@
     </div>
     <div class="content-row submit-row">
       <div class="content-group-container submit-container">
-        <ng-container *ngIf="nav.visible">
+        <ng-container *ngIf="getNav().visible">
           <button type="submit" class="btn feature-button features-button feature-button-round features-button"
           (click)="saveForm()">Submit</button>
         </ng-container>

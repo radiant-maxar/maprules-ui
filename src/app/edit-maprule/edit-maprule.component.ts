@@ -85,6 +85,8 @@ export class EditMapRuleComponent implements OnInit {
     this.clickHandler();
   }
 
+  getNav(): NavigationService { return this.nav; }
+
   /**
    * Creates Form Group for preset.
    * @param preset {any} Preset in maprules config presets array

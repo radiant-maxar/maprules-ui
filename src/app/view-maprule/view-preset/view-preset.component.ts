@@ -13,7 +13,7 @@ import { FieldConfigService } from 'src/app/core/services/field-config.service';
   ]
 })
 export class ViewPresetComponent implements OnInit {
-  private _presets: any[];
+  _presets: any[];
   @Input() set presets(presets: any[]) {
     this._presets = presets;
   }

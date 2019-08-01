@@ -30,16 +30,16 @@ export enum KEY_CODE {
   ]
 })
 export class ComboboxComponent implements OnInit, AfterViewInit, ControlValueAccessor {
-  private _formControl: FormControl;
-  private _formControlName: string;
+  _formControl: FormControl;
+  _formControlName: string;
 
-  private _comboIndex: string;
+  _comboIndex: string;
   @Input() set comboIndex(comboIndex: string) {
     this._comboIndex = comboIndex;
   }
 
-  private comboValues: string[] = [];
-  private _maxElements: number = Infinity;
+  comboValues: string[] = [];
+  _maxElements: number = Infinity;
 
   @Input() set maxElements(maxElements: number) {
     this._maxElements = !maxElements ? Infinity: maxElements;
@@ -47,10 +47,10 @@ export class ComboboxComponent implements OnInit, AfterViewInit, ControlValueAcc
 
   private dataList: any[] = [];
   private dummyDataList: any[] = [];
-  private showDropDown: boolean = false;
   private counter: number;
-  private sortText: string = '';
-  private _disabled: boolean = false;
+  showDropDown: boolean = false;
+  sortText: string = '';
+  _disabled: boolean = false;
 
   @ViewChild("comboInput") comboInput: ElementRef;
   @ViewChild("comboDataContainer") comboDataContainer: ElementRef;
@@ -62,7 +62,7 @@ export class ComboboxComponent implements OnInit, AfterViewInit, ControlValueAcc
     }
   }
 
-  onFocusEventAction(): void {
+  onFocusEventAction(event: any): void {
     this.counter = -1;
   }
 

@@ -8,7 +8,7 @@
       </div>
     </div>
     <div class="preset-card-panel preset-card-panel-hidden">
-      <div [formGroup]="editMapRule.form" class="content-group disabled-feature-panel">
+      <div [formGroup]="getForm()" class="content-group disabled-feature-panel">
           <div class="table-container disabled-feature-table-container"
             formArrayName="disabledFeatures"
             *ngIf="disabledFeaturesFormArray().length > 0">

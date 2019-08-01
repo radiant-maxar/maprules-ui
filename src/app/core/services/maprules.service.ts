@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { HttpHeaders, HttpErrorResponse } from '@angular/common/http';
-import { Observable, throwError, of } from 'rxjs';
+import { Observable, throwError, of, from } from 'rxjs';
 import { catchError, retry, tap, map } from 'rxjs/operators';
 import { environment } from '../../../environments/environment'
 import { Router } from '@angular/router';
@@ -31,19 +31,6 @@ export class MapRulesService {
     private router: Router
   ) {
     this.setMapRulesUrl();
-  }
-
-
-  private sessionOptions(post: boolean = false): any {
-    let sessionHeaders = new HttpHeaders({
-      'Authorization': `Bearer ${this.sessionToken}`
-    })
-
-    if (post) sessionHeaders['Content-Type'] = 'application/json';
-
-    return {
-      headers: sessionHeaders
-    }
   }
 
   setMapRulesUrl(){
@@ -124,6 +111,24 @@ export class MapRulesService {
       )
   }
 
+  logout() {
+      const options: RequestInit = {
+          credentials: 'include',
+          mode: 'cors',
+          method: 'GET'
+
+      }
+      let logoutPromise = fetch(this.maprules + '/auth/logout', options)
+      return from(logoutPromise).subscribe(
+          (resp: any) => {
+              if (resp.status === 200) this.clearUser()
+          },
+          (err: any) => {
+              console.log(err);
+          }
+      )
+  }
+
   private handleError(error: HttpErrorResponse) {
     console.error(
       `MapRules ERROR ${error.status}, ` +
@@ -144,75 +149,16 @@ export class MapRulesService {
       }
   }
 
-  // authorized() {
-  //   return this.http.get(this.maprules + "/auth/session", this.sessionOptions())
-  //     .pipe(
-  //       map((res: any) => {
-  //         this.sessionToken = res.data;
-  //       }),
-  //       catchError(this.handleError)
-  //     )
-  // }
+  public setUser(user: any) {
+      this.user = user;
+  }
 
-  // authorizedUser(): boolean {
-  //   return !!this.sessionToken;
-  // }
+  public clearUser() {
+      this.user = null;
+  }
 
-  // getUser() {
-  //   return this.http.get(this.mapRulesUrl + '/auth/user')
-  //     .pipe(catchError(this.handleError));
-  // }
-
-  // login() {
-  //   // create id that will track browser origin.
-  //   this.http.get(this.maprules + '/auth/login', {
-  //     responseType: 'text'
-  //   })
-  //     .pipe( catchError(this.handleError))
-  //     .subscribe(
-  //       (cbUrl: any) => {
-  //         let popup = window.open(cbUrl, 'osmLogin', 'height=750,width=400');
-  //         (window as any).osmCallback = function (error, user) {
-  //           if (error) {
-  //             window.console.warn( 'Failed to verify oauth tokens w/ provider:' );
-  //             window.console.warn( 'XMLHttpRequest.status', error.status || null );
-  //             window.console.warn( 'XMLHttpRequest.responseText ', error.responseText || null );
-
-  //             window.alert( 'Failed to complete oauth handshake. Check console for details & retry.' );
-  //             window.history.pushState( {}, document.title, window.location.pathname );
-  //           } else {
-  //             if (localStorage) {
-  //               localStorage.setItem('user', JSON.stringify(user))
-  //             }
-  //           }
-  //         }
-  //       }
-  //     );
-  // }
-
-  // verify() {
-  //   const [oauth_token, oauth_verifier] = this.getParams('oauth_token', 'oauth_verifier');
-  //   return this.http
-  //     .get(`${this.maprules}/auth/verify?oauth_token=${oauth_token}&oauth_verifier=${oauth_verifier}`)
-  //     .pipe(catchError(this.handleError))
-  // }
-
-  // haveParams(...params) {
-  //   return this.getParams(...params).length === params.length;
-  // }
-
-  // getParams(...params) {
-  //   var results = [], tmp = [];
-  //   params.forEach(parameterName => {
-  //     location.search
-  //       .substr(1)
-  //       .split('&')
-  //       .forEach(function (item) {
-  //         tmp = item.split('=');
-  //         if (tmp[0] === parameterName) results.push(decodeURIComponent(tmp[1]));
-  //       });
-  //   });
-  //   return results;
-  // }
+  public getUser(): any {
+      return this.user;
+  }
 
 }
