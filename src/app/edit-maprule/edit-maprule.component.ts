@@ -153,9 +153,13 @@ export class EditMapRuleComponent implements OnInit {
 
   saveForm(): void {
     this.maprules.save(this.form.value, this.presetGeometries)
-      .subscribe((data: any) => {
-        let configId = data.id || this.route.snapshot.params.id; // data.id when from new, params.id when fromm existing...
-        this.router.navigateByUrl(`/${configId}/start`);
+      .subscribe((resp: any) => {
+        if (resp.error) {
+            location.replace('/login.html');
+        } else {
+            let configId = resp.id || this.route.snapshot.params.id; // data.id when from new, params.id when fromm existing...
+            this.router.navigateByUrl(`/${configId}/start`);
+        }
       });
   }
 

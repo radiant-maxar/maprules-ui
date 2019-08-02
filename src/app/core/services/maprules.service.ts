@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError, of, from } from 'rxjs';
-import { catchError, retry, tap, map } from 'rxjs/operators';
+import { catchError, retry, tap, map, switchMap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment'
 import { Router } from '@angular/router';
 import { FieldConfigService } from './field-config.service';
@@ -61,25 +61,50 @@ export class MapRulesService {
         credentials: 'include',
         mode: 'cors',
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+            'Content-Type': 'application/json'
+        },
         body: JSON.stringify(scrubbedForm)
-     }
-
-      return from(fetch(this.mapRulesUrl, options))
-        .pipe(catchError(this.handleError))
+    }
+     return from(fetch(this.mapRulesUrl, options))
+       .pipe(
+           switchMap((resp: any) => {
+               if (resp.ok) {
+                   return resp.json()
+               } else {
+                   return of({
+                     error: true,
+                     message: `Error ${resp.status}`
+                   });
+               }
+           }),
+           catchError(this.handleError)
+       )
   }
 
   updateConfig(scrubbedForm: {[name: string]: any}, configId: any) {
       let options: RequestInit = {
           credentials: 'include',
           mode: 'cors',
-          method: 'POST',
+          method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(scrubbedForm)
        }
 
        return from(fetch(this.mapRulesUrl + '/' + configId, options))
-          .pipe(catchError(this.handleError))
+          .pipe(
+              switchMap((resp: any) => {
+                  if (resp.ok) {
+                      return resp.json()
+                  } else {
+                      return of({
+                        error: true,
+                        message: `Error ${resp.status}`
+                      });
+                  }
+              }),
+              catchError(this.handleError)
+          )
   }
 
   serialize(config: any, presetGeometries: any[]): any {
