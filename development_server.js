@@ -24,7 +24,7 @@ gaze([
     })
 })
 gaze([
-    'src/app/login/**/*.{js,html}'
+    'src/login/**/*.{js,html}'
 ], function(err, watcher) {
     watcher.on('all', function() {
         updateLogin();

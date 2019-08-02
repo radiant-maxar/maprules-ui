@@ -5,7 +5,6 @@ class Auth {
     constructor() {}
 
     authorized() {
-        // var options = /
         return fetch(`${environment.maprules}/auth/session`)
             .then((resp) => {
                 if (resp.status === 200) {
@@ -28,23 +27,7 @@ class Auth {
                 }
             })
             .then(function(loginPage) { // login page to login into maprules.
-                window.open(loginPage, 'osmLogin',
-                    'width=500,height=800,toolbar=no,status=no,menubar=no');
-
-                window.osmCallback = function(error, user) {
-                    if (error) {
-                        window.console.warn( 'Failed to verify oauth tokens w/ provider:' );
-                        window.console.warn( 'XMLHttpRequest.status', error.status || null );
-                        window.console.warn( 'XMLHttpRequest.responseText ', error.responseText || null );
-
-                        window.alert( 'Failed to complete oauth handshake. Check console for details & retry.' );
-                        window.history.pushState( {}, document.title, window.location.pathname );
-                    } else {
-                        if (localStorage) {
-                            localStorage.setItem('user', JSON.stringify(user))
-                        }
-                    }
-                }
+                location.replace(loginPage);
             })
             .catch(function (error) {
                 throw error;
@@ -88,38 +71,14 @@ class Auth {
                 return resp.json()
             })
             .then( function(resp) {
-                if ( opener ) {
-                    window.onbeforeunload = function() {
-                        opener.osmCallback( null, resp );
-                    };
-
-                    let pathname = opener.location.pathname;
-
-                    // redirect parent
-                    opener.location.replace( pathname.substr( 0, pathname.lastIndexOf( '/' ) + 1 ) );
-
-                    // close self
-                    window.close();
-                } else {
-                    localStorage.setItem( 'user', JSON.stringify( resp ) );
-
-                    let pathname = window.location.pathname;
-
-                    window.location.replace( pathname.substr( 0, pathname.lastIndexOf( '/' ) + 1 ) );
-                }
+                localStorage.setItem( 'user', JSON.stringify( resp ) );
+                let pathname = window.location.pathname;
+                location.replace( pathname.substr( 0, pathname.lastIndexOf( '/' ) + 1 ) );
             } )
             .catch( function(err) {
-                if ( opener ) {
-                    window.onbeforeunload = function() {
-                        opener.osmCallback( err, null );
-                    };
-
-                    self.close();
-                } else {
-                    window.alert( 'Failed to complete oauth handshake. Check console for details & retry.' );
-                    // clear oauth params.
-                    window.history.pushState( {}, document.title, window.location.pathname );
-                }
+                window.alert( 'Failed to complete oauth handshake. Check console for details & retry.' );
+                // clear oauth params.
+                window.history.pushState( {}, document.title, window.location.pathname );
             } );
     }
 }
