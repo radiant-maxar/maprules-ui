@@ -3,12 +3,13 @@ const shell = require('shelljs');
 const http = require('http');
 const serveStatic = require('serve-static');
 const finalhandler = require('finalhandler')
+const request = require('request');
 const port = process.env.PORT || 4200
 
-function buildApp() {
+function buildApp() { // gets run anytime the angular code changes
     shell.exec('ng build');
 }
-function updateLogin() {
+function updateLogin() { // gets run anytime the login code or angular code changes.
     shell.exec('cp src/login/* dist');
 }
 
@@ -17,10 +18,10 @@ gaze([
     'src/**/*.{ts,css,html,json,}'
 ], function(err, watcher) {
     watcher.on('all', function() {
-        console.log('rebuilding source...')
+        console.log('\nrebuilding source...\n')
         buildApp();
         updateLogin();
-        console.log('source rebuilt!')
+        console.log('\nsource rebuilt!\n')
     })
 })
 gaze([
@@ -28,7 +29,7 @@ gaze([
 ], function(err, watcher) {
     watcher.on('all', function() {
         updateLogin();
-        console.log('login page copied!')
+        console.log('\nlogin page copied!\n')
     })
 })
 
