@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NavigationService } from '../../../core/services/navigation.service';
 import { MapRulesService } from '../../../core/services/maprules.service'
 import { environment } from '../../../../environments/environment';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-navbar',
@@ -48,7 +49,11 @@ export class NavigationBarComponent {
   authenticated: boolean = false;
   showMenu: boolean = false;
 
-  constructor(private nav: NavigationService, private maprules: MapRulesService) {
+  constructor(
+      private nav: NavigationService,
+      private maprules: MapRulesService,
+      private router: Router
+  ) {
       this.nav.emitter.subscribe((event: any) => this[event.type] = event.value)
   }
 
@@ -74,6 +79,7 @@ export class NavigationBarComponent {
                   this.maprules.clearUser()
                   this.userDetails = {};
                   this.authenticated = false;
+                  this.router.navigateByUrl('/home');
               }
           },
           (err: any) => {

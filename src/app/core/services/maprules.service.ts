@@ -74,7 +74,8 @@ export class MapRulesService {
                } else {
                    return of({
                      error: true,
-                     message: `Error ${resp.status}`
+                     status: resp.status,
+                     message: `Error ${resp.message}`
                    });
                }
            }),
@@ -99,7 +100,8 @@ export class MapRulesService {
                   } else {
                       return of({
                         error: true,
-                        message: `Error ${resp.status}`
+                        status: resp.status,
+                        message: `Error ${resp.message}`
                       });
                   }
               }),
@@ -191,6 +193,16 @@ export class MapRulesService {
 
   public getUser(): any {
       return this.user;
+  }
+
+  public explore(): any {
+      const options: RequestInit = {
+          credentials: 'include',
+          mode: 'cors',
+          method: 'GET'
+      }
+
+      return from(fetch(this.maprules + '/explore', options));
   }
 
 }

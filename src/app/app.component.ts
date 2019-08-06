@@ -32,22 +32,22 @@ export class AppComponent implements OnInit {
                     type: 'authenticated',
                     value: true
                 })
-                return localStorage.getItem('user'); // if so, try to get user
+                return { status: resp.status, user: localStorage.getItem('user') }// if so, try to get user
             } else if (resp.status === 401) {
-                window.location.replace('/login.html'); // otherwise (if unauthorized) login again
+                return resp; // if we get a 401, then just init the UI without protected resources.
             } else {
                 throw Error('unable to talk to MapRules service'); // otherwise, for now, just say can't reach service
             }
         })
         .catch(error => { alert(error.message); })
-        .then(user => {
-            if (user) { // if we have the user, set the user and be done
-                this.maprules.setUser(JSON.parse(user));
+        .then((resp: any) => {
+            if (resp.user) { // if we have the user, set the user and be done
+                this.maprules.setUser(JSON.parse(resp.user));
                 this.nav.emitter.emit({
                     type: 'userDetails',
                     value: this.maprules.getUser()
                 });
-            } else { // or, ask for session's user details.
+            } else if (resp.status === 200) { // or, ask for session's user details.
                 const options: RequestInit = {
                     credentials: 'include',
                     mode: 'cors',
