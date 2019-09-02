@@ -1,12 +1,60 @@
-.content-group-container {
-    margin: 30px 100px;
+.content {
+    width: 100vw;
+    height: 94vh;
+    padding-top: 20px;
+    margin: auto;
 }
+
+.content-row {
+    flex-basis: 115px;
+    flex-shrink: 1;
+    display: flex;
+    margin: auto;
+    align-items: center;
+    width: 80%;
+    max-width: 1000px;
+}
+
+.submit-row {
+    flex-basis: 40%;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    /* height: 40%; */
+}
+
+.content-group-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.submit-container,
+.submit-container button {
+    align-self: flex-end
+}
+
+.maprule-name-container {
+    width: 30%;
+}
+
+.content-body {
+    width: 100%;
+}
+
 .content-group {
     margin: 20px;
 }
 
 .content-header {
-    margin: 10px;
+    align-self: start;
+    margin-top: 30px;
+    display: flex;
+}
+
+.content-header * {
+    justify-content: start;
 }
 
 .content-label {
@@ -14,14 +62,31 @@
 }
 
 .content-label h5 {
-    font-size: 30px;
+    font-size: 20px;
     font-weight: bold;
     color:rgba(31, 73, 98, 0.746)
 }
 
-.maprule-name {
-    margin-left: 10px;
-    width: 20%;
+.form-input {
+
+    border-radius: 5px;
+    border: 1px solid rgba(0,0,0,.2);
+    padding: 5px 15px;
+    font-size: 14px;
+}
+
+.form-input:focus,
+.form-input textarea:focus {
+    outline: none;
+}
+
+.form-input-full {
+    width: 100%;
+}
+
+.form-input-preset {
+    border: none;
+    background: none;
 }
 
 /* #14676C sea green */

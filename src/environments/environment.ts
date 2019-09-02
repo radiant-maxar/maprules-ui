@@ -8,6 +8,7 @@ export const environment = {
   maprulesConfig: 'http://localhost:3001/config',
   taginfo: 'https://taginfo.openstreetmap.org/api/4/',
   osm: 'http://localhost:3000',
+  id: 'http://localhost:8080/#map?',
   josm: 'http://127.0.0.1:8111'
 };
 

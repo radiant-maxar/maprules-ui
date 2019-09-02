@@ -1,6 +1,5 @@
-import { Injectable } from '@angular/core';
+import { Injectable, EventEmitter } from '@angular/core';
 import { FieldConfig } from '../../shared/interfaces/field-config.interface';
-import { SelectizeOption } from '../../shared/interfaces/selectize-option.interface';
 import { Validators} from '@angular/forms';
 declare var $: any;
 
@@ -10,6 +9,28 @@ declare var $: any;
 
 
 export class FieldConfigService {
+  static KEY_CONDITIONS: String[] = [
+    'must not have',
+    'must have',
+    'may have'
+  ];
+
+  static VAL_CONDITIONS: String[] = [
+    'must not be',
+    'must be',
+    'may be',
+    '<', '<=',
+    '>', '>='
+  ]
+
+  static keyCondition(condition: number) {
+    return this.KEY_CONDITIONS[condition];
+  }
+
+  static valCondition(condition: number) {
+    return this.VAL_CONDITIONS[condition];
+  }
+
 
   config: FieldConfig[] = [
     {
@@ -38,7 +59,14 @@ export class FieldConfigService {
   guidelineConfig: Map<number, Map<number, FieldConfig[]>> = new Map<number, Map<number, FieldConfig[]>>();
   disabledFeatureConfig: FieldConfig[][] = [];
 
+  emitter: EventEmitter<any> = new EventEmitter();
+  geom: Array<string> = [ 'Area', 'Line', 'Point' ]
+
   constructor() {}
+
+  get geometry() {
+    return this.geom;
+  }
 
   getFieldConfig(name: string) {
     const field = this.config.find((control) => control.name === name);
@@ -53,7 +81,7 @@ export class FieldConfigService {
    return this.primaryGroupConfig.get(i);
   }
 
-  getGuidelineFieldConfig(i: number, guidelineGroupIndex: number, keyOptions: SelectizeOption[]) {
+  getGuidelineFieldConfig(i: number, guidelineGroupIndex: number, keyOptions: any[]) {
     let keyConditionMap: Map<string, number> = new Map<string, number>()
       .set('must have', 1)
       .set('may have', 2)
@@ -115,27 +143,27 @@ export class FieldConfigService {
                           }
                          ];
   }
-  getPrimaryKeyConfigSettings(keyOptions: SelectizeOption[]){ 
-    return {  type: 'primary', 
-            name: 'key', 
-            validation: [Validators.required], 
-            selectizeConfig: { 
-                              create: true, 
-                              persist: true, 
-                              items: [""], 
-                              maxItems: 1, 
-                              options: keyOptions, 
-                              plugins: ['dropdown_direction'], 
-                              dropdownDirection: 'down'        
+  getPrimaryKeyConfigSettings(keyOptions: any[]){
+    return {  type: 'primary',
+            name: 'key',
+            validation: [Validators.required],
+            selectizeConfig: {
+                              create: true,
+                              persist: true,
+                              items: [""],
+                              maxItems: 1,
+                              options: keyOptions,
+                              plugins: ['dropdown_direction'],
+                              dropdownDirection: 'down'
             }
     };
   }
- getPrimaryValueConfigSettings(valueOptions: SelectizeOption[]){
-  var valConfig = { 
-              type: 'primary', 
-              name: 'val', 
-              value: "", 
-              selectizeConfig: { 
+ getPrimaryValueConfigSettings(valueOptions: any[]){
+  var valConfig = {
+              type: 'primary',
+              name: 'val',
+              value: "",
+              selectizeConfig: {
                                   create: true,
                                   persist: true,
                                   maxItems: 1,
@@ -143,9 +171,9 @@ export class FieldConfigService {
                                   options: valueOptions,
                                   allowEmptyOption: true,
                                   plugins: ['dropdown_direction'],
-                                  dropdownDirection: 'down' 
-                                } 
-    }; 
+                                  dropdownDirection: 'down'
+                                }
+    };
     return valConfig;
   }
 
@@ -177,7 +205,7 @@ export class FieldConfigService {
     return this.disabledFeatureConfig[i].find((control) => control.name === name);
   }
 
-  getDisabledKeyConfig(keyOptions: SelectizeOption[]){
+  getDisabledKeyConfig(keyOptions: any[]){
     return { type: 'selectize',
              name: 'key',
              selectizeConfig: {
@@ -190,9 +218,9 @@ export class FieldConfigService {
                               }
              };
   }
-  
-  getDisabledValueConfig(valueOptions: SelectizeOption[]){
-    return {  
+
+  getDisabledValueConfig(valueOptions: any[]){
+    return {
       type: 'selectize',
       name: 'val',
       value: "",
@@ -203,12 +231,12 @@ export class FieldConfigService {
                           options: valueOptions,
                           allowEmptyOption: false,
                           plugins: ['dropdown_direction', 'remove_button'],
-                          dropdownDirection: 'down'      
+                          dropdownDirection: 'down'
                         }
     };
   }
-  
-  refreshSelectizeOptions(id: string, valueOptions: SelectizeOption[]){
+
+  refreshSelectizeOptions(id: string, valueOptions: any[]){
     var $select = $(document.getElementById(id));
     if($select[0]){
       var selectize = $select[0].selectize;

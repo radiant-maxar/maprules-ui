@@ -1,0 +1,234 @@
+<div #viewPreset
+  class="preset-container view-preset-container" *ngFor="let preset of _presets; let presetIndex = index;">
+  <div class="preset-card-header preset-card-panel-header-hidden">
+    <label class="content-label">
+      <h5>{{preset.name}}</h5>
+    </label>
+    <div>
+      <button class="preset-button" id="show-preset-button" (click)="showPresetPanel(presetIndex)">
+        <i class="fa fa-plus-square-o"></i>
+      </button>
+    </div>
+  </div>
+  <div class="preset-card-panel preset-card-panel-hidden">
+    <div class="content-group">
+      <div class="feature-header">
+        <label class="content-label">
+          <h5>Geometry</h5>
+        </label>
+      </div>
+      <div class="content-body feature-body">
+        <div class="geometry-container">
+          <div class="combo-card geometry-card"
+            *ngFor="let geometry of preset.geometry">
+            <div class="geometry-label">
+              {{ geometry }}
+            </div>
+            <div [ngSwitch]="geometry" class="geometry-icon">
+              <app-area *ngSwitchCase="'Area'"></app-area>
+              <app-node *ngSwitchCase="'Point'"></app-node>
+              <app-way *ngSwitchCase="'Line'"></app-way>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="content-group">
+      <div class="feature-header">
+        <label class="content-label">
+          <h5>Identifying Tags</h5>
+        </label>
+      </div>
+      <div class="content-body feature-body">
+        <div class="table-container view-preset-table-container">
+          <div class="table-row header">
+            <div class="wrapper text-4">
+              <div class="wrapper text-2">
+                <div class="text">Key</div>
+                <div class="text">Value</div>
+              </div>
+            </div>
+          </div>
+          <div class="table-row" *ngFor="let primary of preset.primary">
+            <div class="wrapper text-2">
+              <div class="text view-text-row">
+                <div class="combo-card">
+                  {{ primary.key }}
+                </div>
+              </div>
+              <div class="text view-text-row">
+                <div class="combo-card">
+                  {{ primary.val }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="content-group" *ngIf="tagCondition(preset.fields, 1).length">
+        <div class="feature-header">
+          <label class="content-label">
+            <h5>Required Tags</h5>
+          </label>
+        </div>
+        <div class="content-body feature-body">
+          <div class="table-container view-preset-table-container">
+            <div class="table-row header">
+              <div class="wrapper text-4 view-4">
+                <div class="wrapper text-2">
+                  <div class="text">Key Condition</div>
+                  <div class="text">Key</div>
+                </div>
+              </div>
+              <div class="wrapper text-4 view-4">
+                <div class="wrapper text-2">
+                  <div class="text">Value Condition</div>
+                  <div class="text">Value(s)</div>
+                </div>
+              </div>
+            </div>
+            <div class="table-row" *ngFor="let requiredTag of tagCondition(preset.fields, 1)">
+              <div class="wrapper text-4 view-4">
+                <div class="wrapper text-2">
+                  <div class="text view-text-row">
+                    <div class="combo-card view-must">
+                      {{ keyCondition(requiredTag.keyCondition) }}
+                    </div>
+                  </div>
+                  <div class="text view-text-row">
+                    <div class="combo-card">
+                      {{ requiredTag.key }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="wrapper text-4 view-4">
+                <div class="wrapper text-2">
+                  <div class="text view-text-row">
+                    <div class="combo-card"[ngClass]="{
+                        'view-must-not': tagValuesCondition(requiredTag.values, 0),
+                        'view-must': tagValuesCondition(requiredTag.values, 1),
+                        'view-may': tagValuesCondition(requiredTag.values, 2)
+                      }">
+                      {{ valCondition(requiredTag.values) }}
+                    </div>
+                  </div>
+                  <div class="text view-text-row">
+                    <div class="combo-cards-container view-cards-container">
+                      <div
+                        *ngFor="let value of tagValues(requiredTag.values)"
+                        class="combo-card">
+                        <div class="combo-card-label wrap-text">{{ value.split(' - ')[0] }}</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+    <div class="content-group" *ngIf="tagCondition(preset.fields, 2).length">
+      <div class="feature-header">
+        <label class="content-label">
+          <h5>Suggested Tags</h5>
+        </label>
+      </div>
+      <div class="content-body feature-body">
+        <div class="table-container view-preset-table-container">
+          <div class="table-row header">
+            <div class="wrapper text-4 view-4">
+              <div class="wrapper text-2">
+                <div class="text">Key Condition</div>
+                <div class="text">Key</div>
+              </div>
+            </div>
+            <div class="wrapper text-4 view-4">
+              <div class="wrapper text-2">
+                <div class="text">Value Condition</div>
+                <div class="text">Value(s)</div>
+              </div>
+            </div>
+          </div>
+          <div class="table-row" *ngFor="let suggestedTag of tagCondition(preset.fields, 2)">
+            <div class="wrapper text-4 view-4">
+              <div class="wrapper text-2">
+                <div class="text view-text-row">
+                  <div class="combo-card view-may">
+                    {{ keyCondition(suggestedTag.keyCondition) }}
+                  </div>
+                </div>
+                <div class="text view-text-row">
+                  <div class="combo-card">
+                    {{ suggestedTag.key }}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="wrapper text-4 view-4">
+              <div class="wrapper text-2">
+                <div class="text view-text-row">
+                  <div class="combo-card"[ngClass]="{
+                      'view-must-not': tagValuesCondition(suggestedTag.values, 0),
+                      'view-must': tagValuesCondition(suggestedTag.values, 1),
+                      'view-may': tagValuesCondition(suggestedTag.values, 2)
+                    }">
+                    {{ valCondition(suggestedTag.values) }}
+                  </div>
+                </div>
+                <div class="text view-text-row">
+                  <div class="combo-cards-container view-cards-container">
+                    <div
+                      *ngFor="let value of tagValues(suggestedTag.values)"
+                      class="combo-card">
+                      <div class="combo-card-label wrap-text">{{ value }}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="content-group" *ngIf="tagCondition(preset.fields, 0).length">
+      <div class="feature-header">
+        <label class="content-label">
+          <h5>Disallowed Tags</h5>
+        </label>
+      </div>
+      <div class="content-body feature-body">
+        <div class="table-container view-preset-table-container">
+          <div class="table-row header">
+            <div class="wrapper text-4 view-4">
+              <div class="wrapper text-2">
+                <div class="text">Key Condition</div>
+                <div class="text">Key</div>
+              </div>
+            </div>
+          </div>
+          <div class="table-row">
+            <div class="wrapper text-4 view-4">
+              <div class="wrapper text-2">
+                <div class="text view-text-row">
+                  <div class="combo-card view-must-not">
+                    must not have
+                  </div>
+                </div>
+                <div class="text view-text-row">
+                  <div class="combo-cards-container view-cards-container">
+                    <div class="combo-card" *ngFor="let disallowedTag of tagCondition(preset.fields, 0)">
+                      {{ disallowedTag.key }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

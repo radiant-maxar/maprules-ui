@@ -1,0 +1,104 @@
+.preset-container {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.preset-card {
+  margin-bottom: 20px;
+  border: 1px solid rgba(0,0,0,.125);
+  border-radius: 10px;
+}
+
+.preset-card-panel-hidden {
+  visibility: hidden;
+  height: 0;
+  overflow: hidden;
+}
+
+.preset-card:last-of-type {
+  border-bottom-right-radius: initial;
+}
+
+.preset-card-header {
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  overflow: hidden;
+  background: rgba(193, 201, 218, .1);
+  border-bottom: 1px solid rgba(0,0,0,.125);
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 20px;
+}
+
+.preset-card-panel-header-hidden {
+  border-bottom: none;
+}
+
+.preset-features-header {
+  margin: 10px;
+}
+
+#remove-preset-button {
+  margin-left: 10px;
+}
+
+.features-button {
+  font-size: 20px;
+}
+
+.card-closed {
+  overflow: hidden;
+}
+
+.preset-button {
+  height: 40px;
+  width: 40px;
+  background: rgba(193, 201, 218, .2);
+  border: 1px rgb(0,0,0,.125) solid;
+  border-radius: 5px;
+}
+
+.preset-button:focus {
+  outline: none;
+}
+
+.preset-button:hover {
+  background: rgba(193, 201, 218, .5);
+}
+
+.content-body {
+  display: flex;
+  flex-direction: column;
+}
+
+.add-button {
+  align-self: flex-end;
+  width: initial;
+  height: 25px;
+  border-top-right-radius: initial;
+  border-top-left-radius: initial;
+  border-top: none;
+  font-size: 12px;
+}
+
+
+.empty-form-array {
+  border-radius: 5px;
+  border: 1px rgb(0,0,0,.125) solid;
+}
+
+.add-preset-button {
+  margin-top: -20px;
+  margin-left: auto;
+  height: 30px;
+  font-size: 14px;
+}
+
+.geometry-body {
+  flex-direction: row;
+}
+
+.geometry-body label {
+  padding: 5px;
+}

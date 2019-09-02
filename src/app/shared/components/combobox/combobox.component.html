@@ -1,0 +1,42 @@
+<div [ngClass]="{ disabled: _disabled }" class="combo-container">
+  <div
+    (click)="onClickEventAction($event)"
+    [ngClass]="{ 'combo-open': showDropDown }"
+    class="combo-content-container">
+    <div class="combo-cards-container">
+      <ng-container *ngIf="comboValues.length > 0">
+        <div
+          *ngFor="let comboValue of comboValues; let valueIndex=index;"
+          class="combo-card" >
+          <div class="combo-card-label wrap-text">{{ comboValues[valueIndex] }}</div>
+          <i class="fa fa-times combo-card-remove" (click)="removeComboVal(valueIndex)"></i>
+        </div>
+      </ng-container>
+      <div class="combo-input-container"
+        [ngClass]="{ 'hidden': comboValues.length === _maxElements }">
+        <input
+          #comboInput
+          type="text"
+          class="combo-input"
+          placeholder="Add..."
+          [disabled]="_disabled"
+          [value]="sortText"
+          (keyup)="onKeyUpAction($event)"
+          (focus)="onFocusEventAction($event)"
+          />
+      </div>
+    </div>
+    <button [disabled]="_disabled" class="combo-drop-down-button" (click)="toggleDropDown()">
+      <i class="combo-icon fa fa-angle-down"></i>
+    </button>
+  </div>
+  <div class="combo-data-container" *ngIf="comboValues.length < _maxElements && showDropDown">
+    <div *ngFor="let data of dummyDataList; let i=index;"
+      class="data-list wrap-text"
+      (click)="selectDropdown($event)"
+      [attr.title]="data.title ? data.title: null"
+      [ngClass]="{ highlight: checkHighlight(i) }">
+      {{data.name}}
+    </div>
+  </div>
+</div>

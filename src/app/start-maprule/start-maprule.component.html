@@ -1,0 +1,43 @@
+<div class="content" *ngIf="maprule">
+  <div class="content-row view-preset-row">
+    <div class="content-group-container maprule-name-container">
+      <div class="content-header">
+        <label class="content-label feature-label">
+          <h5>{{ maprule.name }}</h5>
+        </label>
+      </div>
+    </div>
+  </div>
+  <div class="content-row view-preset-row" *ngIf="maprule.presets.length > 0">
+    <app-view-preset
+      class="preset-container content-group-container"
+      [presets]="maprule.presets">
+    </app-view-preset>
+  </div>
+  <div class="content-row view-preset-row" *ngIf="maprule.disabledFeatures.length > 0">
+    <app-view-disabled-feature
+      class="preset-container content-group-container view-disabled-feature-container"
+      [disabledFeatures]="maprule.disabledFeatures">
+    </app-view-disabled-feature>
+  </div>
+  <div class="content-row view-preset-row button-row">
+    <button
+      (click)="toEdit()"
+      class="preset-button"
+      type="button">
+      Edit MapRule
+    </button>
+    <button
+      (click)="editWith('iD')"
+      class="preset-button"
+      type="button">
+      Map with iD
+    </button>
+    <button
+      (click)="editWith('JOSM')"
+      class="preset-button"
+      type="button">
+      Map with JOSM
+    </button>
+  </div>
+</div>

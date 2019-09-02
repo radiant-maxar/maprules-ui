@@ -1,0 +1,176 @@
+.combo-content-container {
+  display: flex;
+  border: 1px solid rgba(0,0,0,.2);
+  border-radius: 10px;
+  overflow: hidden;
+  min-height: 35px;
+  width: 100%;
+}
+
+.combo-data-container {
+  font-size: 12px;
+  border: 1px solid rgba(0,0,0,.2);
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  overflow: hidden;
+}
+
+.data-list {
+  margin: 0;
+  padding: 1px 0;
+  border-bottom: 1px solid rgba(0,0,0,.25);
+  background: white;
+  text-align: center;
+}
+
+.highlight,
+.data-list:hover {
+  background: rgba(193, 201, 218, .25);
+}
+
+.data-list:last-child {
+  border-bottom: none;
+}
+
+.combo-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 8px 8px 0 8px;
+}
+
+.combo-cards-container,
+.combo-input-container,
+.combo-data-container   {
+  width: 100%;
+  display: flex;
+}
+
+.combo-content-container,
+.combo-card,
+.combo-input-container {
+  border-radius: 5px;
+  font-size: 12px;
+}
+
+.combo-card {
+  margin: 8px;
+}
+
+.combo-data-container,
+.combo-cards-container {
+  margin-bottom: 0px;
+}
+
+.combo-data-container {
+  flex-direction: column;
+}
+
+.combo-cards-container {
+  display: flex;
+  flex-wrap: wrap;
+  min-width: 45px;
+}
+
+.combo-card {
+  flex-basis: 0;
+  padding: 2px 5px;
+}
+
+.combo-card {
+  display: flex;
+  max-width: 150px;
+  align-items: baseline;
+  justify-content: space-evenly;
+  border: 1px rgb(193,201,218) solid;
+  background: rgba(193, 201, 218, .2);
+}
+
+.combo-card i {
+  width: 18px;
+  align-self: center;
+}
+
+.combo-card div {
+  width: max-content;
+}
+
+.combo-input {
+  border: none;
+}
+
+.combo-input,
+.combo-drop-down-button {
+  outline: none;
+}
+
+.combo-input-container {
+  display: flex;
+  padding: 2px 8px;
+  margin-bottom: 4px;
+}
+
+.combo-input-container {
+		flex: 0 30%;
+}
+
+/* .combo-input-container {
+  flex: 0 30%;
+} */
+
+.combo-drop-down-button {
+  border: none;
+  border-left: 1px solid rgba(0,0,0,.2);
+  background: none;
+}
+.combo-drop-down-button:hover {
+  background:rgba(193, 201, 218, .2)
+}
+
+.combo-data-container {
+  display: flex;
+  flex-wrap: nowrap;
+  max-height: 208px;
+  overflow-y: scroll;
+}
+
+.data-list {
+  width: 100%;
+  padding: 1px;
+}
+
+.wrap-text {
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -pre-wrap;
+  white-space: -o-pre-wrap;
+  word-wrap: break-word;
+}
+
+.hidden {
+  display: none;
+  padding: 0;
+  margin: 0;
+  width: 0;
+}
+
+.combo-open {
+  border-bottom-left-radius: initial;
+  border-bottom-right-radius: initial;
+  border-bottom: none;
+}
+
+.disabled .combo-cards-container,
+.disabled .combo-drop-down-button {
+  background-color: rgba(0,0,0,.05)
+}
+
+.disabled input {
+  background-color: initial;
+}
+
+@media all and (max-width: 735px) {
+  .combo-input-container {
+    margin-bottom: 4px;
+  }
+}

@@ -1,0 +1,9 @@
+.view-preset-row {
+	width: 50%;
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
+.view-disabled-feature-container {
+	align-self: flex-start;
+}

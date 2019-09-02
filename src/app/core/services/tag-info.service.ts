@@ -1,75 +1,112 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { catchError, timeout, retry, finalize } from 'rxjs/operators';
-import { SelectizeOption } from '../../shared/interfaces/selectize-option.interface';
-import { environment } from '../../../environments/environment'
+import { HttpClient } from '@angular/common/http';
+import { ServiceCacheInterceptor } from './service-cache-interceptor';
+import { environment } from '../../../environments/environment';
+import { OperatorFunction } from 'rxjs';
+import { reduce } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
 })
-
-
 export class TagInfoService {
- 
-  tagInfoUrl: string;
-  keysMap : Map<number, any> = new Map<number, any>();
-  comboMap: Map<number, any> = new Map<number, any>();
-  popularKeys: SelectizeOption[];
-  popularTagsRequest: any;
+  /* CACHE PROPS */
+  public static POPULAR_TAGS = '/api/4/tags/popular';
+  public static POPULAR_KEYS = '/api/4/keys/all';
+  public static TAG_VALUES = 'tagValues';
+  public static TAG_COMBINATIONS = 'tagCombinations';
+  public static KEY_COMBINATIONS = 'keyCombinations';
 
-  constructor(private http: HttpClient) {
-    this.setTagInfoUrl();
-    this.getPopularKeyOptions();
+  /* URL BUILDERS/STRINGS */
+  static POPULAR_TAGS_URL = `${environment.taginfo}tags/popular?page=1&rp=20&sortname=count_all&sortorder=desc`;
+  static POPULAR_KEYS_URL = `${environment.taginfo}keys/all?page=1&rp=20&filter=in_wiki&sortname=count_all&sortorder=desc`
+  /**
+   * Builds url for getting popular values for a given key
+   * @param key {string} values' key
+   * @return {string} tag values url...
+   */
+  static tagValuesUrl(key: string): string {
+    return `${environment.taginfo}key/values?key=${key}&page=1&rp=50&sortname=count_ways&sortorder=desc`;
   }
 
-  setTagInfoUrl(){
-    this.tagInfoUrl = environment.taginfo;
+  /**
+   * Builds url for getting specific tag combinations
+   * @param key {string} combo key
+   * @param value {string} combo value
+   * @return {string} tag combinations url string...
+   */
+  static tagCombinationsUrl(key: string, value: string): string {
+    return `${environment.taginfo}tag/combinations?key=${key}&value=${value}&page=1&rp=50&sortname=together_count&sortorder=desc`;
   }
 
-  get popularTags(){
-    return this.http.get(this.tagInfoUrl + "tags/popular?rp=50").pipe(
-      catchError(this.handleError)
-    );
+  /**
+   * Builds url for getting specific key combinations
+   * @param key {string} combo key
+   * @param value {string} combo value
+   * @return {string} key combinations url string...
+   */
+  static keyCombinationsUrl(key: string, value: string): string {
+    return `${environment.taginfo}key/combinations?key=${key}&value=${value}&page=1&rp=50&sortname=together_count&sortorder=desc`;
   }
 
-  getPopularValues(primaryKey: string){
-    return this.http.get(this.tagInfoUrl + "key/values?key=" + primaryKey).pipe(
-      catchError(this.handleError)
-    );
+  static reducer(nameKey: string, valKey: string): OperatorFunction<any, any> {
+    return reduce((data: Array < any >, response: any) => {
+      response.data.forEach((datum: any) => {
+        data.push({
+          name: datum[nameKey],
+          value: datum[valKey]
+        })
+      })
+      return data;
+    }, [])
   }
 
-  getTagCombinations(primaryKey: string, primaryValue: string){
-    return this.http.get(this.tagInfoUrl + "tag/combinations?key=" + primaryKey + "&" + "value=" + primaryValue).pipe(
-      catchError(this.handleError)
-    );
+  constructor(private http: HttpClient) { }
+
+  /**
+   * Returns Observable with popular tags selectize options, be it from cache or an http request
+   * @return {Observable<SelectizeOption[]>} popular tag values' observable
+   */
+  popularTags() {
+    return this.http.get(TagInfoService.POPULAR_TAGS_URL)
+      .pipe(TagInfoService.reducer('key', 'key'));
   }
 
-  private handleError(error: HttpErrorResponse) {
-    console.error('An error occurred:', error);  
-    return throwError(
-      'Could not reach taginfo');
-  };
+  popularKeys() {
+    return this.http.get(TagInfoService.POPULAR_KEYS_URL)
+      .pipe(TagInfoService.reducer('key', 'key'))
+  }
 
-  getPopularKeyOptions(){
-    var osmEntityKeys = [];  
-    var popularKeyOptions = [];
-    this.popularTagsRequest = this.popularTags.subscribe(
-      (data) => {
-        data['data'].sort((a,b) => parseFloat(b.count_all) - parseFloat(a.count_all)).forEach(function(prop) {
-          var current = <SelectizeOption>{text:prop.key, value:prop.key};
-          if(!osmEntityKeys.includes(prop.key)){
-            osmEntityKeys.push(prop.key);
-            popularKeyOptions.push(current);
-          }
-        });
-      },
-      error => {
-        console.error(error);
-      }
-    );
-    this.popularTagsRequest.add(() => {
-      this.popularKeys = popularKeyOptions;
-    });
+  /**
+   * Returns Observable with tag values selectize options, be it from cache or an http request
+   * @param key {string} key to get tag values for...
+   * @return {Observable<SelectizeOption[]>}
+   */
+  tagValues(key: string) {
+    return this.http.get(TagInfoService.tagValuesUrl(key))
+      .pipe(TagInfoService.reducer('value', 'value'))
+  }
+
+  /**
+   * Return Observable with tag combinations for given key/value selectize options, be it from cache or an http request
+   * @param key {string} combination key
+   * @param value {string} combination value
+   * @return {Observable<SelectizeOption[]>}
+   */
+  // tagCombinations(key:string, value: string) {
+  //   return this.http.get(TagInfoService.tagCombinationsUrl(key, value))
+  //     .pipe(TagInfoService.reducer('other_key', 'other_key'));
+  // }
+
+  /**
+   * Return Observable with tag combinations for given key/value selectize options, be it from cache or an http request
+   * @param key {string} combination key
+   * @param value {string} combination value
+   * @return {Observable<SelectizeOption[]>}
+   */
+  keyCombinations(key: string, value: string) {
+    return this.http.get(TagInfoService.keyCombinationsUrl(key, value))
+      .pipe(TagInfoService.reducer('other_key', 'other_key'))
+    // 'https://taginfo.openstreetmap.org/api/4/key/combinations?key=amenity&value=clinic&page=1&rp=10&sortname=together_count&sortorder=desc'
+    // return of([]);
   }
 }

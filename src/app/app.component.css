@@ -13,3 +13,7 @@
 .navbar-brand {
     margin: 0 15px;
 }
+
+.app {
+    overflow-x: hidden;
+}

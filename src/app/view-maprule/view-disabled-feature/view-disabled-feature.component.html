@@ -1,0 +1,44 @@
+<div #viewDisabledFeature class="preset-container view-preset-container">
+    <div class="preset-card-header preset-card-panel-header-hidden">
+      <label class="content-label">
+        <h5>Disabled Features</h5>
+      </label>
+      <div>
+        <button class="preset-button" id="show-preset-button" (click)="showDisabledFeaturePanel()">
+          <i class="fa fa-plus-square-o"></i>
+        </button>
+      </div>
+    </div>
+    <div class="preset-card-panel preset-card-panel-hidden">
+      <div class="content-group">
+        <div class="content-body feature-body">
+          <div class="table-container view-preset-table-container">
+            <div class="table-row header">
+              <div class="wrapper text-4">
+                <div class="wrapper text-2">
+                  <div class="text">Key</div>
+                  <div class="text">Value(s)</div>
+                </div>
+              </div>
+            </div>
+            <div class="table-row" *ngFor="let disabledFeature of _disabledFeatures">
+              <div class="wrapper text-2">
+                <div class="text view-text-row">
+                  <div class="combo-card">
+                    {{ disabledFeature.key }}
+                  </div>
+                </div>
+                <div class="text view-text-row">
+                  <div class="combo-cards-container view-cards-container">
+                    <div *ngFor="let val of disabledFeature.val" class="combo-card">
+                      {{ val.split(' - ')[0] }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
