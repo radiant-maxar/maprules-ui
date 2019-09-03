@@ -85,6 +85,8 @@ export class EditMapRuleComponent implements OnInit {
     this.clickHandler();
   }
 
+  getNav(): NavigationService { return this.nav; }
+
   /**
    * Creates Form Group for preset.
    * @param preset {any} Preset in maprules config presets array
@@ -151,9 +153,17 @@ export class EditMapRuleComponent implements OnInit {
 
   saveForm(): void {
     this.maprules.save(this.form.value, this.presetGeometries)
-      .subscribe((data: any) => {
-        let configId = data.id || this.route.snapshot.params.id; // data.id when from new, params.id when fromm existing...
-        this.router.navigateByUrl(`/${configId}/start`);
+      .subscribe((resp: any) => {
+        if (resp.error) {
+            if (resp.error.status === 401) {
+                location.replace('/login.html');
+            } else {
+                window.alert(resp.message)
+            }
+        } else {
+            let configId = resp.id || this.route.snapshot.params.id; // data.id when from new, params.id when fromm existing...
+            this.router.navigateByUrl(`/${configId}/start`);
+        }
       });
   }
 

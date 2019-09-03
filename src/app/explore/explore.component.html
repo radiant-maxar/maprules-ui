@@ -1,0 +1,23 @@
+<div class="content" *ngIf="presets.length">
+    <div class="content-row view-preset-row">
+        <div *ngFor="let preset of presets" class="preset-container view-preset-container">
+            <div class="preset-card-header preset-card-panel-header explore-container">
+                <label class="content-label">
+                    <h5>{{ preset.preset_name }}</h5>
+                    <span>Author: {{ preset.user_name }}</span>
+                </label>
+                <div>
+                    <button
+                        class="preset-button"
+                        (click)="openView(preset.id)">View
+                    </button>
+                    <button
+                        class="preset-button edit-config"
+                        (click)="openEdit(preset.id)"
+                        *ngIf="preset.edit === true">Edit
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -8,7 +8,7 @@
       </div>
     </div>
   </div>
-  <div class="content-row view-preset-row" *ngIf="maprule.presets.length > 0">
+  <div class="content-row view-preset-row" *ngIf="getMapRules().presets.length > 0">
     <app-view-preset
       class="preset-container content-group-container"
       [presets]="maprule.presets">

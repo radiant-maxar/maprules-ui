@@ -10,6 +10,10 @@
     transform: translate(0,3px);
 }
 
+.login-nav {
+    margin-left: auto;
+}
+
 .current-location {
     color: rgb(57,57,57);
     background: rgba(57,57,57,0.1);

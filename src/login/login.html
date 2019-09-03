@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>MapRules</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+  <link rel="icon" type="image/x-icon" href="favicon.png">
+</head>
+<body>
+<script src="auth.js"></script>
+<script>
+    let auth = new Auth();
+    //first time we go hear, we will not have these in our location object
+    //so, it will see if the user is authorized (has a session jwt) in the else block.
+    if (auth.haveParameters('oauth_verifier', 'oauth_token')) {
+        auth.verify()
+    } else {
+        auth.authorized()
+    }
+</script>
+</body>
+</html>

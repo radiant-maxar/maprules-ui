@@ -12,13 +12,17 @@ import { NavigationService } from '../core/services/navigation.service';
   ]
 })
 export class ViewMapRuleComponent implements OnInit {
-  private maprule: any;
+  maprule: any;
 
   constructor(
     private maprules: MapRulesService,
     private nav: NavigationService,
     private route: ActivatedRoute
   ) { }
+
+  getMapRules(): MapRulesService {
+      return this.maprule;
+  }
 
   ngOnInit() {
     let nav = this.route.snapshot.queryParams.nav;

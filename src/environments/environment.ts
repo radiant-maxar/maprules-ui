@@ -9,7 +9,8 @@ export const environment = {
   taginfo: 'https://taginfo.openstreetmap.org/api/4/',
   osm: 'http://localhost:3000',
   id: 'http://localhost:8080/#map?',
-  josm: 'http://127.0.0.1:8111'
+  josm: 'http://127.0.0.1:8111',
+  docs: 'https://github.com/radiant-maxar/maprules/blob/develop/README.md'
 };
 
 /*

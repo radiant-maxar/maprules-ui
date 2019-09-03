@@ -61,10 +61,18 @@
     margin-bottom: 10px;
 }
 
-.content-label h5 {
-    font-size: 20px;
+.content-label h5,
+.content-label span {
     font-weight: bold;
     color:rgba(31, 73, 98, 0.746)
+}
+
+.content-label span {
+    margin-top: 10px;
+    font-size: 12px;
+}
+.content-label h5 {
+    font-size: 20px;
 }
 
 .form-input {

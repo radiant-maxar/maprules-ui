@@ -21,6 +21,7 @@ import { ComboboxModule } from './modules/combobox.module';
 import { ViewPresetComponent } from './view-maprule/view-preset/view-preset.component';
 import { ViewDisabledFeatureComponent } from './view-maprule/view-disabled-feature/view-disabled-feature.component';
 import { StartMapRuleComponent } from './start-maprule/start-maprule.component';
+import { ExploreComponent } from './explore/explore.component';
 
 const appRoutes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -47,6 +48,7 @@ const appRoutes: Routes = [
     DecodeConditionPipe,
     EncodeClassPipe,
     ViewDisabledFeatureComponent,
+    ExploreComponent
   ],
   imports: [
     BrowserModule,

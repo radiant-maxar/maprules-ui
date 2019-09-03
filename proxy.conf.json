@@ -1,0 +1,7 @@
+{
+    "/auth/login": {
+        "target": "http://localhost:3001/auth/login",
+        "secure": false,
+        "logLevel": "debug"
+    }
+}

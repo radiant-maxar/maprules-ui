@@ -31,6 +31,14 @@ export class PresetComponent {
     private fieldConfig: FieldConfigService,
   ) { }
 
+  public getForm(): FormGroup {
+      return this.editMapRule.form;
+  }
+
+  public getPresets() {
+      return this.editMapRule.presets
+  }
+
   /* GETTERS FOR NESTED PARTS OF PRESET GROUP */
   primaryFormArray(presetIndex: number): FormArray {
     return this.editMapRule.presets.at(presetIndex).get('primary') as FormArray;
@@ -99,7 +107,7 @@ export class PresetComponent {
     }
   }
 
-  private addPreset(): void {
+  addPreset(): void {
     this.editMapRule.createPresetFormGroup({
       primary: [ { key: '', val: '' } ],
       name: '',
