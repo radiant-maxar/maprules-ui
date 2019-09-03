@@ -143,6 +143,7 @@ export class MapRulesService {
     }
   }
 
+
   getMapRule(configId: string){
     return this.http
       .get(this.mapRulesUrl + "/" + configId)
