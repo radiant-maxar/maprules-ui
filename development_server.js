@@ -34,7 +34,7 @@ gaze([
 })
 
 const serve = serveStatic('dist', {
-    index: ['index.html', 'login.html']
+    index: ['index.html', 'login.html'],
 })
 
 const server = http.createServer(function onRequest(req, res) {

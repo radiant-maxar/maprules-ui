@@ -5,7 +5,7 @@
     "ng": "ng",
     "start": "node development_server.js",
     "build:dev": "ng build && cp src/login/* dist",
-    "build": "ng build && npm run makeapidocs && mkdir dist/maprules-ui/login && cp src/login/* dist/maprules-ui/login",
+    "build": "ng build && npm run makeapidocs && mkdir dist/maprules-ui/login && cp src/login/* dist/maprules-ui/",
     "makeapidocs": "apidoc -f maprules-ui.docs.js && apidoc-markdown2 -p doc -o maprules-ui.apidocs.md",
     "test": "ng test",
     "lint": "ng lint",
