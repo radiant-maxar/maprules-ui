@@ -27,6 +27,7 @@ const appRoutes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: 'home', component: MainComponent },
   { path: 'new', component: EditMapRuleComponent },
+  { path: 'explore', component: ExploreComponent },
   { path: ':id/instructions', component: ViewMapRuleComponent },
   { path: ':id/start', component: StartMapRuleComponent },
   { path: ':id/edit', component: EditMapRuleComponent },
