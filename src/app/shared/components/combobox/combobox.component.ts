@@ -177,18 +177,25 @@ export class ComboboxComponent implements OnInit, ControlValueAccessor {
 
   filteredList(): any[] {
     let comboValues = this.comboValues.slice(); // new copy of array...
+    let partnerValues = [];
     let formControlName = this._formControlName;
     if (formControlName.endsWith('Key')) { // if key, filter out any partner tag keys...
-      let parentArray = this._formControl.parent.parent as FormArray;
-      parentArray.controls.forEach(function (control: FormGroup) {
-        let partnerKey = control.controls[formControlName].value;
+      let parentArray = this._formControl.parent.parent.value;
+      let formIndex = Number(this._comboIndex[0]);
+      parentArray.forEach(function (partner: any, index: number) {
+        if (index === formIndex) return; // ignore the current key.
+        let partnerKey = partner[formControlName];
         if (partnerKey.length) {
-          comboValues.push(partnerKey)
+          partnerValues.push(partnerKey)
         }
       })
     }
     return this.dataList
-      .filter(function (d) { return !comboValues.includes(d.name); })
+      .filter(function (d) {
+        if (comboValues.length) return !comboValues.includes(d.name);
+        if (partnerValues.length) return !partnerValues.includes(d.name);
+        else return true;
+      })
       .sort(function (a, b) { return a.name - b.name });
   }
 
