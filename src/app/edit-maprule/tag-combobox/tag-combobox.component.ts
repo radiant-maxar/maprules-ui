@@ -30,8 +30,35 @@ export enum KEY_CODE {
     }
   ]
 })
-export class TagComboboxComponent extends ComboboxComponent
-  implements AfterViewInit {
+export class TagComboboxComponent extends ComboboxComponent implements AfterViewInit {
+
+  /**
+   * Removes values already selected for input,
+   * Or, when it is a key, any values that are already
+   * in a separate key form control's input
+   */
+  filteredDataList() {
+    let comboValues = this.comboValues.slice(); // new copy of array...
+    let partnerValues = [];
+    let formControlName = this._formControlName;
+    if (formControlName.endsWith('Key')) { // if key, filter out any partner tag keys...
+      let parentArray = this._formControl.parent.parent.value;
+      let formIndex = Number(this._comboIndex[0]);
+      parentArray.forEach(function (partner: any, index: number) {
+        if (index === formIndex) return; // ignore the current key.
+        let partnerKey = partner[formControlName];
+        if (partnerKey.length) {
+          partnerValues.push(partnerKey)
+        }
+      })
+    }
+    return this.dataList.filter(function (d) {
+      if (comboValues.length) return !comboValues.includes(d.name);
+      if (partnerValues.length) return !partnerValues.includes(d.name);
+      else return true;
+    })
+  }
+
   // https://stackoverflow.com/questions/44731894/get-access-to-formcontrol-from-the-custom-form-component-in-angular
   ngAfterViewInit(): void {
     let that = this;

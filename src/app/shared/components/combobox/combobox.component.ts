@@ -175,34 +175,22 @@ export class ComboboxComponent implements OnInit, ControlValueAccessor {
     return this.doUpdate(value.trim());
   }
 
-  filteredList(): any[] {
-    let comboValues = this.comboValues.slice(); // new copy of array...
-    let partnerValues = [];
-    let formControlName = this._formControlName;
-    if (formControlName.endsWith('Key')) { // if key, filter out any partner tag keys...
-      let parentArray = this._formControl.parent.parent.value;
-      let formIndex = Number(this._comboIndex[0]);
-      parentArray.forEach(function (partner: any, index: number) {
-        if (index === formIndex) return; // ignore the current key.
-        let partnerKey = partner[formControlName];
-        if (partnerKey.length) {
-          partnerValues.push(partnerKey)
-        }
-      })
-    }
-    return this.dataList
-      .filter(function (d) {
-        if (comboValues.length) return !comboValues.includes(d.name);
-        if (partnerValues.length) return !partnerValues.includes(d.name);
-        else return true;
-      })
-      .sort(function (a, b) { return a.name - b.name });
+
+  /**
+   * Function to be overwritten such that the
+   * dataList is filtered specific to the combobox
+   */
+  filteredDataList(): Array<any> {
+    return this.dataList;
   }
 
-  ngOnInit() { }
+  filteredList(): any[] {
+    return this.filteredDataList().sort(function (a, b) {
+      return a.name - b.name
+    });
+  }
 
-  doChange(val: string) {}
-
+  doChange(val: string) {} // noop, implement in child classes
 
   removeComboVal(comboIndex: number) {
     this.comboValues.splice(comboIndex, 1);
@@ -213,6 +201,8 @@ export class ComboboxComponent implements OnInit, ControlValueAccessor {
     }
   }
 
+  // needed noops
+  ngOnInit() { }
   writeValue(value: any) { }
   onChange(newVal: any) { }
   onTouched(_?: any) { }
