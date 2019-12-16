@@ -40,19 +40,19 @@
                   [formGroupName]="primaryIndex">
                   <div class="wrapper text-2">
                     <div class="text">
-                      <app-combobox
+                      <app-tag-combobox
                         [maxElements]="1"
                         [comboIndex]="presetIndex + ':' + primaryIndex"
                         formControlName="primaryKey">
-                      </app-combobox>
+                      </app-tag-combobox>
                     </div>
                     <div class="text value-row">
-                      <app-combobox
+                      <app-tag-combobox
                         class="text-value"
                         [maxElements]="1"
                         [comboIndex]="presetIndex + ':' + primaryIndex"
                         formControlName="primaryVal">
-                      </app-combobox>
+                      </app-tag-combobox>
                       <button class="preset-button text-button"
                         type="button" (click)="removePrimaryGroup(presetIndex, primaryIndex)">
                         <i class="fa fa-times"></i>
@@ -112,35 +112,35 @@
                   <div class="wrapper text-4 text-4-row">
                     <div class="wrapper text-2">
                       <div class="text">
-                        <app-combobox
+                        <app-tag-combobox
                           [maxElements]="1"
                           [comboIndex]="presetIndex + ':' + fieldIndex"
                           formControlName="fieldKeyCondition">
-                        </app-combobox>
+                        </app-tag-combobox>
                       </div>
                       <div class="text">
-                        <app-combobox
+                        <app-tag-combobox
                           [maxElements]="1"
                           [comboIndex]="presetIndex + ':' + fieldIndex"
                           formControlName="fieldKey">
-                        </app-combobox>
+                        </app-tag-combobox>
                       </div>
                     </div>
                   </div>
                   <div class="wrapper text-2">
                     <div class="text">
-                      <app-combobox
+                      <app-tag-combobox
                         [maxElements]="1"
                         [comboIndex]="presetIndex + ':' + fieldIndex"
                         formControlName="fieldValCondition">
-                      </app-combobox>
+                      </app-tag-combobox>
                     </div>
                     <div class="text value-row">
-                      <app-combobox
+                      <app-tag-combobox
                         class="text-value field-val"
                         [comboIndex]="presetIndex + ':' + fieldIndex"
                         formControlName="fieldVal">
-                      </app-combobox>
+                      </app-tag-combobox>
                       <button
                         class="text-button"
                         type="button" (click)="removeField(presetIndex, fieldIndex)">
