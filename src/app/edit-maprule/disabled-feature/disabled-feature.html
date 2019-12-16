@@ -25,18 +25,18 @@
             *ngFor="let disabledFeature of disabledFeaturesFormArray().controls; let disabledFeatureIndex=index"
             [formGroupName]="disabledFeatureIndex">
             <div class="text">
-              <app-combobox
+              <app-tag-combobox
                 [maxElements]="1"
                 [comboIndex]="'disabledFeatureIndex'"
                 formControlName="disabledKey">
-              </app-combobox>
+              </app-tag-combobox>
             </div>
             <div class="text value-row">
-              <app-combobox
+              <app-tag-combobox
                 class="text-value"
                 [comboIndex]="'disabledFeatureIndex'"
                 formControlName="disabledVal">
-              </app-combobox>
+              </app-tag-combobox>
               <button class="text-button"
                 type="button" (click)="removeDisabledFeature(disabledFeatureIndex)">
                 <i class="fa fa-times"></i>
