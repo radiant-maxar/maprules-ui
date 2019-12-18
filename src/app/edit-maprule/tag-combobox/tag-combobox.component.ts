@@ -17,7 +17,6 @@ export enum KEY_CODE {
 }
 
 
-// source and much thanks -> https://medium.com/@madhavmahesh/angular-6-component-creation-for-combo-box-6b2eec03bece
 @Component({
   selector: 'app-tag-combobox',
   templateUrl: '../../shared/components/combobox/combobox.component.html',
