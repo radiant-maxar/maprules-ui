@@ -1,11 +1,7 @@
-import { AfterViewInit, Component, forwardRef, Injector, Input, OnInit, ViewChild, ViewChildren, QueryList, Directive, ElementRef, ViewRef, SimpleChanges, OnChanges, EventEmitter, HostListener } from '@angular/core';
-import { ControlValueAccessor, FormControl, NgControl, NG_VALUE_ACCESSOR, FormArray, FormGroup } from '@angular/forms';
-import { of, Observable, Subject, BehaviorSubject } from 'rxjs';
-import { FieldConfigService } from 'src/app/core/services/field-config.service';
-import { EditMapRuleComponent } from 'src/app/edit-maprule/edit-maprule.component';
-import { TagInfoService } from '../../../core/services/tag-info.service';
+import { Component, forwardRef, Input, OnInit, ViewChild, ElementRef, Injector, AfterViewInit } from '@angular/core';
+import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, NgControl } from '@angular/forms';
 import { ComboboxPipe } from './combobox.pipe';
-import { debounce, debounceTime, distinctUntilChanged, distinct, first, filter, skipWhile, throttle, throttleTime, distinctUntilKeyChanged, take } from 'rxjs/operators';
+import { FieldConfigService } from 'src/app/core/services/field-config.service';
 
 export enum KEY_CODE {
   ENTER = 13,
@@ -29,7 +25,7 @@ export enum KEY_CODE {
     }
   ]
 })
-export class ComboboxComponent implements OnInit, ControlValueAccessor {
+export class ComboboxComponent implements OnInit, ControlValueAccessor, AfterViewInit {
   protected _formControl: FormControl;
   protected _formControlName: string;
 
@@ -52,6 +48,17 @@ export class ComboboxComponent implements OnInit, ControlValueAccessor {
   protected sortText: string = '';
   protected _disabled: boolean = false;
 
+  dropDownUpdate(update: boolean) {
+    if (update) {
+      this.fieldConfig.emitter.emit({
+        type: 'dropdown',
+        combo: this._comboIndex + ':' + this._formControlName,
+        value: update
+      })
+    }
+    this.showDropDown = update;
+  }
+
   @ViewChild("comboInput") comboInput: ElementRef;
   @ViewChild("comboDataContainer") comboDataContainer: ElementRef;
 
@@ -66,20 +73,20 @@ export class ComboboxComponent implements OnInit, ControlValueAccessor {
     this.counter = -1;
   }
 
-
-
   onBlurEventAction(event: any): void {
-    this.showDropDown = false;
+    this.dropDownUpdate(false);
   }
 
   onKeyUpAction(event: KeyboardEvent): void {
+    let value = event.currentTarget['value'].trim();
     if (!event.currentTarget['value'].length && event.keyCode === KEY_CODE.BACKSPACE) {
+      this._formControl.setValue(value);
       this.dummyDataList = this.filteredList();
-      this.showDropDown = false;
+      this.dropDownUpdate(false);
       return;
     }
-    let value = event.currentTarget['value'].trim();
-    this.showDropDown = true;
+    if (!value.length) return;
+    this.dropDownUpdate(true);
     switch (event.keyCode) {
       case KEY_CODE.UP_ARROW: {
         if (this.counter !== 0) {
@@ -107,7 +114,7 @@ export class ComboboxComponent implements OnInit, ControlValueAccessor {
       }
       case KEY_CODE.TAB_KEY: {
         if (!this.dummyDataList.length) {
-          this.showDropDown = false;
+          this.dropDownUpdate(false);
           return;
         }
         value = 0 <= this.counter ? this.selectDropdown(event, this.getCounter()) : this.selectText(value);
@@ -126,7 +133,7 @@ export class ComboboxComponent implements OnInit, ControlValueAccessor {
   }
 
   reset(): void {
-    this.showDropDown = false;
+    this.dropDownUpdate(false);
     this.dummyDataList = this.dataList;
   }
 
@@ -137,12 +144,12 @@ export class ComboboxComponent implements OnInit, ControlValueAccessor {
     if (!this.dummyDataList.length) {
       this.dummyDataList = this.filteredList();
     }
-    this.showDropDown = !this.showDropDown;
+    this.dropDownUpdate(!this.showDropDown);
   }
 
   textChange(value: string): void {
-    this.dummyDataList = this.comboboxPipe.transform(this.filteredList(), value);
-    this.showDropDown = 0 < this.dummyDataList.length
+    this.dummyDataList = this.filteredList();
+    this.dropDownUpdate(0 < this.dummyDataList.length);
   }
 
   doUpdate(value: string): string {
@@ -150,7 +157,7 @@ export class ComboboxComponent implements OnInit, ControlValueAccessor {
     this.sortText = ''
     this.comboInput.nativeElement.value = this.sortText;
     this.comboValues.push(value)
-    this.showDropDown = false;
+    this.dropDownUpdate(false);
     this.dummyDataList = this.filteredList();
     if (this.dummyDataList.length - 1 < this.counter) {
       this.counter = -1;
@@ -185,9 +192,7 @@ export class ComboboxComponent implements OnInit, ControlValueAccessor {
   }
 
   filteredList(): any[] {
-    return this.filteredDataList().sort(function (a, b) {
-      return a.name - b.name
-    });
+    return this.comboboxPipe.transform(this.filteredDataList(), this._formControl.value.toLowerCase())
   }
 
   doChange(val: string) {} // noop, implement in child classes
@@ -201,6 +206,40 @@ export class ComboboxComponent implements OnInit, ControlValueAccessor {
     }
   }
 
+
+  // get the form control and listen to changes...
+  ngAfterViewInit(): void {
+    const controlName: NgControl = this.injector.get(NgControl, null);
+    // when the component is initially created, go get the formControl
+    // and use it to set the control name and eventName this combobox will listen
+    // the changes for...
+    if (controlName) {
+      this._formControl = controlName.control as FormControl;
+      this._formControlName = controlName.name;
+    }
+
+    // make sure to initialize the input value!
+    if (this._formControl && this._formControl.value) {
+      setTimeout(() => { // there's a better way to do this...
+        let comboValues = this._formControl.value.split(',');
+        if (comboValues.length === 1 && this._maxElements === 1) {
+          this.sortText = comboValues[0];
+        } else {
+          this.sortText = ''
+        }
+
+        this.comboValues = this.comboValues.concat(comboValues);
+      })
+    } else {
+      this.sortText = '';
+    }
+
+    this._formControl.valueChanges.subscribe(val => {
+      if (val && val.length) this.textChange(val)
+      this.comboInput.nativeElement.focus();
+    })
+  }
+
   // needed noops
   ngOnInit() { }
   writeValue(value: any) { }
@@ -211,5 +250,7 @@ export class ComboboxComponent implements OnInit, ControlValueAccessor {
 
   constructor(
     protected comboboxPipe: ComboboxPipe,
+    protected fieldConfig: FieldConfigService,
+    protected injector: Injector
   ) { }
 }

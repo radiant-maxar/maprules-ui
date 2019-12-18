@@ -1,6 +1,4 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { ServiceCacheInterceptor } from './service-cache-interceptor';
 import { environment } from '../../../environments/environment';
 import { OperatorFunction } from 'rxjs';
 import { reduce } from 'rxjs/operators';
@@ -48,43 +46,47 @@ export class TagInfoService {
     return `${environment.taginfo}key/combinations?key=${key}&value=${value}&page=1&rp=50&sortname=together_count&sortorder=desc`;
   }
 
-  static reducer(nameKey: string, valKey: string): OperatorFunction<any, any> {
+  static reducer(resource: string): OperatorFunction<any, any> {
+    let nameKey: string, valKey: string;
+    if (resource === this.POPULAR_TAGS_URL || resource === this.POPULAR_KEYS_URL) {
+      nameKey = 'key';
+      valKey = 'key';
+    } else if (resource.indexOf(`${environment.taginfo}key/values`) === 0) {
+      nameKey = 'value';
+      valKey = 'value';
+    } else if (resource.indexOf(`${environment.taginfo}tag/combinations`) === 0
+            || resource.indexOf(`${environment.taginfo}key/combinations`) === 0) {
+      nameKey = 'other_key';
+      valKey = 'other_key';
+    }
+
     return reduce((data: Array < any >, response: any) => {
       response.data.forEach((datum: any) => {
-        data.push({
+        var serializedDatum = {
           name: datum[nameKey],
           value: datum[valKey]
-        })
+        }
+        if (data.findIndex(d => d.name === serializedDatum.name) > -1) {
+          return;
+        }
+        data.push(serializedDatum)
       })
-      return data;
+      return data.sort(function (a, b) {
+        return (a.name > b.name) ? 1 : -1
+      });
     }, [])
   }
 
-  constructor(private http: HttpClient) { }
-
-  /**
-   * Returns Observable with popular tags selectize options, be it from cache or an http request
-   * @return {Observable<SelectizeOption[]>} popular tag values' observable
-   */
-  popularTags() {
-    return this.http.get(TagInfoService.POPULAR_TAGS_URL)
-      .pipe(TagInfoService.reducer('key', 'key'));
-  }
-
-  popularKeys() {
-    return this.http.get(TagInfoService.POPULAR_KEYS_URL)
-      .pipe(TagInfoService.reducer('key', 'key'))
-  }
-
+  constructor() {}
   /**
    * Returns Observable with tag values selectize options, be it from cache or an http request
    * @param key {string} key to get tag values for...
    * @return {Observable<SelectizeOption[]>}
    */
-  tagValues(key: string) {
-    return this.http.get(TagInfoService.tagValuesUrl(key))
-      .pipe(TagInfoService.reducer('value', 'value'))
-  }
+  // tagValues(key: string) {
+  //   return this.http.get(TagInfoService.tagValuesUrl(key))
+  //     .pipe(TagInfoService.reducer('value', 'value'))
+  // }
 
   /**
    * Return Observable with tag combinations for given key/value selectize options, be it from cache or an http request
@@ -103,10 +105,10 @@ export class TagInfoService {
    * @param value {string} combination value
    * @return {Observable<SelectizeOption[]>}
    */
-  keyCombinations(key: string, value: string) {
-    return this.http.get(TagInfoService.keyCombinationsUrl(key, value))
-      .pipe(TagInfoService.reducer('other_key', 'other_key'))
+  // keyCombinations(key: string, value: string) {
+    // return this.http.get(TagInfoService.keyCombinationsUrl(key, value))
+      // .pipe(TagInfoService.reducer('other_key', 'other_key'))
     // 'https://taginfo.openstreetmap.org/api/4/key/combinations?key=amenity&value=clinic&page=1&rp=10&sortname=together_count&sortorder=desc'
     // return of([]);
-  }
+  // }
 }

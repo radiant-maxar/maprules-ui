@@ -31,7 +31,6 @@ export class FieldConfigService {
     return this.VAL_CONDITIONS[condition];
   }
 
-
   config: FieldConfig[] = [
     {
       type: 'input',

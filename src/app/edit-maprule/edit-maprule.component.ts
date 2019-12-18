@@ -12,6 +12,8 @@ import { TagInfoService } from '../core/services/tag-info.service';
 import { fbind } from 'q';
 import { Subject } from 'rxjs';
 import { debounce, debounceTime, filter } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
+import { TagComboboxComponent } from './tag-combobox/tag-combobox.component';
 
 @Component({
   exportAs: 'edit-maprule',
@@ -39,7 +41,7 @@ export class EditMapRuleComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private maprules: MapRulesService,
-    private tagInfoSevice: TagInfoService,
+    private http: HttpClient,
     private nav: NavigationService,
     private route: ActivatedRoute,
     private router: Router,
@@ -53,7 +55,6 @@ export class EditMapRuleComponent implements OnInit {
         if (next.hasOwnProperty('id')) {
           this.maprules.getMapRule(next.id).subscribe(
             (data: any) => {
-              this.tagInfoSevice.popularKeys().subscribe();
               this.form.get('mapruleName').setValue(data.name);
               data.presets.forEach(this.createPresetFormGroup.bind(this));
               data.disabledFeatures.forEach(this.createDisabledFormGroup.bind(this));
@@ -78,6 +79,10 @@ export class EditMapRuleComponent implements OnInit {
             fieldValCondition: this.fb.control(''),
             fieldVal: this.fb.control('')
           }))
+          TagComboboxComponent.updateComboResourceMap('0:0:primaryKey', TagInfoService.POPULAR_KEYS_URL);
+          this.http.get(TagInfoService.POPULAR_KEYS_URL)
+            .pipe(TagInfoService.reducer(TagInfoService.POPULAR_KEYS_URL))
+            .subscribe();
           this.fieldConfig.emitter.emit({ type: 'maprule-init' });
         }
       }

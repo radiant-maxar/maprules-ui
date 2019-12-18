@@ -6,10 +6,8 @@ import {
   HttpHandler
 } from '@angular/common/http';
 import { ServicesCache } from './services-cache';
-import { catchError, map, reduce, tap, first } from 'rxjs/operators';
+import { catchError, tap, first } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
-import { OperatorFunction } from 'rxjs';
-
 import { TagInfoService } from './tag-info.service';
 import { environment } from 'src/environments/environment';
 
@@ -64,6 +62,7 @@ export class ServiceCacheInterceptor implements HttpInterceptor {
    */
   private cacheEndpoints: string[] = [
     TagInfoService.POPULAR_TAGS_URL,
+    TagInfoService.POPULAR_KEYS_URL,
     `${environment.taginfo}key/values?key=`,
     `${environment.taginfo}tag/combinations?`,
     `${environment.taginfo}key/combinations?`,
@@ -75,10 +74,10 @@ export class ServiceCacheInterceptor implements HttpInterceptor {
    * @param requestUrl {string} the request url
    * @return {boolean} true if we should cache.
    */
-  private isCacheEndpoint(requestUrl: string) {
-    return this.cacheEndpoints.findIndex((url: string) => {
-      return requestUrl.includes(url);
-    }) > -1;
+  private isCacheEndpoint(requestUrl: string): boolean {
+    return this.cacheEndpoints.findIndex(function(e: string) {
+      return requestUrl.includes(e);
+    }) !== -1;
   }
 
   /**
