@@ -52,8 +52,7 @@ export class ComboboxComponent implements OnInit, ControlValueAccessor, AfterVie
     if (update) {
       this.fieldConfig.emitter.emit({
         type: 'dropdown',
-        combo: this._comboIndex + ':' + this._formControlName,
-        value: update
+        index: this._comboIndex + ':' + this._formControlName,
       })
     }
     this.showDropDown = update;
@@ -83,16 +82,18 @@ export class ComboboxComponent implements OnInit, ControlValueAccessor, AfterVie
       this._formControl.setValue(value);
       this.dummyDataList = this.filteredList();
       this.dropDownUpdate(false);
+      this.counter = -1;
       return;
     }
-    if (!value.length) return;
-    this.dropDownUpdate(true);
+
     switch (event.keyCode) {
       case KEY_CODE.UP_ARROW: {
         if (this.counter !== 0) {
           --this.counter;
         }
-        break;
+        this._formControl.setValue(value);
+        this.dropDownUpdate(true);
+        return;
       }
       case KEY_CODE.DOWN_ARROW: {
         if (!this.dummyDataList.length) {
@@ -106,22 +107,30 @@ export class ComboboxComponent implements OnInit, ControlValueAccessor, AfterVie
         if (this.counter === -1) return;
 
         this.checkHighlight(this.counter);
-        break;
+        this._formControl.setValue(value);
+        this.dropDownUpdate(true);
+        return;
       }
       case KEY_CODE.ENTER: {
         value = 0 <= this.counter ? this.selectDropdown(event, this.getCounter()) : this.selectText(value);
+        this._formControl.setValue(value);
+        this.dropDownUpdate(false);
         break;
       }
       case KEY_CODE.TAB_KEY: {
-        if (!this.dummyDataList.length) {
-          this.dropDownUpdate(false);
-          return;
+        if (this.dummyDataList.length) {
+          value = 0 <= this.counter ? this.selectDropdown(event, this.getCounter()) : this.selectText(value);
+          this._formControl.setValue(value);
         }
-        value = 0 <= this.counter ? this.selectDropdown(event, this.getCounter()) : this.selectText(value);
+        this.dropDownUpdate(false);
         break;
       }
+      default: {
+        this.counter = -1;
+        this._formControl.setValue(value);
+        this.dropDownUpdate(true);
+      }
     }
-    this._formControl.setValue(value);
   }
 
   getCounter(): number {
@@ -153,7 +162,6 @@ export class ComboboxComponent implements OnInit, ControlValueAccessor, AfterVie
   }
 
   doUpdate(value: string): string {
-    this.doChange(value);
     this.sortText = ''
     this.comboInput.nativeElement.value = this.sortText;
     this.comboValues.push(value)
@@ -200,6 +208,7 @@ export class ComboboxComponent implements OnInit, ControlValueAccessor, AfterVie
   removeComboVal(comboIndex: number) {
     this.comboValues.splice(comboIndex, 1);
     this._formControl.setValue(this.comboValues.join(','))
+
     this.sortText = ''
     if (!this.comboValues.length) {
       setTimeout(() => this.comboInput.nativeElement.focus(), 150)

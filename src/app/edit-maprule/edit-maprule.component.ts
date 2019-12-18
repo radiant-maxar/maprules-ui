@@ -1,19 +1,14 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, HostListener } from '@angular/core';
-import { Validators, FormGroup, FormBuilder, FormArray, FormControl } from '@angular/forms';
+import { Component, EventEmitter, OnInit, Output, HostListener } from '@angular/core';
+import { Validators, FormGroup, FormBuilder, FormArray } from '@angular/forms';
 
-import { FieldConfig } from '../shared/interfaces/field-config.interface';
-import { PresetComponent } from './preset/preset.component';
-import { DisabledFeatureComponent} from './disabled-feature/disabled-feature.component'
 import { MapRulesService } from '../core/services/maprules.service';
 import { NavigationService } from '../core/services/navigation.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FieldConfigService } from 'src/app/core/services/field-config.service';
 import { TagInfoService } from '../core/services/tag-info.service';
-import { fbind } from 'q';
 import { Subject } from 'rxjs';
-import { debounce, debounceTime, filter } from 'rxjs/operators';
+import { debounceTime, filter } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
-import { TagComboboxComponent } from './tag-combobox/tag-combobox.component';
 
 @Component({
   exportAs: 'edit-maprule',
@@ -79,7 +74,6 @@ export class EditMapRuleComponent implements OnInit {
             fieldValCondition: this.fb.control(''),
             fieldVal: this.fb.control('')
           }))
-          TagComboboxComponent.updateComboResourceMap('0:0:primaryKey', TagInfoService.POPULAR_KEYS_URL);
           this.http.get(TagInfoService.POPULAR_KEYS_URL)
             .pipe(TagInfoService.reducer(TagInfoService.POPULAR_KEYS_URL))
             .subscribe();
@@ -112,8 +106,8 @@ export class EditMapRuleComponent implements OnInit {
     if (primaries.length === 0) primaries.push(fb.group({ }))
 
     let fields: FormArray = this.fb.array([]);
-	preset.fields.forEach(function(field) {
-	  let valCode = field.values.length ? field.values[0].valCondition: '';
+    preset.fields.forEach(function (field) {
+      let valCode = field.values.length ? field.values[0].valCondition: '';
       let keyCondition: String = FieldConfigService.keyCondition(field.keyCondition);
       let valCondition: String = FieldConfigService.valCondition(valCode)
 
