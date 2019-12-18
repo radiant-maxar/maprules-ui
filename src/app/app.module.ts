@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { EditMapRuleModule } from './modules/edit-maprule.module';
 import { NavigationBarComponent } from './shared/components/navigation-bar/navigation-bar.component';
 import { EditMapRuleComponent } from './edit-maprule/edit-maprule.component';
@@ -22,6 +22,8 @@ import { ViewPresetComponent } from './view-maprule/view-preset/view-preset.comp
 import { ViewDisabledFeatureComponent } from './view-maprule/view-disabled-feature/view-disabled-feature.component';
 import { StartMapRuleComponent } from './start-maprule/start-maprule.component';
 import { ExploreComponent } from './explore/explore.component';
+import { ServicesCache } from './core/services/services-cache';
+import { ServiceCacheInterceptor } from './core/services/service-cache-interceptor';
 
 const appRoutes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -61,7 +63,14 @@ const appRoutes: Routes = [
     HttpClientModule,
     RouterModule.forRoot(appRoutes)
   ],
-  providers: [],
+  providers: [
+    ServicesCache,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ServiceCacheInterceptor,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
