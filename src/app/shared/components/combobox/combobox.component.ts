@@ -112,15 +112,21 @@ export class ComboboxComponent implements OnInit, ControlValueAccessor, AfterVie
         return;
       }
       case KEY_CODE.ENTER: {
-        value = 0 <= this.counter ? this.selectDropdown(event, this.getCounter()) : this.selectText(value);
-        this._formControl.setValue(value);
+        // if user hits enter and is over a dropdown option, select it. otherwise, use typed in text
+        if (this.dummyDataList.length && 0 <= this.counter) {
+          this.selectDropdown(event, this.getCounter())
+        } else {
+          this._formControl.setValue(this.selectText(value));
+        }
         this.dropDownUpdate(false);
         break;
       }
       case KEY_CODE.TAB_KEY: {
-        if (this.dummyDataList.length) {
-          value = 0 <= this.counter ? this.selectDropdown(event, this.getCounter()) : this.selectText(value);
-          this._formControl.setValue(value);
+        // same logic as enter.
+        if (this.dummyDataList.length && 0 <= this.counter) {
+          this.selectDropdown(event, this.getCounter())
+        } else {
+          this._formControl.setValue(this.selectText(value));
         }
         this.dropDownUpdate(false);
         break;
@@ -173,16 +179,14 @@ export class ComboboxComponent implements OnInit, ControlValueAccessor, AfterVie
     return this.comboValues.join();
   }
 
-  selectDropdown(event: any, counter: number = this.counter, updateForm: boolean = true): string {
+  selectDropdown(event: any, counter: number = this.counter, updateForm: boolean = true) {
     let value = (event.keyCode ? this.dummyDataList[counter].name : event.target.innerText).trim();
+
     if (!value.length) return;
-    value = this.doUpdate(value)
 
     if (updateForm) {
-      this._formControl.setValue(value);
+      this._formControl.setValue(this.doUpdate(value));
     }
-
-    return value;
   }
 
   selectText(value: string): string {
@@ -209,7 +213,8 @@ export class ComboboxComponent implements OnInit, ControlValueAccessor, AfterVie
     this.comboValues.splice(comboIndex, 1);
     this._formControl.setValue(this.comboValues.join(','))
 
-    this.sortText = ''
+    this.sortText = '';
+    this.dummyDataList = this.filteredList();
     if (!this.comboValues.length) {
       setTimeout(() => this.comboInput.nativeElement.focus(), 150)
     }
