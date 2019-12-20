@@ -186,4 +186,19 @@ export class EditMapRuleComponent implements OnInit {
       .subscribe(() => this.fieldConfig.emitter.emit({ type: 'clicked' }))
   }
 
+  public getParentForm(parentIndex: string, formName: string) {
+    let [presetIndex, formIndex] = parentIndex.split(':').map(Number);
+    let preset: any = this.presets.at(presetIndex);
+    let formGroup;
+    if (formName.indexOf('primary') === 0) {
+      formGroup = preset.get('primary').at(formIndex)
+    } else if (formName.indexOf('field') === 0) {
+      formGroup = preset.get('fields').at(formIndex);
+    } else if (formName.indexOf('disabled') === 0) {
+      formGroup = preset.disabledFeatures[formIndex]
+    } else {
+      return;
+    }
+    return formGroup;
+  }
 }

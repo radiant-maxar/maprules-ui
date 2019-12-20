@@ -77,15 +77,16 @@ export class ComboboxComponent implements OnInit, ControlValueAccessor, AfterVie
   }
 
   onKeyUpAction(event: KeyboardEvent): void {
-    let value = event.currentTarget['value'].trim();
     if (!event.currentTarget['value'].length && event.keyCode === KEY_CODE.BACKSPACE) {
-      this._formControl.setValue(value);
-      this.dummyDataList = this.filteredList();
+      this.filterText = '';
+      this._formControl.setValue(this.filterText);
+      this.dummyDataList = [];
       this.dropDownUpdate(false);
       this.counter = -1;
       return;
     }
 
+    let match: any = this.getMatch(event.currentTarget['value'].trim(), 'name');
     switch (event.keyCode) {
       case KEY_CODE.UP_ARROW: {
         if (this.counter !== 0) {
@@ -127,8 +128,11 @@ export class ComboboxComponent implements OnInit, ControlValueAccessor, AfterVie
       }
       default: {
         this.counter = -1;
-        this._formControl.setValue(value);
-        this.dropDownUpdate(true);
+        this.filterText = match.name;
+        // if coming from a state where dropdown is not open, wait until user types 2 characters at least
+        // if we allow at 1 character, the results are kind of weird.
+        // when I type 'y', I want 'yes', but probably not 'farm_auxillary'
+        this.dropDownUpdate(2 <= this.filterText.length);
       }
     }
   }

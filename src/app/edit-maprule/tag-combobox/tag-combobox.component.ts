@@ -78,19 +78,19 @@ export class TagComboboxComponent extends ComboboxComponent implements AfterView
         let url: string = '';
         if (formGroupIndex === 0) {
           if (this._formControlName.endsWith('Val')) {
-            let key: string = this._formControl.parent.get(controlKey).value;
+            let key: string = this.editMapRule.getParentForm(this._comboIndex, this._formControlName).value[controlKey];
             if (key.length) url = TagInfoService.tagValuesUrl(key);
           } else {
             url = TagInfoService.POPULAR_KEYS_URL;
           }
         } else {
           if (this._formControlName.endsWith('Val')) {
-            let key = formArray.at(formGroupIndex).get(controlKey).value;
+            let key: string = this.editMapRule.getParentForm(this._comboIndex, this._formControlName).value[controlKey];
             if (key.length) url = TagInfoService.tagValuesUrl(key);
           } else {
-            let partnerGroup = formArray.at(formGroupIndex - 1) as FormGroup;
-            let key: string = partnerGroup.get(controlKey).value;
-            let val: string = partnerGroup.get(controlVal).value;
+            let partnerData = this.editMapRule.getParentForm(`${this._comboIndex[0]}:${formGroupIndex - 1}`, this._formControlName).value;
+            let key: string = partnerData[controlKey];
+            let val: string = partnerData[controlVal];
             url = key.length && val.length ? TagInfoService.tagCombinationsUrl(key, val) : TagInfoService.POPULAR_KEYS_URL;
           }
         }
@@ -215,12 +215,9 @@ export class TagComboboxComponent extends ComboboxComponent implements AfterView
       (next) => {
         var fullComboIndex = this._comboIndex + ':' + this._formControlName;
         if (next.index !== fullComboIndex) return;
-        if (next.type === 'dropdown') {
-          this.getComboResource()
-        }
-        if (next.type === 'condition') {
-          this._disabled = next.disabled;
-        }
+        if (next.type === 'dropdown') this.getComboResource()
+        else if (next.type === 'condition') this._disabled = next.disabled;
+        else if (next.type === 'partnerUpdate') setTimeout(() => this.comboInput.nativeElement.focus());
       },
       (error) => {
         console.log(error)
@@ -233,7 +230,22 @@ export class TagComboboxComponent extends ComboboxComponent implements AfterView
     if (/fieldKeyCondition/.test(this._formControlName)) {
       this.conditionChanged(val);
     }
-    return super.doUpdate(val)
+    let value = super.doUpdate(val);
+
+    if (this._maxElements === 1 && !this._formControlName.endsWith('Val')) {
+      let partnerKey = '';
+      if (this._formControlName === 'primaryKey') partnerKey = 'primaryVal'
+      else if (this._formControlName === 'fieldKeyCondition') partnerKey = 'fieldKey'
+      else if (this._formControlName === 'fieldKey') partnerKey = 'fieldValCondition'
+      else if (this._formControlName === 'fieldValCondition') partnerKey = 'fieldVal'
+      else if (this._formControlName === 'disabledKey') partnerKey = 'disabledVal'
+      this.fieldConfig.emitter.emit({
+        type: 'partnerUpdate',
+        index: `${this._comboIndex}:${partnerKey}`
+      })
+    }
+
+    return value;
   }
 
   conditionChanged(val): void {
