@@ -201,9 +201,10 @@ export class TagComboboxComponent extends ComboboxComponent implements AfterView
     }
 
     return this.dataList.filter(function (d) {
-      if (comboValues.length) return !comboValues.includes(d.name);
-      if (valuesToIgnore.length) return !valuesToIgnore.includes(d.name);
-      return true;
+      let inCombo: boolean = false, inToIgnore: boolean = false;
+      if (comboValues.length) inCombo = comboValues.findIndex((c: any) => c.value === d.value) !== -1;
+      if (valuesToIgnore.length) inToIgnore = valuesToIgnore.includes(d.value);
+      return !inCombo && !inToIgnore; // only show those not in the combo list and not in values to ignore list;
     })
   }
 
